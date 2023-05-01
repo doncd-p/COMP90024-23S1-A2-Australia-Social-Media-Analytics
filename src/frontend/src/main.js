@@ -8,7 +8,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import Element from 'element-ui';
 import './assets/css/element-variables.scss';
 import locale from 'element-ui/lib/locale/lang/en'
-
+// Git test commit
 Vue.use(ElementUI, { locale })
 Vue.use(Element);
 Vue.use(ElementUI);
