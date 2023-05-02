@@ -1,5 +1,5 @@
 # COMP90024-23S1-A2-Australia-Social-Media-Analytics
-![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)
+![Python Version](https://img.shields.io/badge/python-3.11%2B-blue)
 
 ## Project Workflow
 
