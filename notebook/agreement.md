@@ -35,7 +35,7 @@ if not english:
 7. sentiment: compound score
 8. sentiment: neg (round to 4 digits)
 9. sentiment: pos (round to 4 digits)
-10.sentiment: -1/0/1  (argmax of neg, pos and neu)
+10. sentiment: -1/0/1  (argmax of neg, pos and neu)
 
 
 
