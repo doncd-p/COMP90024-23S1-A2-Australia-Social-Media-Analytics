@@ -77,10 +77,14 @@
 </template>
 
 <script>
+import Gmaps from "./Gmaps.vue";
 import { Loader } from "@googlemaps/js-api-loader";
 
 export default {
   name: "Map",
+  components: {
+    Gmaps,
+  },
   props: {
     msg: String,
   },
