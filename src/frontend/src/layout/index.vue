@@ -6,11 +6,13 @@
 
 <script>
 import AppMain from "./AppMain.vue";
+import SideBar from "./SideBar"
 
 export default {
   name: "Layout",
   components: {
     AppMain,
+    SideBar
   },
   data() {
     return {};
@@ -23,13 +25,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.header-container {
-  top: 0;
-  width: 100%;
-  z-index: 9999;
-}
 .body-container {
+  width: 100%;
   // overflow: hidden;
-  margin-top: 78px;
+  padding-top: 78px;
+  height: calc;
 }
 </style>

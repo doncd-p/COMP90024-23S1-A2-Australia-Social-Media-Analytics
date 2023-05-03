@@ -1,27 +1,12 @@
 <template>
     <div id="app">  
-      <el-col :span="4">
-         <el-menu 
-            default-active="distribution"
-            class="el-menu-vertical-demo"
-            background-color="#333"
-            text-color="#fff"
-            active-text-color="#ffd04b">
-            <el-menu-item index="distribution">
-              <span slot="title">Distribution</span>
-            </el-menu-item>
-            <el-menu-item index="ranking">
-              <span slot="title">Ranking</span>
-            </el-menu-item>
-          </el-menu>
-      </el-col>
-      <el-col :span="20" class="chart">
+      <el-col :span="24" class="chart">
         <el-row class="scatter1">
           <!-- figure1 -->
           <el-col class="figure" :span="20">
             <div class="c" ref="linechart" ></div>
           </el-col>
-          <el-col class="filter" :span="6">
+          <el-col class="filter" :span="4">
             <div class="filter1"> 
                   <div class="filter1label"> Interval:</div>
                   <el-select v-model="interval" :change="handleClick()" >
@@ -39,7 +24,7 @@
           <el-col class="figure" :span="20">
             <div class="c scatter" ref="scatterchart" ></div>
           </el-col>
-          <el-col class="filter" :span="6">
+          <el-col class="filter" :span="4">
             <el-row>
               <div class="filter1"> 
                   <div class="filter1label"> Time After Election:</div>
@@ -146,7 +131,7 @@ export default {
         title: [
           {
             left: 'center',
-            text: "The Sentiment of Whole Australia Before and After the Selection"
+            text: "The Sentiment of Whole Australia Before and After the Election"
           }
         ],
         tooltip: {
@@ -302,9 +287,9 @@ export default {
   }
   .description{
     height:220px;
-    width:90%;
-    margin-left: 30px;
-    margin-top:30px;
+    width:91%;
+    margin-left: 5%;
+    margin-top:2%;
     background-color:#5f4848;
     border:0.5em solid#cb7f67;
   }
