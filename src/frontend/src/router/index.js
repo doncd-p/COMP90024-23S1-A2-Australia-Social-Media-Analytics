@@ -16,14 +16,22 @@ const routes = [
         component: () => import('../views/home/Home.vue')
       },
       {
-        path: 'distribution',
-        name: 'Distribution',
-        component: () => import('../views/dashboard/Distribution.vue')
-      },
-      {
-        path: 'ranking',
-        name: 'Ranking',
-        component: () => import('../views/dashboard/Ranking.vue')
+        path: 'dashboard',
+        name: 'Dashboard',
+        redirect: '/dashboard/ranking',
+        component: () => import('../views/dashboard/index.vue'),
+        children: [
+          {
+            path: 'distribution',
+            name: 'Distribution',
+            component: () => import('../views/dashboard/Distribution.vue')
+          },
+          {
+            path: 'ranking',
+            name: 'Ranking',
+            component: () => import('../views/dashboard/Ranking.vue')
+          },
+        ]
       },
       {
         path: 'about',

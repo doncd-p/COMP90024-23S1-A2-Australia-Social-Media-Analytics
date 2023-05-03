@@ -1,21 +1,6 @@
 <template>
     <div id="app">  
-      <el-col :span="4">
-         <el-menu 
-            default-active="ranking"
-            class="el-menu-vertical-demo"
-            background-color="#333"
-            text-color="#fff"
-            active-text-color="#ffd04b">
-            <el-menu-item index="distribution">
-              <span slot="title">Distribution</span>
-            </el-menu-item>
-            <el-menu-item index="ranking">
-              <span slot="title">Ranking</span>
-            </el-menu-item>
-          </el-menu>
-      </el-col>
-      <el-col :span="20" class="table">
+      <el-col :span="24" class="table">
         <el-row class="table1">
           <!-- figure1 -->
           <el-col class="tablebody" :span="20">
@@ -272,9 +257,12 @@ export default {
   .el-menu-vertical-demo{
     height:100vh;
   }
+  .table{
+    height: 100px;
+  }
   .table1{
     height: 30em;
-    display:flex;
+    display: flex;
     background-color: #5f4848;
     justify-content:center;
     align-items: center;
@@ -283,7 +271,7 @@ export default {
   .table2{
     height: 30em;
     background-color: #444a5b;
-    display:flex;
+    display: flex;
     justify-content:center;
     align-items: center;
   }

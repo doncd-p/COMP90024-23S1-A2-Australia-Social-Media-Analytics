@@ -15,7 +15,7 @@
       <h1><a to="#">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ELEFEEL&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a></h1>
     </div>
     <el-menu
-      :default-active="activeIndex2"
+      :default-active="activeMenu"
       class="header-container"
       mode="horizontal"
       background-color="#333"
@@ -24,7 +24,7 @@
       router
     >
       <el-menu-item index="/home">Home</el-menu-item>
-      <el-menu-item index="/distribution">Dashboard</el-menu-item>
+      <el-menu-item index="/dashboard">Dashboard</el-menu-item>
       <el-menu-item index="/map">Map</el-menu-item>
       <el-menu-item index="/about">About Us</el-menu-item>
  
@@ -41,6 +41,17 @@ export default {
       activeIndex: "1",
       activeIndex2: "1",
     };
+  },
+
+  computed: {
+    activeMenu() {
+      const route = this.$route
+      const { path } = route
+      if (path === '/dashboard/distribution' || path === '/dashboard/ranking') {
+        return '/dashboard'
+      }
+      return path
+    }
   },
 
   mounted() {},
