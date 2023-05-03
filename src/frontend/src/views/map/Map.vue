@@ -96,11 +96,8 @@ export default {
       map: {},
       dialogVisible: false,
       mapItem: {
-        // 对话框标题
         divisionName: undefined,
-        // 平均年龄
         avgAge: undefined,
-        // 平均教育年龄
         avgEducYears: undefined,
         avgWeeklyIncome: undefined,
         erp: undefined,
@@ -128,9 +125,9 @@ export default {
       });
 
       const mapData = [
-        // 展示数据
+        // displayed data
         {
-          divisionName: "测试标题1",
+          divisionName: "Banks",
           avgAge: 44.34516963142491,
           avgEducYears: 10.395970873626483,
           avgWeeklyIncome: 1724.3859379956157,
@@ -158,9 +155,9 @@ export default {
                 title: "Well I guess that's how to fell alive!"
             },
           ],
-          // 百分比
+          
           color: "#67C23A",
-          // 多边形地理位置
+          // lat and lng of polygon
           polygon: [
             { lat: 25.774, lng: -80.19 },
             { lat: 18.466, lng: -66.118 },
@@ -170,7 +167,7 @@ export default {
           ],
         },
         {
-          divisionName: "测试标题2",
+          divisionName: "Revers",
           avgAge: 44.34516963142491,
           avgEducYears: 10.395970873626483,
           avgWeeklyIncome: 1724.3859379956157,
@@ -216,7 +213,7 @@ export default {
         });
 
         mapData.forEach((item, i) => {
-          // 定义多边形参数
+          // define the parameters of polygon
           const itemPolygon = new google.maps.Polygon({
             paths: item.polygon,
             strokeColor: item.color,
@@ -234,11 +231,21 @@ export default {
             this.mapItem.erp = item.erp;
             this.mapItem.netMigration = item.netMigration;
             this.mapItem.tweets = item.tweets;
-            // 点击对话框
             this.dialogVisible = true;
           });
-
-          // 地图上绘制多边形
+          const infowindow = new google.maps.InfoWindow({
+            content: item.divisionName,
+          });
+            
+          itemPolygon.addListener("mouseover",  (event) => {
+            infowindow.setPosition(event.latLng);
+            infowindow.open(map, itemPolygon);
+          });
+          itemPolygon.addListener('mouseout', () => {
+            map.data.revertStyle();
+            infowindow.close();
+          });
+          // draw polygons in the map
           itemPolygon.setMap(map);
         });
       });
