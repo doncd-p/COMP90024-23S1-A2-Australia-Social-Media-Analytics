@@ -8,7 +8,7 @@ def index():
 
 if __name__ == '__main__':
     HOST = '0.0.0.0'
-    PORT= 80
+    PORT= 8080
     DEBUG = True
 
     app.run(debug=DEBUG, host=HOST, port=PORT)
