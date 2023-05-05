@@ -111,7 +111,7 @@ export default {
 
     loadEcharts() {
       // chart1:
-       const dateList = this.chartData.map(function (item) {
+      const dateList = this.chartData.map(function (item) {
           return item[0];
         });
       const valueList = this.chartData.map(function (item) {
@@ -170,30 +170,39 @@ export default {
       const singleAxis = [];
       const series = [];
       status.forEach(function (sta, idx) {
-      title.push({
-        textBaseline: 'middle',
-        top: ((idx + 0.5) * 100) / 2 + '%',
-        text: sta
-      });
-      singleAxis.push({
-        left: 150,
-        type: 'value',
-        min:-100,
-        max:100,
-        boundaryGap: false,
-        top: (idx * 100) / 2 + 5 + '%',
-        height: 100 / 2 - 13 + '%',
-      });
-      series.push({
-        singleAxisIndex: idx,
-        coordinateSystem: 'singleAxis',
-        type: 'scatter',
-        data: []
+        title.push({
+          textBaseline: 'middle',
+          top: ((idx + 0.5) * 100) / 2 + '%',
+          text: sta
         });
+        singleAxis.push({
+          left: 150,
+          type: 'value',
+          min:-100,
+          max:100,
+          boundaryGap: false,
+          top: (idx * 100) / 2 + 5 + '%',
+          height: 100 / 2 - 13 + '%',
+        });
+        series.push({
+          singleAxisIndex: idx,
+          coordinateSystem: 'singleAxis',
+          type: 'scatter',
+          data: [],
+          markLine: {}
+          });
       });
       this.chartData2.forEach(function (dataItem) {
         series[dataItem[0]].data.push([dataItem[1]]);
       });
+      console.log(series)
+      series.markLine = {
+        lineStyle: {
+          type: 'solid'
+        },
+        data: [{ type: 'average', name: 'avg' }]
+      };
+      
       const options2= {
         emphasis: {
         focus: 'series'
