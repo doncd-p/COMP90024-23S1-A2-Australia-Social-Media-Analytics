@@ -1,2 +1,25 @@
+# Git ignore file for your project
 
+# Ignore Python bytecode files
+__pycache__/
+
+# Ignore Parquet files
 *.parquet
+
+# Ignore macOS system files
+.DS_Store
+
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore virtual environment files
+venv/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Environment variables
+.env
