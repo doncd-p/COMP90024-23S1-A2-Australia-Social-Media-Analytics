@@ -15,7 +15,7 @@
               <div class="border-top h2" id="info1" v-html="typingtext1"></div>
               <div class="border-top h4" id="info2" v-html="typingtext2"></div>
               <div>
-                <router-link to="/distribution">
+                <router-link to="/dashboard/ranking">
                   <div class="downbutton"></div>
                 </router-link>
               </div>
