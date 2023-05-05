@@ -273,7 +273,6 @@ export default {
 }
 .map {
   height: 700px;
-  background-color: green;
   margin-bottom: 30px;
 }
 .radio-container {

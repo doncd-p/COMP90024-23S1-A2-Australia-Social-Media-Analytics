@@ -236,7 +236,7 @@ export default {
     end.setFullYear(2022,11,24);
     this.timeline1 = [start, end];
     this.timeline2 = [start, end];
-    picker.$emit('pick', [start, end]);
+    
   },
 
   methods: {
