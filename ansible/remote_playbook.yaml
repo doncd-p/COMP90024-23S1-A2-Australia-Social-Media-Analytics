@@ -7,9 +7,15 @@
     - name: Install docker installer from galaxy
       command: ansible-galaxy install geerlingguy.docker
 
-# Deploy the project playbook
-- name: Deploy the COMP90024 project
+
+- name: Install Docker on all instances
   hosts: instance
+  become: true
+  roles:
+    - install_docker
+
+- name: Deploy the backend
+  hosts: backend
   become: true
   vars:
     work_dir: ./COMP90024-23S1-A2-Australia-Social-Media-Analytics/src
@@ -25,6 +31,5 @@
         name: '{{docker_network_name}}'
     - name: Pull python flask image
       command:  docker pull python:3.11.3-slim-bullseye
-
   roles:
-    - backend   # Deploy the backend service
+    - backend

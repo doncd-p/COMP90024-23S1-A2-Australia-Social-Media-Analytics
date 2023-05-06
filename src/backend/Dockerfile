@@ -16,7 +16,7 @@ COPY . .
 EXPOSE 8080
 
 # start the program
-CMD ["gunicorn" , "app:app", "-c", "gunicorn_config.py"]
+CMD ["gunicorn" , "main:app", "-c", "gunicorn_config.py"]
 
 # Build image:
 # sudo docker image build -t backend .
