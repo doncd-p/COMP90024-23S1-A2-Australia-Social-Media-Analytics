@@ -1,0 +1,23 @@
+  - name: Set local_work_dir
+    set_fact:
+      local_work_dir: "{{ playbook_dir }}/../src/"
+
+  - name: Update apt cache
+    apt:
+      update_cache: yes
+    become: true
+  
+  - name: Ensure destination directory exists
+    ansible.builtin.file:
+      path: '{{work_dir}}'
+      state: directory
+
+  - name: Synchronize code from local to remote server
+    ansible.builtin.synchronize:
+      src: '{{local_work_dir}}'
+      dest: '{{work_dir}}'
+      delete: yes
+      recursive: yes
+      rsync_opts:
+        - "--exclude=.git"
+        - "--exclude-from=../.gitignore"
