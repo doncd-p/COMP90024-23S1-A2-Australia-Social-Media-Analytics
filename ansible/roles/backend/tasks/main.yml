@@ -25,6 +25,6 @@
       state: started
       networks:   # Join the same docker network
         - name: '{{docker_network_name}}'
-      # published_ports:
-      #   - '{{backend_host_port}}:{{backend_container_port}}'  # 8080:8080
+      published_ports:
+        - '{{backend_host_port}}:{{backend_container_port}}'  # 8080:8080
         
