@@ -1,9 +1,10 @@
 from flask import Flask, jsonify
 from flask_restful import Api, Resource
-from ..utils import get_couch
+from app.utils.couchdb_client import CouchDBClient
 
 app = Flask(__name__)
 api = Api(app)
+client = CouchDBClient()
 
 class GetAllTexts(Resource):
     def get(self, db_name):
@@ -16,7 +17,7 @@ class GetAllTexts(Resource):
         Returns:
             A JSON response containing an array of text data.
         """
-        db = get_couch(db_name)
+        db = client.get_db(db_name)
         results = db.view('_all_docs', include_docs=True)
         texts = []
         for r in results:
@@ -38,7 +39,7 @@ class GetAllSentiments(Resource):
         Returns:
             A JSON response containing an array of sentiment data.
         """
-        db = get_couch(db_name)
+        db = client.get_db(db_name)
         results = db.view('_all_docs', include_docs=True)
         sentiments = []
         for r in results:
@@ -60,7 +61,7 @@ class GetAllBBox(Resource):
         Returns:
             A JSON response containing an array of bbox data.
         """
-        db = get_couch(db_name)
+        db = client.get_db(db_name)
         results = db.view('_all_docs', include_docs=True)
         bboxes = []
         for r in results:
