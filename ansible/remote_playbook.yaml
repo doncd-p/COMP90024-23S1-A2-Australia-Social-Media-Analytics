@@ -1,0 +1,30 @@
+# Play tasks on the local host
+- name: Install local dependency
+  hosts: localhost
+  tasks:
+    # Install docker installer from community, so we can install docker
+    # on remote instance
+    - name: Install docker installer from galaxy
+      command: ansible-galaxy install geerlingguy.docker
+
+# Deploy the project playbook
+- name: Deploy the COMP90024 project
+  hosts: instance
+  become: true
+  vars:
+    work_dir: ./COMP90024-23S1-A2-Australia-Social-Media-Analytics/src
+  vars_files: 
+    - vars/settings.yml
+  pre_tasks:
+    - name: Install common dependency
+      include_role:
+        name: common
+
+    - name: Create docker network
+      docker_network:
+        name: '{{docker_network_name}}'
+    - name: Pull python flask image
+      command:  docker pull python:3.11.3-slim-bullseye
+
+  roles:
+    - backend   # Deploy the backend service
