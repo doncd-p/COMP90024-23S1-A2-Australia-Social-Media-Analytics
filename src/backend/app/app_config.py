@@ -1,11 +1,12 @@
 import os
 
 class Config:
-    COUCHDB_HOST = os.environ.get('COUCHDB_HOST', 'localhost')
+    COUCHDB_HOSTS = os.environ.get('COUCHDB_HOSTS', 'localhost').split(',')
     COUCHDB_PORT = os.environ.get('COUCHDB_PORT', '5984')
     COUCHDB_USERNAME = os.environ.get('COUCHDB_USERNAME', 'admin')
     COUCHDB_PASSWORD = os.environ.get('COUCHDB_PASSWORD', 'admin')
-    COUCHDB_DATABASES = os.environ.get('COUCHDB_DATABASES', {'test'})
+    COUCHDB_DATABASES = os.environ.get('COUCHDB_DATABASES', 'db1,db2,test').split(',')
     
-    if COUCHDB_USERNAME and COUCHDB_PASSWORD:
-        COUCHDB_URL = f"http://{COUCHDB_USERNAME}:{COUCHDB_PASSWORD}@{COUCHDB_HOST}:{COUCHDB_PORT}/"
+    @classmethod
+    def couchdb_urls(cls):
+        return [f"http://{cls.COUCHDB_USERNAME}:{cls.COUCHDB_PASSWORD}@{host}:{cls.COUCHDB_PORT}/" for host in cls.COUCHDB_HOSTS]
