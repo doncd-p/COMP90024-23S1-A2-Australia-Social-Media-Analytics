@@ -10,10 +10,9 @@ class CouchDBClient:
             for db_name in Config.COUCHDB_DATABASES:
                 try:
                     db = server[db_name]
+                    self.databases[db_name] = db
                 except couchdb.ResourceNotFound:
-                    db = server.create(db_name)
-
-                self.databases[db_name] = db
+                    pass
 
     def get_db(self, db_name):
         if db_name not in self.databases:
