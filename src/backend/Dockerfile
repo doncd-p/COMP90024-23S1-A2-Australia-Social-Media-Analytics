@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # set up the base python image
-FROM python:3.9.16-slim-bullseye
+FROM python:3.11.3-slim-bullseye
 
 # set the working directory
 WORKDIR /backend
