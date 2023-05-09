@@ -1,0 +1,172 @@
+  # - name: Add SSH fingerprints to known_hosts
+  #   hosts: couchdb
+  #   become: true
+  #   tasks:
+  #     - name: Scan SSH fingerprints
+  #       shell: ssh-keyscan -H {{ inventory_hostname }}
+  #       register: ssh_fingerprint
+
+  #     - name: Add SSH fingerprint to known_hosts
+  #       lineinfile:
+  #         path: ~/.ssh/group9_key.pem
+  #         line: "{{ ssh_fingerprint.stdout }}"
+  #         create: true
+
+  # # Play tasks on the local host
+  # - name: Install local dependency
+  #   hosts: localhost
+  #   tasks:
+  #     # Install docker installer from community, so we can install docker
+  #     # on remote instance
+  #     - name: Install docker installer from galaxy
+  #       command: ansible-galaxy install geerlingguy.docker
+
+  # - name: Install Docker on all instances
+  #   hosts: couchdb
+  #   become: true
+  #   roles:
+  #     - install_docker
+    
+  # - name: Initialize Docker Swarm
+  #   hosts: swarm_manager
+  #   become: true
+  #   tasks:
+  #     - name: Initialize Swarm
+  #       community.docker.docker_swarm:
+  #         state: present
+  #         advertise_addr: "{{ ansible_host }}"
+  #       register: swarm_init
+  #     - name: Get Docker swarm join token
+  #       shell: |  
+  #         sudo docker swarm join-token -q worker
+  #       register: swarm_join_token
+
+  # - name: Open required ports for CouchDB and Docker Swarm
+  #   hosts: couchdb
+  #   become: true
+  #   tasks:
+  #     - name: Enable UFW
+  #       community.general.ufw:
+  #         state: enabled
+
+  #     - name: Allow specified TCP ports
+  #       community.general.ufw:
+  #         rule: allow
+  #         port: "{{ item }}"
+  #         proto: tcp
+  #       loop:
+  #         - 5984  # CouchDB clustered port for all HTTP API requests
+  #         - 4369  # Erlang port mapper daemon (epmd)
+  #         - 9100  # Erlang communication with other CouchDB nodes in the cluster
+  #         - 9101  # Erlang communication with other CouchDB nodes in the cluster
+  #         - 9102  # Erlang communication with other CouchDB nodes in the cluster
+  #         - 2377  # Docker Swarm cluster management communications
+  #         - 7946  # Docker Swarm communication among nodes
+
+  #     - name: Allow specified UDP ports
+  #       community.general.ufw:
+  #         rule: allow
+  #         port: "{{ item }}"
+  #         proto: udp
+  #       loop:
+  #         - 7946  # Docker Swarm communication among nodes
+  #         - 4789
+
+  # - name: Leave the current swarm if already joined
+  #   hosts: swarm_workers
+  #   become: true
+  #   tasks:
+  #     - name: Leave Swarm
+  #       community.docker.docker_swarm:
+  #         state: absent
+  #         force: yes
+  #       register: leave_swarm_result
+
+  # - name: Join Swarm for workers
+  #   hosts: swarm_workers
+  #   become: true
+  #   tasks:
+  #     - name: Join Swarm
+  #       community.docker.docker_swarm:
+  #         state: join
+  #         advertise_addr: "{{ ansible_host }}"
+  #         join_token: "{{ hostvars[groups['swarm_manager'][0]]['swarm_init']['swarm_facts']['JoinTokens']['Worker'] }}"
+  #         remote_addrs: ["{{ hostvars[groups['swarm_manager'][0]]['ansible_host'] }}:2377"]
+  #         timeout: 60
+
+  - name: Deploy CouchDB cluster
+    hosts: master
+    become: yes
+    tasks:
+      - name: Create overlay network for CouchDB
+        community.docker.docker_network:
+          name: couchdb_network
+          driver: overlay
+          driver_options:
+            attachable: true
+          state: present
+
+      - name: Create CouchDB service
+        community.docker.docker_swarm_service:
+          state: present
+          name: couchdb
+          mode: global
+          networks:
+            - name: couchdb_network
+          image: couchdb:latest
+          env:
+            COUCHDB_USER: "{{ couchdb_user }}"
+            COUCHDB_PASSWORD: "{{ couchdb_password }}"
+          publish:
+            - target_port: 5984
+              published_port: 5984
+              mode: host
+
+
+  - name: Configure CouchDB cluster
+    hosts: couchdb
+    tasks:
+      - name: Get CouchDB container ID
+        command: "sudo docker ps -f 'name=couchdb' -q"
+        register: couchdb_container_id
+
+      - name: Set CouchDB node name
+        command: "sudo docker exec {{ couchdb_container_id.stdout }} /bin/bash -c 'echo \"-name couchdb@{{ inventory_hostname }}\" >> /opt/couchdb/etc/vm.args'"
+
+      - name: Modify kernel options in vm.args
+        command: "sudo docker exec {{ couchdb_container_id.stdout }} /bin/bash -c 'sed -i -E \"s/^-kernel inet_dist_listen_min .*/-kernel inet_dist_listen_min 9100/\" /opt/couchdb/etc/vm.args && sed -i -E \"s/^-kernel inet_dist_listen_max .*/-kernel inet_dist_listen_max 9200/\" /opt/couchdb/etc/vm.args'"
+
+      # - name: Restart CouchDB
+      #   command: "sudo docker restart {{ couchdb_container_id.stdout }}"
+
+      - name: Enable cluster on each node
+        ansible.builtin.shell:
+          cmd: >
+            curl -X POST -H "Content-Type: application/json"
+            http://{{ couchdb_user }}:{{ couchdb_password }}@{{ inventory_hostname }}:5984/_cluster_setup
+            -d '{"action": "enable_cluster", "bind_address":"0.0.0.0", "username": "{{ couchdb_user }}", "password":"{{ couchdb_password }}", "node_count":"{{ groups['couchdb'] | length }}"}'
+        args:
+          executable: /bin/bash
+
+      - name: Add nodes to the cluster
+        ansible.builtin.shell:  
+          cmd: >
+            curl -X POST -H "Content-Type: application/json"
+            http://{{ couchdb_user }}:{{ couchdb_password }}@{{ groups['couchdb'][0] }}:5984/_cluster_setup
+            -d '{"action": "enable_cluster", "bind_address": "0.0.0.0", "username": "{{ couchdb_user }}", "password": "{{ couchdb_password }}", "port": 5984, "node_count": "{{ groups['couchdb'] | length }}", "remote_node": "{{ inventory_hostname }}", "remote_current_user": "{{ couchdb_user }}", "remote_current_password": "{{ couchdb_password }}" }'
+            && curl -X POST -H "Content-Type: application/json"
+            http://{{ couchdb_user }}:{{ couchdb_password }}@{{ groups['couchdb'][0] }}:5984/_cluster_setup
+            -d '{"action": "add_node", "host": "{{ inventory_hostname }}", "port": 5984, "username": "{{ couchdb_user }}", "password": "{{ couchdb_password }}"}'
+        args:
+          executable: /bin/bash
+        loop: "{{ groups['couchdb'] | difference([groups['couchdb'][0]]) }}"
+
+      - name: Finish cluster setup and add system databases
+        ansible.builtin.shell:
+          cmd: >
+            curl -X POST -H "Content-Type: application/json"
+            http://{{ couchdb_user }}:{{ couchdb_password }}@{{ groups['couchdb'][0] }}:5984/_cluster_setup
+            -d '{"action": "finish_cluster"}'
+        args:
+          executable: /bin/bash
+        run_once: true
