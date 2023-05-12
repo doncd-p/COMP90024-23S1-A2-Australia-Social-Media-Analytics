@@ -2,7 +2,7 @@ import pandas as pd
 
 
 
-data = pd.read_parquet('../data/curated/twitter_with_sent.parquet')
+data = pd.read_parquet('../data/curated/twitter_sentiment.parquet')
 
 data['neu_score'] = 1-data['pos_score']-data['neg_score']
 data = data.drop('sentiment', axis = 1)
