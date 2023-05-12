@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # set up the base python image
-FROM python:3.9.16-slim-bullseye
+FROM python:3.11.3-slim-bullseye
 
 # set the working directory
 WORKDIR /backend
@@ -16,7 +16,7 @@ COPY . .
 EXPOSE 8080
 
 # start the program
-CMD ["gunicorn" , "app:app", "-c", "gunicorn_config.py"]
+CMD ["gunicorn" , "main:app", "-c", "gunicorn_config.py"]
 
 # Build image:
 # sudo docker image build -t backend .
