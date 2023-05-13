@@ -6,8 +6,9 @@ class TopPositiveTweets(Resource):
     def get(self):
         top_k = int(request.args.get('num', 5))
         electorate = request.args.get('electorate')
-        
-        db = client.get_db('tweet_database')
+                
+        electorate = electorate.lower()
+        electorate = electorate[0].upper() + electorate[1:]
         
         if top_k > 5:
             response = jsonify(
@@ -41,7 +42,7 @@ class TopPositiveTweets(Resource):
         }
 
         try:
-            result = db.find(query)
+            result = client.find_in_partition('tweet_database__electorate', electorate, query)
         except Exception as e:
             response = jsonify(
                 code=500,
@@ -52,7 +53,7 @@ class TopPositiveTweets(Resource):
             return response
 
         cleaned_tweet_list = []
-        for item in result:
+        for item in result['docs']:
             cleaned_tweet = {}
             cleaned_tweet['author'] = item['author_id']
             if ':' not in item['_id']:
@@ -78,7 +79,7 @@ class TopNegativeTweets(Resource):
         top_k = int(request.args.get('num', 5))
         electorate = request.args.get('electorate')
         
-        db = client.get_db('tweet_database')
+        db = client.get_db('tweet_database__electorate')
         
         if top_k > 5:
             response = jsonify(
