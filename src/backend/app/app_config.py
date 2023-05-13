@@ -5,7 +5,6 @@ class Config:
     COUCHDB_PORT = os.environ.get('COUCHDB_PORT', '5984')
     COUCHDB_USERNAME = os.environ.get('COUCHDB_USERNAME', 'group9_admin')
     COUCHDB_PASSWORD = os.environ.get('COUCHDB_PASSWORD', 'group9_H1')
-    COUCHDB_DATABASES = os.environ.get('COUCHDB_DATABASES', 'twitter_database').split(',')
     
     @classmethod
     def couchdb_urls(cls):
