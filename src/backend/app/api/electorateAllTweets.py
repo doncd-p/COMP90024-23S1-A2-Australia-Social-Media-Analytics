@@ -2,6 +2,7 @@ from flask import jsonify, request
 from flask_restful import Resource
 from app.utils.couchdb_client import client
 
+
 class DateSentimentAll(Resource):
     def get(self):
         startdate = request.args.get('startdate')
@@ -9,8 +10,9 @@ class DateSentimentAll(Resource):
         electorate_filter = request.args.get('electorate')
 
         db = client.get_db('tweet_database')
-        view = db.view('_design/date/_view/date_electorate__nsentiment', group=True, startkey=[startdate], endkey=[enddate])
-        
+        view = db.view('_design/date/_view/date_electorate__nsentiment',
+                       group=True, startkey=[startdate], endkey=[enddate])
+
         # Process data
         electorate_n_sent = {}
         for item in view:
@@ -21,29 +23,34 @@ class DateSentimentAll(Resource):
                     'num_neu_tweets': 0,
                     'num_neg_tweets': 0
                 }
-            
-            sentiment_keys = ['num_pos_tweets', 'num_neu_tweets', 'num_neg_tweets']
+
+            sentiment_keys = ['num_pos_tweets',
+                              'num_neu_tweets', 'num_neg_tweets']
             for j in range(3):
-                electorate_n_sent[electorate][sentiment_keys[j]] += item.value[j]['sum']
-                
+                electorate_n_sent[electorate][sentiment_keys[j]
+                                              ] += item.value[j]['sum']
+
         # If a specific electorate has been requested, filter the results
         if electorate_filter:
             if electorate_filter in electorate_n_sent:
                 response = jsonify(
                     code=200,
                     msg="ok",
-                    data={electorate_filter: electorate_n_sent[electorate_filter]},
+                    data={
+                        electorate_filter: electorate_n_sent[electorate_filter]},
                 )
                 response.status_code = 200
                 return response
             else:
-                response = jsonify(code=404, err="Electorate not found", data={})
+                response = jsonify(
+                    code=404, err="Electorate not found", data={})
                 response.status_code = 404
                 return response
 
         response = jsonify(code=200, msg="ok", data=electorate_n_sent)
         response.status_code = 200
         return response
+
 
 class DateAvgSentimentAll(Resource):
     def get(self):
@@ -53,8 +60,9 @@ class DateAvgSentimentAll(Resource):
         range_type = request.args.get('type', 'daily')
 
         db = client.get_db('tweet_database')
-        view = db.view('_design/date/_view/date_electorate__avgsent', group=True, startkey=[startdate], endkey=[enddate])
-        
+        view = db.view('_design/date/_view/date_electorate__avgsent',
+                       group=True, startkey=[startdate], endkey=[enddate])
+
         # Process data
         if not electorate_filter:
             electorate_avg_sent_sum_count = {}
@@ -66,14 +74,15 @@ class DateAvgSentimentAll(Resource):
                 electorate_avg_sent_sum_count[electorate][0] += item.value['sum']
                 electorate_avg_sent_sum_count[electorate][1] += item.value['count']
 
-            electorate_avg_sent = {key: {'avg_sentiment': electorate_avg_sent_sum_count[key][0]/electorate_avg_sent_sum_count[key][1], 'num_tweets': electorate_avg_sent_sum_count[key][1]} for key in electorate_avg_sent_sum_count}
+            electorate_avg_sent = {key: {'avg_sentiment': electorate_avg_sent_sum_count[key][0]/electorate_avg_sent_sum_count[key]
+                                         [1], 'num_tweets': electorate_avg_sent_sum_count[key][1]} for key in electorate_avg_sent_sum_count}
 
             return jsonify(
                 code=200,
                 msg="ok",
                 data=electorate_avg_sent,
             )
-        
+
         if range_type == "daily":
             daily_by_electorate_sentiment = {}
             for item in view:
@@ -82,8 +91,9 @@ class DateAvgSentimentAll(Resource):
                     daily_by_electorate_sentiment[electorate] = {}
 
                 date = item.key[0]
-                daily_by_electorate_sentiment[electorate][date] = item.value['sum'] / item.value['count']
-                    
+                daily_by_electorate_sentiment[electorate][date] = item.value['sum'] / \
+                    item.value['count']
+
             # If a specific electorate has been requested, filter the results
             if electorate_filter:
                 if electorate_filter in daily_by_electorate_sentiment:
@@ -102,7 +112,7 @@ class DateAvgSentimentAll(Resource):
                     )
                     response.status_code = 404
                     return response
-                
+
             response = jsonify(
                 code=200,
                 msg="ok",
@@ -111,7 +121,6 @@ class DateAvgSentimentAll(Resource):
             response.status_code = 200
             return response
 
-            
         elif range_type == "monthly":
             monthly_by_electorate_sentiment = {}
             for item in view:
@@ -120,7 +129,8 @@ class DateAvgSentimentAll(Resource):
                     monthly_by_electorate_sentiment[electorate] = {}
 
                 month = item.key[0][5:7]
-                monthly_by_electorate_sentiment[electorate][month] = item.value['sum']/item.value['count']
+                monthly_by_electorate_sentiment[electorate][month] = item.value['sum'] / \
+                    item.value['count']
 
             # If a specific electorate has been requested, filter the results
             if electorate_filter:
@@ -140,7 +150,7 @@ class DateAvgSentimentAll(Resource):
                     )
                     response.status_code = 404
                     return response
-            
+
             response = jsonify(
                 code=200,
                 msg="ok",
@@ -157,7 +167,8 @@ class DateAvgSentimentAll(Resource):
             response.status_code = 400
 
         return response
-    
+
+
 class WeeklyAvgSentimentAll(Resource):
     def get(self):
         startweek = request.args.get('startweek')
@@ -165,7 +176,8 @@ class WeeklyAvgSentimentAll(Resource):
         electorate_filter = request.args.get('electorate')
 
         db = client.get_db('tweet_database')
-        view = db.view('_design/week/_view/week_electorate__avgsent', group=True, startkey=[startweek], endkey=[endweek])
+        view = db.view('_design/week/_view/week_electorate__avgsent',
+                       group=True, startkey=[startweek], endkey=[endweek])
 
         # Process data
         if not electorate_filter:
@@ -178,7 +190,8 @@ class WeeklyAvgSentimentAll(Resource):
                 electorate_avg_sent_sum_count[electorate][0] += item.value['sum']
                 electorate_avg_sent_sum_count[electorate][1] += item.value['count']
 
-            electorate_avg_sent = {key: {'avg_sentiment': electorate_avg_sent_sum_count[key][0]/electorate_avg_sent_sum_count[key][1], 'num_tweets': electorate_avg_sent_sum_count[key][1]} for key in electorate_avg_sent_sum_count}
+            electorate_avg_sent = {key: {'avg_sentiment': electorate_avg_sent_sum_count[key][0]/electorate_avg_sent_sum_count[key]
+                                         [1], 'num_tweets': electorate_avg_sent_sum_count[key][1]} for key in electorate_avg_sent_sum_count}
 
             response = jsonify(
                 code=200,
@@ -188,7 +201,6 @@ class WeeklyAvgSentimentAll(Resource):
             response.status_code = 200
             return response
 
-            
         weekly_by_electorate_sentiment = {}
         for item in view:
             electorate = item.key[1]
@@ -197,7 +209,8 @@ class WeeklyAvgSentimentAll(Resource):
 
             week = item.key[0]
 
-            weekly_by_electorate_sentiment[electorate][week] = item.value['sum']/item.value['count']
+            weekly_by_electorate_sentiment[electorate][week] = item.value['sum'] / \
+                item.value['count']
 
         # If a specific electorate has been requested, filter the results
         if electorate_filter:
@@ -205,7 +218,8 @@ class WeeklyAvgSentimentAll(Resource):
                 response = jsonify(
                     code=200,
                     msg="ok",
-                    data={electorate_filter: weekly_by_electorate_sentiment[electorate_filter]},
+                    data={
+                        electorate_filter: weekly_by_electorate_sentiment[electorate_filter]},
                 )
                 response.status_code = 200
                 return response

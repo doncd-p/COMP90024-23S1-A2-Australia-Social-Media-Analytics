@@ -2,6 +2,7 @@ from flask import jsonify, request
 from flask_restful import Resource
 from app.utils.couchdb_client import client
 
+
 class TweetsMeta(Resource):
     def get(self):
         db = client.get_db('tweet_database')

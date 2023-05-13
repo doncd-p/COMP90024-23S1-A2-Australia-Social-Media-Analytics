@@ -4,6 +4,8 @@ from .electoratePoliticalTweets import DateSentimentPolitical, DateAvgSentimentP
 from .tweetsMeta import TweetsMeta
 from .tootMeta import TootMeta
 from .topTweets import TopPositiveTweets, TopNegativeTweets
+
+
 def init_api(app):
     """
     Initialize the API, adding all routes to the Flask app.
@@ -11,16 +13,18 @@ def init_api(app):
     Args:
         app (Flask): The Flask app
     """
-    
+
     api = Api()
     api.add_resource(DateSentimentAll, '/sentiments/daterange')
     api.add_resource(DateAvgSentimentAll, '/sentiments/avg/daterange')
     api.add_resource(WeeklyAvgSentimentAll, '/sentiments/avg/weekly')
 
     api.add_resource(DateSentimentPolitical, '/political/sentiments/daterange')
-    api.add_resource(DateAvgSentimentPolitical, '/political/sentiments/avg/daterange')
-    api.add_resource(WeeklyAvgSentimentPolitical, '/political/sentiments/avg/weekly')
-    
+    api.add_resource(DateAvgSentimentPolitical,
+                     '/political/sentiments/avg/daterange')
+    api.add_resource(WeeklyAvgSentimentPolitical,
+                     '/political/sentiments/avg/weekly')
+
     api.add_resource(TopPositiveTweets, '/tweet/top_positive')
     api.add_resource(TopNegativeTweets, '/tweet/top_negative')
 
