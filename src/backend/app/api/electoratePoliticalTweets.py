@@ -212,7 +212,11 @@ class WeeklyAvgSentimentPolitical(Resource):
             if electorate not in weekly_by_electorate_sentiment:
                 weekly_by_electorate_sentiment[electorate] = {}
 
-            week = item.key[0]
+            weekNum = item.key[0]
+            if weekNum > 0:
+                week = "postElectionWeek" + str(weekNum)
+            else:
+                week = "preElectionWeek" + str(-weekNum)
 
             weekly_by_electorate_sentiment[electorate][week] = item.value['sum'] / \
                 item.value['count']
