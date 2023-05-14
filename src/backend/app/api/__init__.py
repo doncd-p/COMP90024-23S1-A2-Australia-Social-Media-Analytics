@@ -4,6 +4,7 @@ from .electoratePoliticalTweets import DateSentimentPolitical, DateAvgSentimentP
 from .tweetsMeta import TweetsMeta
 from .tootMeta import TootMeta
 from .topTweets import TopPositiveTweets, TopNegativeTweets
+from .electorateData import ElectorateData, ElectorateGeoData
 
 
 def init_api(app):
@@ -30,5 +31,8 @@ def init_api(app):
 
     api.add_resource(TweetsMeta, '/tweet/meta')
     api.add_resource(TootMeta, '/toot/meta')
+
+    api.add_resource(ElectorateData, '/electorate/data')
+    api.add_resource(ElectorateGeoData, '/electorate/geo_data')
 
     api.init_app(app)
