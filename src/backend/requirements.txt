@@ -2,3 +2,4 @@ flask == 2.2.3
 Flask-RESTful
 gunicorn 
 couchdb
+requests
