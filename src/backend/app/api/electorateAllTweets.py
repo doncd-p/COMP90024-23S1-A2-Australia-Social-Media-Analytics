@@ -171,71 +171,95 @@ class DateAvgSentimentAll(Resource):
 
 class WeeklyAvgSentimentAll(Resource):
     def get(self):
-        startweek = request.args.get('startweek')
-        endweek = request.args.get('endweek')
-        electorate_filter = request.args.get('electorate')
+        try:
+            startweek = int(request.args.get('startweek', -15))
+            endweek = int(request.args.get('endweek', 0)) + 1
+            electorate_filter = request.args.get('electorate')
 
-        db = client.get_db('tweet_database')
-        view = db.view('_design/week/_view/week_electorate__avgsent',
-                       group=True, startkey=[startweek], endkey=[endweek])
+            # Validate date order
+            if startweek > endweek:
+                response = jsonify(
+                    code=400,
+                    msg="Start week cannot be after end week.",
+                    data={},
+                )
+                response.status_code = 400
+                return response
 
-        # Process data
-        if not electorate_filter:
-            electorate_avg_sent_sum_count = {}
+            db = client.get_db('tweet_database')
+            view = db.view('_design/week/_view/week_electorate__avgsent',
+                           group=True, startkey=[startweek], endkey=[endweek])
+
+            # Process data
+            if not electorate_filter:
+                electorate_avg_sent_sum_count = {}
+                for item in view:
+                    electorate = item.key[1]
+                    if electorate not in electorate_avg_sent_sum_count:
+                        electorate_avg_sent_sum_count[electorate] = [0, 0]
+
+                    electorate_avg_sent_sum_count[electorate][0] += item.value['sum']
+                    electorate_avg_sent_sum_count[electorate][1] += item.value['count']
+
+                electorate_avg_sent = {key: {'avg_sentiment': electorate_avg_sent_sum_count[key][0]/electorate_avg_sent_sum_count[key]
+                                             [1], 'num_tweets': electorate_avg_sent_sum_count[key][1]} for key in electorate_avg_sent_sum_count}
+
+                response = jsonify(
+                    code=200,
+                    msg="ok",
+                    data=electorate_avg_sent,
+                )
+                response.status_code = 200
+                return response
+
+            weekly_by_electorate_sentiment = {}
             for item in view:
                 electorate = item.key[1]
-                if electorate not in electorate_avg_sent_sum_count:
-                    electorate_avg_sent_sum_count[electorate] = [0, 0]
+                if electorate not in weekly_by_electorate_sentiment:
+                    weekly_by_electorate_sentiment[electorate] = {}
 
-                electorate_avg_sent_sum_count[electorate][0] += item.value['sum']
-                electorate_avg_sent_sum_count[electorate][1] += item.value['count']
+                weekNum = item.key[0]
+                if weekNum > 0:
+                    week = "postElectionWeek" + str(weekNum)
+                else:
+                    week = "preElectionWeek" + str(-weekNum)
 
-            electorate_avg_sent = {key: {'avg_sentiment': electorate_avg_sent_sum_count[key][0]/electorate_avg_sent_sum_count[key]
-                                         [1], 'num_tweets': electorate_avg_sent_sum_count[key][1]} for key in electorate_avg_sent_sum_count}
+                weekly_by_electorate_sentiment[electorate][week] = item.value['sum'] / \
+                    item.value['count']
+
+            # If a specific electorate has been requested, filter the results
+            if electorate_filter:
+                if electorate_filter in weekly_by_electorate_sentiment:
+                    response = jsonify(
+                        code=200,
+                        msg="ok",
+                        data={
+                            electorate_filter: weekly_by_electorate_sentiment[electorate_filter]},
+                    )
+                    response.status_code = 200
+                    return response
+                else:
+                    response = jsonify(
+                        code=404,
+                        msg="Electorate not found",
+                        data={},
+                    )
+                    response.status_code = 404
+                    return response
 
             response = jsonify(
                 code=200,
                 msg="ok",
-                data=electorate_avg_sent,
+                data=weekly_by_electorate_sentiment,
             )
             response.status_code = 200
             return response
 
-        weekly_by_electorate_sentiment = {}
-        for item in view:
-            electorate = item.key[1]
-            if electorate not in weekly_by_electorate_sentiment:
-                weekly_by_electorate_sentiment[electorate] = {}
-
-            week = item.key[0]
-
-            weekly_by_electorate_sentiment[electorate][week] = item.value['sum'] / \
-                item.value['count']
-
-        # If a specific electorate has been requested, filter the results
-        if electorate_filter:
-            if electorate_filter in weekly_by_electorate_sentiment:
-                response = jsonify(
-                    code=200,
-                    msg="ok",
-                    data={
-                        electorate_filter: weekly_by_electorate_sentiment[electorate_filter]},
-                )
-                response.status_code = 200
-                return response
-            else:
-                response = jsonify(
-                    code=404,
-                    msg="Electorate not found",
-                    data={},
-                )
-                response.status_code = 404
-                return response
-
-        response = jsonify(
-            code=200,
-            msg="ok",
-            data=weekly_by_electorate_sentiment,
-        )
-        response.status_code = 200
-        return response
+        except Exception as e:
+            response = jsonify(
+                code=500,
+                msg="Error occurred: " + str(e),
+                data={},
+            )
+            response.status_code = 500
+            return response
