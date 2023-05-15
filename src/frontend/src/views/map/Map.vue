@@ -186,25 +186,25 @@ export default {
             // Add click and mouseover listeners
             map.data.addListener("click", (event) => {
               console.log("Clicked feature: ", event.feature);
-              that.mapItem.divisionName =
+              this.mapItem.divisionName =
                 event.feature.getProperty("divisionName");
-              that.mapItem.avgAge = event.feature
+              this.mapItem.avgAge = event.feature
                 .getProperty("averageAge")
                 .toFixed(2);
-              that.mapItem.avgEducYears = event.feature
+              this.mapItem.avgEducYears = event.feature
                 .getProperty("averageEducationYears")
                 .toFixed(2);
-              that.mapItem.avgWeeklyIncome = event.feature
+              this.mapItem.avgWeeklyIncome = event.feature
                 .getProperty("averageWeeklyIncome")
                 .toFixed(2);
-              that.mapItem.erp = event.feature
+              this.mapItem.erp = event.feature
                 .getProperty("estimatedResidentPopulation")
                 .toFixed(2);
-              that.mapItem.netMigration = event.feature
+              this.mapItem.netMigration = event.feature
                 .getProperty("netMigration")
                 .toFixed(2);
-              // that.mapItem.tweets = event.feature.getProperty("tweets");
-              that.dialogVisible = true;
+              // this.mapItem.tweets = event.feature.getProperty("tweets");
+              this.dialogVisible = true;
             });
 
             // Define infowindow outside the listeners
