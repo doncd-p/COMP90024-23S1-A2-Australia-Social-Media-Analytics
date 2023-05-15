@@ -52,9 +52,7 @@ class ElectorateGeoData(Resource):
 
         if doc:
             response = jsonify(
-                code=200,
-                msg="ok",
-                data=doc
+                doc
             )
             response.status_code = 200
             return response

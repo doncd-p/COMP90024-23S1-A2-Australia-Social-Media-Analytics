@@ -1,10 +1,12 @@
 from flask_restful import Api
-from .electorateAllTweets import DateSentimentAll, DateAvgSentimentAll, WeeklyAvgSentimentAll
-from .electoratePoliticalTweets import DateSentimentPolitical, DateAvgSentimentPolitical, WeeklyAvgSentimentPolitical
+from .electorateAllTweets import NumberSentimentAll, DailyAvgSentimentAll, WeeklyAvgSentimentAll, MonthlyAvgSentimentAll
+from .electoratePoliticalTweets import NumberSentimentPolitical, DailyAvgSentimentPolitical, WeeklyAvgSentimentPolitical, MonthlyAvgSentimentPolitical
 from .tweetsMeta import TweetsMeta
 from .tootMeta import TootMeta
 from .topTweets import TopPositiveTweets, TopNegativeTweets
 from .electorateData import ElectorateData, ElectorateGeoData
+from .boardPolitical import BoardWeeklyAvgSentimentPolitical, BoardDailyAvgSentimentPolitical, BoardMonthlyAvgSentimentPolitical
+from .boardAll import BoardWeeklyAvgSentimentAll, BoardDailyAvgSentimentAll, BoardMonthlyAvgSentimentAll
 
 
 def init_api(app):
@@ -16,15 +18,17 @@ def init_api(app):
     """
 
     api = Api()
-    api.add_resource(DateSentimentAll, '/sentiments/daterange')
-    api.add_resource(DateAvgSentimentAll, '/sentiments/avg/daterange')
-    api.add_resource(WeeklyAvgSentimentAll, '/sentiments/avg/weekly')
+    api.add_resource(NumberSentimentAll, '/sentiments/number')
+    api.add_resource(DailyAvgSentimentAll, '/sentiments/daily')
+    api.add_resource(WeeklyAvgSentimentAll, '/sentiments/weekly')
+    api.add_resource(MonthlyAvgSentimentAll, '/sentiments/monthly')
 
-    api.add_resource(DateSentimentPolitical, '/political/sentiments/daterange')
-    api.add_resource(DateAvgSentimentPolitical,
-                     '/political/sentiments/avg/daterange')
+    api.add_resource(NumberSentimentPolitical, '/political/sentiments/number')
+    api.add_resource(DailyAvgSentimentPolitical, '/political/sentiments/daily')
     api.add_resource(WeeklyAvgSentimentPolitical,
-                     '/political/sentiments/avg/weekly')
+                     '/political/sentiments/weekly')
+    api.add_resource(MonthlyAvgSentimentPolitical,
+                     '/political/sentiments/monthly')
 
     api.add_resource(TopPositiveTweets, '/tweet/top_positive')
     api.add_resource(TopNegativeTweets, '/tweet/top_negative')
@@ -34,5 +38,17 @@ def init_api(app):
 
     api.add_resource(ElectorateData, '/electorate/data')
     api.add_resource(ElectorateGeoData, '/electorate/geo_data')
+
+    api.add_resource(BoardWeeklyAvgSentimentAll, '/board/sentiments/weekly')
+    api.add_resource(BoardWeeklyAvgSentimentPolitical,
+                     '/board/political/sentiments/weekly')
+    api.add_resource(BoardDailyAvgSentimentAll,
+                     '/board/sentiments/daily')
+    api.add_resource(BoardDailyAvgSentimentPolitical,
+                     '/board/political/sentiments/daily')
+    api.add_resource(BoardMonthlyAvgSentimentAll,
+                     '/board/sentiments/monthly')
+    api.add_resource(BoardMonthlyAvgSentimentPolitical,
+                     '/board/political/sentiments/monthly')
 
     api.init_app(app)
