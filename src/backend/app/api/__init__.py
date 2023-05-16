@@ -4,8 +4,8 @@ from .electoratePoliticalTweets import NumberSentimentPolitical, DailyAvgSentime
 from .tweetsMeta import TweetsMeta
 from .tootMeta import TootMeta
 from .topTweets import TopPositiveTweets, TopNegativeTweets
-from .electorateData import ElectorateData, ElectorateGeoData
-from .boardPolitical import BoardWeeklyAvgSentimentPolitical, BoardDailyAvgSentimentPolitical, BoardMonthlyAvgSentimentPolitical
+from .electorateData import ElectorateGeoData, ElectorateSudoData, ElectorateSudoDataAll
+from .boardPolitical import BoardWeeklyAvgSentimentPolitical, BoardDailyAvgSentimentPolitical, BoardMonthlyAvgSentimentPolitical, BoardWinningChangeSentiment
 from .boardAll import BoardWeeklyAvgSentimentAll, BoardDailyAvgSentimentAll, BoardMonthlyAvgSentimentAll
 
 
@@ -36,7 +36,8 @@ def init_api(app):
     api.add_resource(TweetsMeta, '/tweet/meta')
     api.add_resource(TootMeta, '/toot/meta')
 
-    api.add_resource(ElectorateData, '/electorate/data')
+    api.add_resource(ElectorateSudoData, '/electorate/sudo_data')
+    api.add_resource(ElectorateSudoDataAll, '/electorate/sudo_data/all')
     api.add_resource(ElectorateGeoData, '/electorate/geo_data')
 
     api.add_resource(BoardWeeklyAvgSentimentAll, '/board/sentiments/weekly')
@@ -50,5 +51,7 @@ def init_api(app):
                      '/board/sentiments/monthly')
     api.add_resource(BoardMonthlyAvgSentimentPolitical,
                      '/board/political/sentiments/monthly')
+    api.add_resource(BoardWinningChangeSentiment,
+                     '/board/political/sentiments/winningchange')
 
     api.init_app(app)
