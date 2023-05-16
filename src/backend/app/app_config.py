@@ -2,6 +2,7 @@ import os
 
 
 class Config:
+    BASE_URL = os.environ.get('BASE_URL', 'http://localhost:8080')
     COUCHDB_HOSTS = os.environ.get(
         'COUCHDB_HOSTS', '172.26.133.251').split(',')
     COUCHDB_PORT = os.environ.get('COUCHDB_PORT', '5984')
