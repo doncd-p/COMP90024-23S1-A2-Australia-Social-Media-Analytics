@@ -1,0 +1,62 @@
+- name: install Git
+  become: yes
+  apt:
+    name: git
+    state: present
+    update_cache: yes
+
+# - name: install Docker
+#   become: yes
+#   apt:
+#     name: docker
+#     state: present
+#     update_cache: yes
+
+- name: Add Docker GPG key
+  shell: |  
+    sudo install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --yes --dearmor -o /etc/apt/keyrings/docker.gpg
+    sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+- name: Add Docker repository to apt sources
+  shell: |
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo $VERSION_CODENAME) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+- name: Install Docker Engine and Docker Compose
+  shell: |
+    sudo apt-get update
+    sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin 
+      
+- name: Create group
+  become: yes
+  group:
+    name: docker
+    state: present
+
+- name: add user permissions
+  become: yes
+  shell: "usermod -aG docker {{ remote_user }}"
+
+- name: Reset ssh connection for changes to take effect
+  meta: "reset_connection"
+
+- name: install python package manager
+  become: yes
+  apt:
+    name: python3-pip
+    state: present
+    update_cache: yes
+
+- name: install python sdk
+  become_user: "{{ remote_user }}"
+  pip:
+    name:
+      - docker
+      - docker-compose
+
+- name: Start Docker service
+  become: yes
+  service:
+    name: docker
+    state: started
+
