@@ -200,8 +200,8 @@ class DailyAvgSentimentPolitical(Resource):
 class WeeklyAvgSentimentPolitical(Resource):
     def get(self):
         try:
-            startweek = int(request.args.get('startweek', -15))
-            endweek = int(request.args.get('endweek', 0)) + 1
+            startweek = int(request.args.get('startweek'))
+            endweek = int(request.args.get('endweek')) + 1
             electorate_filter = request.args.get('electorate')
 
             # Validate date order
