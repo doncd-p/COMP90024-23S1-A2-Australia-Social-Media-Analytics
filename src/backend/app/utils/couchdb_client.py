@@ -9,10 +9,10 @@ class CouchDBClient:
         self.server_url, self.server = self.connect_to_couchdb()
         self.databases = {}
 
-        for db_name in self.server:
+        for remote_db_name in self.server:
             try:
-                db = self.server[db_name]
-                self.databases[db_name] = db
+                db = self.server[remote_db_name]
+                self.databases[remote_db_name] = db
             except couchdb.ResourceNotFound:
                 pass
 
@@ -30,10 +30,9 @@ class CouchDBClient:
         raise Exception("No available CouchDB servers found")
 
     def find_in_partition(self, db_name, partition_key, query):
-        if db_name not in self.databases:
-            raise ValueError(f"Unknown database: {db_name}")
+        remote_db_name = self.get_remote_db_name(db_name)
 
-        url = f"{self.server_url}{db_name}/_partition/{partition_key}/_find"
+        url = f"{self.server_url}{remote_db_name}/_partition/{partition_key}/_find"
         response = requests.post(url, data=json.dumps(query), headers={
                                  "Content-Type": "application/json"})
 
@@ -43,10 +42,27 @@ class CouchDBClient:
         return response.json()
 
     def get_db(self, db_name):
-        if db_name not in self.databases:
+        remote_db_name = self.get_remote_db_name(db_name)
+        return self.databases[remote_db_name]
+
+    def get_remote_db_name(self, db_name):
+        best_match = None
+        for remote_db_name in self.databases:
+            if db_name in remote_db_name:
+                # If this is the first match or a better match, update best_match
+                if best_match is None or len(remote_db_name) < len(best_match):
+                    best_match = remote_db_name
+        if best_match is not None:
+            return best_match
+        else:
             raise ValueError(f"Unknown database: {db_name}")
 
-        return self.databases[db_name]
+    def find_original_name(self, db_name):
+        # Check if any of the orginal database names is a substring of db_name
+        for original_db_name in self.server:
+            if original_db_name in db_name:
+                return original_db_name
+        return None
 
 
 client = CouchDBClient()
