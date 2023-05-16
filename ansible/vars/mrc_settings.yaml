@@ -10,18 +10,23 @@ ip_file: "./inventory/instance_addresses.ini"
 
 # Volume
 volumes:
-  - vol_name: demo-vol-1-1
-    vol_size: 10
-  - vol_name: demo-vol-1-2
-    vol_size: 10
-  - vol_name: demo-vol-2-1
-    vol_size: 10
-  - vol_name: demo-vol-2-2
-    vol_size: 10
-  - vol_name: demo-vol-3-1
-    vol_size: 10
-  - vol_name: demo-vol-3-2
-    vol_size: 10
+  - vol_name: instance1-volume
+    vol_size: 60
+    device: /dev/vdb
+    mountpoint: /home/ubuntu/COMP90024
+  - vol_name: instance2-volume
+    vol_size: 60
+    device: /dev/vdb
+    mountpoint: /data
+  - vol_name: instance3-volume
+    vol_size: 60
+    device: /dev/vdb
+    mountpoint: /data
+  # - vol_name: instance4-volume
+  #   vol_size: 60
+  #   device: /dev/vdb
+  #   mountpoint: /data
+
 
 # Security group
 security_groups:
@@ -58,9 +63,22 @@ security_groups:
 
 # Instance
 instances:
-  - name: demo-1
-    volumes: ["demo-vol-1-1", "demo-vol-1-2"]
-  - name: demo-2
-    volumes: ["demo-vol-2-1", "demo-vol-2-2"]
-  - name: demo-3
-    volumes: ["demo-vol-3-1", "demo-vol-3-2"]
+  - name: instance1
+    volume_ids: '{ instance1_volumes|default([]) }'
+    volumes: ['instance1-volume']
+  - name: instance2
+    volume_ids: '{ instance2_volumes|default([]) }'
+    volumes: ['instance2-volume']
+  - name: instance3
+    volume_ids: '{ instance3_volumes|default([]) }'
+    volumes: ['instance3-volume']
+
+
+# frontend_server:
+#   - name: frontend_server
+#     volume_ids: '{ instance1_volumes|default([]) }'
+#     volumes: ['instance4-volume']
+  # - name: instance4
+  #   security_groups: instance4-security-group
+  #   volume_ids: '{ instance4_volumes|default([]) }'
+  #   volumes: ['instance4-volume']
