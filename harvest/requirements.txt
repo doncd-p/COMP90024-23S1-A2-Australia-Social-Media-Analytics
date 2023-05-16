@@ -1,0 +1,9 @@
+urllib3
+numpy
+pandas
+tweepy
+nltk
+couchdb
+nltk
+Mastodon.py
+openpyxl
