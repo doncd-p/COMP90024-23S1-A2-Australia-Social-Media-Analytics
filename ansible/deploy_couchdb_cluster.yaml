@@ -1,0 +1,6 @@
+---
+# name: Provision and configure CouchDB cluster
+- hosts: DB_INSTANCES
+  become: true
+  roles:
+    - role: deploy_couchdb_cluster
