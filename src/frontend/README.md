@@ -1,5 +1,3 @@
-# ccc_assign2
-
 ## Project setup
 ```
 npm install
