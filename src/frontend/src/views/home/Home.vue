@@ -33,7 +33,7 @@ export default {
 
   data() {
     return {
-      typingtext1: "<h1>Everyone has the right to fight for it</h1>",
+      typingtext1: "<h1>How good is Australia... how good are Australians.</h1>",
       typingtext2: "WELCOME TO ELECTION ANALYSIS",
     };
   },
@@ -49,6 +49,6 @@ export default {
 <style lang="scss" scoped>
 .banner {
   height: calc(100vh - 78px);
-  background: url('../../assets/images/bg7.jpg')  center center / cover no-repeat;
+  background: url('../../assets/images/governHouse.jpg')  center center / cover no-repeat;
 }
 </style>

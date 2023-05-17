@@ -167,7 +167,7 @@ methods: {
   },
   async updateData1(){
     this.loading = true
-    const senSrc = "http://172.26.128.247:8080/political/sentiments/daily?startdate="+this.getDate(this.timeline1[0])+"&enddate="+this.getDate(this.timeline1[1])
+    const senSrc = process.env.VUE_APP_BASE_URL + "/political/sentiments/daily?startdate="+this.getDate(this.timeline1[0])+"&enddate="+this.getDate(this.timeline1[1])
     const senTweets = await this.$axios.get(senSrc).then((result) => {return result.data.data;});
 
     let tableData = []
@@ -201,7 +201,7 @@ methods: {
     },
     async updateData2(){
       this.loading = true
-      const senSrc = "http://172.26.128.247:8080/political/sentiments/daily?startdate="+this.getDate(this.timeline2[0])+"&enddate="+this.getDate(this.timeline2[1])
+      const senSrc = process.env.VUE_APP_BASE_URL + "/political/sentiments/daily?startdate="+this.getDate(this.timeline2[0])+"&enddate="+this.getDate(this.timeline2[1])
       const senTweets = await this.$axios.get(senSrc).then((result) => {return result.data.data;});
 
       let tableData = []
@@ -232,8 +232,8 @@ methods: {
     },
     async initData(){
        //tabledata
-      const src = "http://172.26.128.247:8080/electorate/sudo_data/all"
-      const senSrc = "http://172.26.128.247:8080/political/sentiments/daily?startdate="+this.getDate(this.timeline1[0])+"&enddate="+this.getDate(this.timeline1[1])
+      const src = process.env.VUE_APP_BASE_URL + "/electorate/sudo_data/all"
+      const senSrc = process.env.VUE_APP_BASE_URL + "/political/sentiments/daily?startdate="+this.getDate(this.timeline1[0])+"&enddate="+this.getDate(this.timeline1[1])
      
       const senTweets = await this.$axios.get(senSrc).then((result) => {return result.data.data;});
       let tableData1 = [];

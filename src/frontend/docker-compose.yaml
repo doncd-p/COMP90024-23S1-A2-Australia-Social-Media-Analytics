@@ -1,0 +1,10 @@
+version: '3'
+services:
+  frontendapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: frontendapp:latest
+    ports:
+      - 8081:80
+    restart: always

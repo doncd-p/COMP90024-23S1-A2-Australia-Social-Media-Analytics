@@ -39,7 +39,6 @@ export default {
   },
   methods: {
     initData() {
-      console.log(this.pieData)
       this.pieName = ["Negative Tweets", "Netural Tweets", "Positive Tweets"]
     },
     initEcharts() {

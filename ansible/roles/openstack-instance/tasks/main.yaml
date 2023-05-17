@@ -1,0 +1,84 @@
+---
+# Create an instance on MRC
+- name: Create DB instances
+  openstack.cloud.server:
+    name: "{{ item.name }}"
+    auto_floating_ip: false
+    availability_zone: "{{ availability_zone }}"
+    flavor: "{{ instance_flavor }}"
+    image: "{{ instance_image }}"
+    key_name: "{{ instance_key_name }}"
+    network: "{{ instance_network }}"
+    security_groups: "{{ sg_names }}"
+    timeout: 600
+    volumes: "{{ item.volumes }}"
+    state: present
+    wait: true
+  loop: "{{ instances }}"
+  register: os_db_instances
+
+# - name: Create frontend instance
+#   openstack.cloud.server:
+#     name: "{{ item.name }}"
+#     auto_floating_ip: false
+#     availability_zone: "{{ availability_zone }}"
+#     flavor: "{{ instance_flavor }}"
+#     image: "{{ instance_image }}"
+#     key_name: "{{ instance_key_name }}"
+#     network: "{{ instance_network }}"
+#     security_groups: "{{ sg_names }}"
+#     timeout: 600
+#     volumes: "{{ item.volumes }}"
+#     state: present
+#     wait: true
+#   loop: "{{ frontend_server }}"
+#   register: os_instance
+
+# - ansible.builtin.debug:
+#     msg: "Instance {{ item.server.name }} has been created. IP address is {{ item['server']['addresses'][instance_network][0]['addr'] }}"
+#   loop: "{{ os_instance.results }}"
+#   when: item.server is defined
+
+- ansible.builtin.debug:
+    msg: "Instance {{ item.server.name }} has been created. IP address is {{ item['server']['addresses'][instance_network][0]['addr'] }}"
+  loop: "{{ os_db_instances.results }}"
+  when: item.server is defined
+
+# - name: Wait for connection
+#   ansible.builtin.wait_for:
+#     host: "{{ item['server']['addresses'][instance_network][0]['addr'] }}"
+#     port: 22
+#     timeout: 120
+#     search_regex: OpenSSH
+#   loop: "{{ os_instance.results }}"
+#   when: item.server is defined
+
+- name: Wait for connection
+  ansible.builtin.wait_for:
+    host: "{{ item['server']['addresses'][instance_network][0]['addr'] }}"
+    port: 22
+    timeout: 120
+    search_regex: OpenSSH
+  loop: "{{ os_db_instances.results }}"
+  when: item.server is defined
+
+# Add hosts to Ansible in-memory inventory
+# - name: Add Frontend host
+#   ansible.builtin.add_host:
+#     name: "{{ item['server']['addresses'][instance_network][0]['addr'] }}"
+#     groups: FRONTEND_INSTANCE
+#   loop: "{{ os_instance.results }}"
+#   when: item.server is defined
+
+- name: Add DB host
+  ansible.builtin.add_host:
+    name: "{{ item['server']['addresses'][instance_network][0]['addr'] }}"
+    groups: DB_INSTANCES
+  loop: "{{ os_db_instances.results }}"
+  when: item.server is defined
+
+- name: create file
+  become: yes
+  template:
+    src: ansible-hosts.j2
+    dest: "{{ ip_file }}"

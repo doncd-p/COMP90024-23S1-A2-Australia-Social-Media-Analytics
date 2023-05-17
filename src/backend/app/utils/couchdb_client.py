@@ -1,39 +1,37 @@
 import couchdb
 import requests
 import json
+import random
 from ..app_config import Config
 
 
 class CouchDBClient:
     def __init__(self):
-        self.server_url, self.server = self.connect_to_couchdb()
-        self.databases = {}
-
-        for db_name in self.server:
-            try:
-                db = self.server[db_name]
-                self.databases[db_name] = db
-            except couchdb.ResourceNotFound:
-                pass
+        self.servers = self.connect_to_couchdb()
 
     def connect_to_couchdb(self):
+        # Try to connect to each CouchDB server in the configuration
+        servers = []
         for url in Config.couchdb_urls():
             try:
                 server = couchdb.Server(url)
                 # Try to access the server to check if it's up
                 server.version()
-                return url, server
+                servers.append((url, server))
             except:
                 # If the server is down, an exception will be raised
                 # and the next server in the list will be tried.
                 pass
-        raise Exception("No available CouchDB servers found")
+        if not servers:
+            raise Exception("No available CouchDB servers found")
+        return servers
 
     def find_in_partition(self, db_name, partition_key, query):
-        if db_name not in self.databases:
-            raise ValueError(f"Unknown database: {db_name}")
+        # Choose a random server and find the corresponding database
+        server_url, server = random.choice(self.servers)
+        remote_db_name = self.get_remote_db_name(db_name, server)
 
-        url = f"{self.server_url}{db_name}/_partition/{partition_key}/_find"
+        url = f"{server_url}{remote_db_name}/_partition/{partition_key}/_find"
         response = requests.post(url, data=json.dumps(query), headers={
                                  "Content-Type": "application/json"})
 
@@ -43,10 +41,26 @@ class CouchDBClient:
         return response.json()
 
     def get_db(self, db_name):
-        if db_name not in self.databases:
+        # Choose a random server and find the corresponding database
+        server_url, server = random.choice(self.servers)
+        remote_db_name = self.get_remote_db_name(db_name, server)
+        try:
+            db = server[remote_db_name]
+        except couchdb.ResourceNotFound:
             raise ValueError(f"Unknown database: {db_name}")
+        return db
 
-        return self.databases[db_name]
+    def get_remote_db_name(self, db_name, server):
+        # Find the best matching database in the given server for CouchDB replicate renaming issue
+        best_match = None
+        for remote_db_name in server:
+            if db_name in remote_db_name:
+                if best_match is None or len(remote_db_name) < len(best_match):
+                    best_match = remote_db_name
+        if best_match is not None:
+            return best_match
+        else:
+            raise ValueError(f"Unknown database: {db_name}")
 
 
 client = CouchDBClient()
