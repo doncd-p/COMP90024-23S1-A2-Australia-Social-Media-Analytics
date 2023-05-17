@@ -21,11 +21,17 @@ export default {
   },
 
   mounted() {
-    console.log(this.lineData)
+    this.mycharts()
   },
 
   methods: {
     mycharts() {
+      const dateList = this.lineData.map(function (item) {
+          return item[0];
+        });
+      const valueList = this.lineData.map(function (item) {
+          return item[1];
+        });
       const options = {
            // Make gradient line here
         visualMap: [
@@ -33,8 +39,8 @@ export default {
             show: false,
             type: 'continuous',
             seriesIndex: 0,
-            min: -0.4,
-            max: 0.4
+            min: -1,
+            max: 1
           }
         ],
         title: [
@@ -53,8 +59,8 @@ export default {
         ],
         yAxis: [
           {
-            min:-0.4,
-            max:0.4
+            min:-1,
+            max:1
           }
         ],
         grid: [
@@ -70,7 +76,7 @@ export default {
         ]
       };
       let myChart = echarts.init(this.$refs.charts);
-      myChart.setOption(option);
+      myChart.setOption(options);
       window.addEventListener("resize", function () {
         myChart.resize(); 
       });

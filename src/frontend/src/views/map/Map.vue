@@ -33,15 +33,15 @@
         </div>
       </el-col>
     </el-row>
-
-    <div class="colorRange"
-        :style="cover"
-        v-if="senario != 'status'"
-        ></div>
-        <div v-else class="colorRange" style="display:flex;">
-        <div style="height: 100%; margin-right: 2%; width: 30%; background-color: #666666"></div>
-        <div style="height: 100%; width:30%;background-color: #FF0000"></div>
-      </div>
+      <el-row class="colorItem">
+       <div class="legend">{{legend.left}}</div>
+       <div class="colorRange" :style="cover" v-if="senario != 'status'"></div>
+        <div v-else class="colorRange" >
+            <div style="height: 100%; margin-right: 2%; width: 48%; background-color: #666666"></div>
+            <div style="height: 100%; width:48%;background-color: #FF0000"></div>
+        </div>
+        <div class="legend">{{legend.right}}</div>
+      </el-row>
     <!-- map -->
     <div class="map" id="map" v-loading="loading" style="height: 100vh"
       element-loading-text="loading..."
@@ -138,7 +138,10 @@ export default {
       },
       colorList:[],
       output: null,
-
+    legend:{
+      left: "50%",
+      right:"100%"
+    }
  
     };
   },
@@ -318,7 +321,6 @@ export default {
                     color  = "#FF0000";
                   }
                 }
-                console.log(sentiment,color);
               }else if(label == 'tweets'){
                 const num_tweets = that.output[feature.getProperty("divisionName")]["num_tweets"];
                 color = that.gradient("#FFFFFF","#FF0000",3000)[num_tweets];
@@ -375,7 +377,7 @@ export default {
             map.data.addListener("mouseover", async (event) => {
               let value;
               if (label == 'sentiment'){
-                value = await this.output[event.feature.getProperty("divisionName")]["avg_sentiment"];
+                value = await this.output[event.feature.getProperty("divisionName")]["avg_sentiment"].toFixed(3);
               }else if (label == 'vote'){
                 if(this.time == "pre"){
                   value = event.feature.getProperty("winningPercentage2019").toFixed(3);
@@ -429,6 +431,20 @@ export default {
   watch: {
     senario: {
       handler(value) {
+        if(value == "vote"){
+          this.legend.left = "50%"
+          this.legend.right = "100%"
+        }else if (value == "sentiment"){
+          this.legend.left = "-1"
+          this.legend.right = "1"
+        }else if (value == "tweets"){
+          this.legend.left = "0"
+          this.legend.right = "max"
+        }else{
+          this.legend.left = "non-changed"
+          this.legend.right = "changed"
+        }
+       
         this.handleSenarioChange(value);
       },
       deep: true,
@@ -496,6 +512,19 @@ export default {
 }
 .colorRange {
   height: 20px;
-  width: 30%;
+  width: 70%;
+  display: flex;
+}
+.colorItem{
+  display: flex;
+  align-items: center;
+  margin:1%;
+  
+}
+.legend{
+  margin:0 1%;
+  color:#fff;
+  font-size: 24px;
+  margin: auto;
 }
 </style>
