@@ -70,28 +70,24 @@ export default {
        tableData1: [],
         //table1 filter2
         pickerOptions1: {
-          shortcuts: [{
-            text: 'last a week',
+          shortcuts: [ {
+            text: 'a month before election',
             onClick(picker) {
               const end = new Date();
               const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              start.setFullYear(2022,3,22);
+              end.setFullYear(2022,4,22);
+              this.timeline1 = [start, end];
               picker.$emit('pick', [start, end]);
             }
           }, {
-            text: 'last a month',
+            text: 'a month after election ',
             onClick(picker) {
               const end = new Date();
               const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: 'last three months',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              start.setFullYear(2022,4,22);
+              end.setFullYear(2022,5,22);
+              this.timeline1 = [start, end];
               picker.$emit('pick', [start, end]);
             }
           }]
@@ -103,27 +99,23 @@ export default {
         //table2 filter2
         pickerOptions2: {
           shortcuts: [{
-            text: 'a week before eleboration',
+            text: 'a month before election',
             onClick(picker) {
               const end = new Date();
               const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              start.setFullYear(2022,3,22);
+              end.setFullYear(2022,4,22);
+              this.timeline2 = [start, end];
               picker.$emit('pick', [start, end]);
             }
           }, {
-            text: 'a month before eleboration',
+            text: 'a month after election ',
             onClick(picker) {
               const end = new Date();
               const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: 'a month after eleboration',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              start.setFullYear(2022,4,22);
+              end.setFullYear(2022,5,22);
+              this.timeline2 = [start, end];
               picker.$emit('pick', [start, end]);
             }
           }]
@@ -135,8 +127,8 @@ export default {
   mounted() {
     const end = new Date();
     const start = new Date();
-    start.setFullYear(2019,0,14);
-    end.setFullYear(2022,11,24);
+    start.setFullYear(2022,1,9);
+    end.setFullYear(2023,5,30);
     this.timeline1 = [start, end];
     this.timeline2 = [start, end];
     
