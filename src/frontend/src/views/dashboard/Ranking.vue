@@ -1,5 +1,8 @@
 <template>
-    <div id="app">  
+    <div id="app" v-loading="loading" style="height: 100vh"
+      element-loading-text="loading..."
+      element-loading-spinner="el-icon-loading"
+      element-loading-background="rgba(0, 0, 0, 0.8)">  
       <el-col :span="24" class="table">
         <el-row class="table1">
           <!-- figure1 -->
@@ -14,14 +17,7 @@
             </el-table>
           </el-col>
           <el-col class="filter" :span="4">
-            <el-row>
-                <div class="filter1"> 
-                  <div class="filter1label"> State:</div>
-                  <el-select v-model="state1" :change="handleClick()" >
-                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                  </el-select>
-                </div>
-            </el-row>
+            
             <el-row>
                 <div class="filter1"> 
                   <div class="filter1label"> Timeline:</div>
@@ -44,14 +40,7 @@
             </el-table>
           </el-col>
           <el-col class="filter" :span="4">
-            <el-row>
-                <div class="filter1"> 
-                  <div class="filter1label"> State:</div>
-                  <el-select v-model="state2" :change="handleClick()" >
-                    <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                  </el-select>
-                </div>
-            </el-row>
+            
             <el-row>
                 <div class="filter1"> 
                   <div class="filter1label"> Timeline:</div>
@@ -68,12 +57,12 @@
     
 </template>
 <script>
-import { getNoParam, getParam, postParam } from '../../api/test'
 
 export default {
   name: "distribution",
   data() {
       return {
+      loading:true,
        //table1 data
        tableData1: [{
           electorate: 'Eleborate1',
@@ -111,18 +100,7 @@ export default {
           sentiment: -89,
           state: 'vic'
         }],
-        //table1 filter1
-        options: [{
-          value: 'all',
-          label: 'ALL'
-        }, {
-          value: 'vic',
-          label: 'VIC'
-        }, {
-          value: 'nsw',
-          label: 'NSW'
-        }],
-        state1: 'all',
+        
         //table1 filter2
         pickerOptions1: {
           shortcuts: [{
@@ -153,7 +131,8 @@ export default {
         },
         timeline1: [],
         //table2 data
-        tableData2: [{
+        tableData2: [
+          {
           electorate: 'Eleborate1',
           party1: 'LP',
           party2: 'ALP',
@@ -183,19 +162,9 @@ export default {
           party2: 'LNP',
           vote:'67%',
           tweets: 34356
-        }],
-      //table2 filter1
-        options2: [{
-          value: 'all',
-          label: 'ALL'
-        }, {
-          value: 'vic',
-          label: 'VIC'
-        }, {
-          value: 'nsw',
-          label: 'NSW'
-        }],
-        state2: 'all',
+        }
+        ],
+      
         //table2 filter2
         pickerOptions2: {
           shortcuts: [{
@@ -225,7 +194,6 @@ export default {
           }]
         },
         timeline2: [],
-      
       }
     },
 
@@ -237,6 +205,7 @@ export default {
     this.timeline1 = [start, end];
     this.timeline2 = [start, end];
     
+    this.updateData();
   },
 
   methods: {
@@ -247,6 +216,14 @@ export default {
     },
     updateData(){
        //tabledata
+      //  const src = "http://172.26.128.247:8080/"
+      //  this.$axios
+      //   .get("http://172.26.128.247:8080/electorate/data?electorate=Barker")
+      //   .then((result) => {
+      //   console.log(result);
+      //   });
+      
+      this.loading = false
     },
    
     

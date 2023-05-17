@@ -1,15 +1,20 @@
 <template>
-    <div id="app">  
+    <div id="app" v-loading="loading" style="height: 100vh"
+      element-loading-text="loading..."
+      element-loading-spinner="el-icon-loading"
+      element-loading-background="rgba(0, 0, 0, 0.8)">  
       <el-col :span="24" class="chart">
         <el-row class="scatter1">
           <!-- figure1 -->
           <el-col class="figure" :span="20">
-            <div class="c" ref="linechart" ></div>
+            <div class="c"  ref="linechart" ></div>
           </el-col>
           <el-col class="filter" :span="4">
-            <div class="filter1"> 
+            
+            <el-row>
+              <div class="filter1"> 
                   <div class="filter1label"> Interval:</div>
-                  <el-select v-model="interval" :change="handleClick()" >
+                  <el-select v-model="interval"  >
                   <el-option
                     v-for="item in options"
                     :key="item.value"
@@ -18,6 +23,13 @@
                   </el-option>
                 </el-select>
                 </div>
+            </el-row>
+            <el-row>
+              <div class="description">
+                  <div style="font-size:20px;font-weight:600;margin-top:10px;margin-left:10px;color:#cb7f67;">About Figure:</div> <br/>
+                  <div style="margin:10px;margin-top:0px;color:#fff;">{{description1}}</div>
+              </div>
+            </el-row>
           </el-col>
         </el-row>
         <el-row class="scatter2">
@@ -28,7 +40,7 @@
             <el-row>
               <div class="filter1"> 
                   <div class="filter1label"> Time After Election:</div>
-                  <el-select v-model="after" :change="handleClick()" >
+                  <el-select v-model="after">
                   <el-option
                     v-for="item in options2"
                     :key="item.value"
@@ -41,7 +53,7 @@
             <el-row>
               <div class="description">
                   <div style="font-size:20px;font-weight:600;margin-top:10px;margin-left:10px;color:#cb7f67;">About Figure:</div> <br/>
-                  <div style="margin:10px;margin-top:0px;color:#fff;">{{description}}</div>
+                  <div style="margin:10px;margin-top:0px;color:#fff;">{{description2}}</div>
               </div>
             </el-row>
           </el-col>
@@ -54,14 +66,16 @@
 </template>
 <script>
 import echarts from 'echarts';
-import { getNoParam, getParam, postParam } from '../../api/test'
 
 export default {
   name: "distribution",
   data() {
       return {
+        loading:true,
        //chart1 data
-        chartData: [["2000-06-05", -34], ["2000-06-06", -65], ["2000-06-07", -76], ["2000-06-08", 0], ["2000-06-09", -56], ["2000-06-10", 45], ["2000-06-11", 34], ["2000-06-12", 56], ["2000-06-13", 56], ["2000-06-14", 34], ["2000-06-15", 79], ["2000-06-16", 80]],
+        dailyChartData:null,
+        weekChartData:null,
+        monthChartData:null,
         options: [{
           value: 'day',
           label: 'Day'
@@ -94,27 +108,53 @@ export default {
         }
         ],
         after: '1w',
-        description: 'This is about xxx'
+        description1: '',
+        description2: ''
       }
     },
-
+  created(){
+    this.loadEcharts();
+    setTimeout(() => {
+      this.getMonthData();
+      this.getWeekData();
+      this.getDailyData();
+   }, 0);
+  },
   mounted() {
-    this.loadEcharts()
   },
   watch: {
-    chartData: function(value) {
-      this.loadEcharts()
-    }
+    interval: {
+      handler(value) {
+        if (this.interval == "week"){
+        this.description1 = "(-15) refers 15 weeks before the election, 15 refers 15 weeks after the election."
+        }else{
+          this.description1 = ""
+        }
+        this.loadEcharts()
+      },
+      deep: true,
+    },
+
   },
 
   methods: {
-
-    loadEcharts() {
+   
+    async loadEcharts() {
+      let chartData;
+      if(this.interval=="day"&&this.dailyChartData){
+        chartData = this.dailyChartData;
+      }else if (this.interval == "week" &&this.weekChartData){
+        chartData = this.weekChartData;
+      }else if (this.interval=="month"&&this.monthChartData){
+        chartData = this.monthChartData;
+      }else{
+        chartData = await this.getData();
+      }
       // chart1:
-      const dateList = this.chartData.map(function (item) {
+      const dateList = chartData.map(function (item) {
           return item[0];
         });
-      const valueList = this.chartData.map(function (item) {
+      const valueList = chartData.map(function (item) {
           return item[1];
         });
       const options = {
@@ -124,8 +164,8 @@ export default {
             show: false,
             type: 'continuous',
             seriesIndex: 0,
-            min: -100,
-            max: 100
+            min: -0.4,
+            max: 0.4
           }
         ],
         title: [
@@ -144,8 +184,8 @@ export default {
         ],
         yAxis: [
           {
-            min:-100,
-            max:100
+            min:-0.4,
+            max:0.4
           }
         ],
         grid: [
@@ -164,7 +204,7 @@ export default {
       let linechart = echarts.init(this.$refs.linechart)
       linechart.setOption(options)
       
-      // chart2:
+      
       const status = ['non-changed', 'changed'];
       const title = [];
       const singleAxis = [];
@@ -195,7 +235,6 @@ export default {
       this.chartData2.forEach(function (dataItem) {
         series[dataItem[0]].data.push([dataItem[1]]);
       });
-      console.log(series)
       series.markLine = {
         lineStyle: {
           type: 'solid'
@@ -216,35 +255,70 @@ export default {
       };
       let scatterchart = echarts.init(this.$refs.scatterchart)
       scatterchart.setOption(options2)
-    },
-
-    handleClick() {
-      this.updateChart();
-
+      this.loading = false;
+      
     },
     
+    getData() {
+      if (this.interval == "day"){
+        return this.$axios
+        .get("http://172.26.128.247:8080/board/political/sentiments/daily?startdate=2022-02-09&enddate=2023-06-30")
+        .then((result) => {
+          this.dayChartData = result.data.data;
+          return result.data.data;
+      });
+      }else if( this.interval == "week"){
+        return this.$axios
+        .get("http://172.26.128.247:8080/board/political/sentiments/weekly?startweek=-15&endweek=15")
+        .then((result) => {
+          this.weekChartData = result.data.data;
+          return result.data.data;
+      });
+      }else{
+        return this.$axios
+        .get("http://172.26.128.247:8080/board/political/sentiments/monthly?startdate=2022-02-09&enddate=2022-06-30")
+        .then((result) => {
+          this.monthChartData = result.data.data;
+          return result.data.data;
+      });
+      }
    
-    updateChart() {
-      if (this.interval === 'day') {
-        this.chartData = [["2000-06-05", -34], ["2000-06-06", -65], ["2000-06-07", -76], ["2000-06-08", 0], ["2000-06-09", -56], ["2000-06-10", 45], ["2000-06-11", 34], ["2000-06-12", 56], ["2000-06-13", 56], ["2000-06-14", 34], ["2000-06-15", 79], ["2000-06-16", 80]];
-      } else if (this.interval === 'week') {
-        this.chartData = [["2000-06-05", -34], ["2000-06-06", -65], ["2000-06-07", -76], ["2000-06-08", 0], ["2000-06-09", -56]];
-      } else { 
-        this.chartData = [["2000-06-05", -34], ["2000-06-06", -65], ["2000-06-07", -76]];
-      }
-
-      if (this.after === '1w'){
-        this.chartData2 = [[0, 5], [0, -10], [0, -89], [0, 45], [0, 23], [1, 34], [1,46], [1,35], [1,-30]]
-      } else if(this.after === '2w'){
-        this.chartData2 = [[0, 5], [0, -90], [0, -34], [0, 54], [0, 3], [1, 4], [1,86], [1,45], [1,-76]]
-      } else if (this.after === '1m'){
-        this.chartData2 = [[0, 5], [0, -8], [0, -12], [0, 64], [0, 87], [1, 45], [1,6], [1,53], [1,-79]]
-      } else if(this.after === '2m'){
-        this.chartData2 = [[0, 5], [0, 54], [0, 3], [1, 4], [1,86], [1,-76]]
-      } else{
-        this.chartData2 = [[0, 5], [0, -90], [0, -34],  [1, 4], [1,86]]
-      }
     },
+    getDailyData(){
+       this.$axios
+        .get("http://172.26.128.247:8080/board/political/sentiments/daily?startdate=2022-02-09&enddate=2023-06-30")
+        .then((result) => {
+          this.dailyChartData = result.data.data;
+      });
+    },
+    getWeekData(){
+       this.$axios
+        .get("http://172.26.128.247:8080/board/political/sentiments/weekly?startweek=-15&endweek=15")
+        .then((result) => {
+          this.weekChartData = result.data.data;
+      });
+    },
+    getMonthData(){
+       this.$axios
+        .get("http://172.26.128.247:8080/board/political/sentiments/month?startdate=2022-02-09&enddate=2023-06-30")
+        .then((result) => {
+          this.monthChartData = result.data.data;
+      });
+    },
+
+
+      // if (this.after === '1w'){
+      //   this.chartData2 = [[0, 5], [0, -10], [0, -89], [0, 45], [0, 23], [1, 34], [1,46], [1,35], [1,-30]]
+      // } else if(this.after === '2w'){
+      //   this.chartData2 = [[0, 5], [0, -90], [0, -34], [0, 54], [0, 3], [1, 4], [1,86], [1,45], [1,-76]]
+      // } else if (this.after === '1m'){
+      //   this.chartData2 = [[0, 5], [0, -8], [0, -12], [0, 64], [0, 87], [1, 45], [1,6], [1,53], [1,-79]]
+      // } else if(this.after === '2m'){
+      //   this.chartData2 = [[0, 5], [0, 54], [0, 3], [1, 4], [1,86], [1,-76]]
+      // } else{
+      //   this.chartData2 = [[0, 5], [0, -90], [0, -34],  [1, 4], [1,86]]
+      // }
+    
   },
 };
 </script>
