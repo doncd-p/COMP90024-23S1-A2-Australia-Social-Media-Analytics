@@ -714,15 +714,6 @@ a.navbar-brand span {
 	-moz-background-size: cover;
 	min-height:750px;
 }
-.w3layouts-banner-top1{
-	background: url(../images/bg7.jpg) no-repeat 0px 0px;
-    background-size: cover;	
-	-webkit-background-size: cover;	
-	-moz-background-size: cover;
-	-o-background-size: cover;		
-	-moz-background-size: cover;
-	min-height:750px;
-}
 .w3layouts-banner-top2{
 	background: url(../images/bg8.jpg) no-repeat 0px 0px;
     background-size: cover;	
