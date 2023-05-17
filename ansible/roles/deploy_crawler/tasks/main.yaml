@@ -1,0 +1,21 @@
+---
+- name: Clone Git repo
+  git:
+    repo: "{{ git_repo }}"
+    dest: "/home/ubuntu/COMP90024"
+    version: main
+    update: yes
+
+- name: Install docker-compose python package
+  ansible.builtin.pip:
+    name: docker-compose
+
+- name: Compose down previous server
+  shell: docker-compose down --rmi local
+  args:
+    chdir: /home/ubuntu/COMP90024/harvester
+
+- name: Compose start server
+  shell: docker-compose up -d
+  args:
+    chdir: /home/ubuntu/COMP90024/harvester
