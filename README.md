@@ -1,5 +1,76 @@
 # COMP90024-23S1-A2-Australia-Social-Media-Analytics
 ![Python Version](https://img.shields.io/badge/python-3.11%2B-blue)
+![All Contributors](https://img.shields.io/github/contributors/doncd-p/COMP90024-23S1-A2-Australia-Social-Media-Analytics)
+![License](https://img.shields.io/github/license/doncd-p/cOMP90024-23S1-A2-Australia-Social-Media-Analytics)
+
+
+- [COMP90024-23S1-A2-Australia-Social-Media-Analytics](#comp90024-23s1-a2-australia-social-media-analytics)
+  - [Contributor](#contributor)
+  - [Background](#background)
+  - [Repository Structure](#repository-structure)
+  - [Project Workflow](#project-workflow)
+    - [Branches](#branches)
+    - [Naming Conventions](#naming-conventions)
+    - [Pull Requests and Code Review](#pull-requests-and-code-review)
+
+
+## Contributor
+<a href="https://github.com/doncd-p/COMP90024-23S1-A2-Australia-Social-Media-Analytics/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=doncd-p/COMP90024-23S1-A2-Australia-Social-Media-Analytics" />
+</a>
+
+- Chenyang Dong - doncd@student.unimelb.edu.au
+- Lang Chen - lang.chen1@student.unimelb.edu.au
+- Un Leng Kam - ukam@student.unimelb.edu.au
+- Ying Zhu - ying.zhu4@student.unimelb.edu.au
+- Zhuoya Zhou - zhuoyaz@student.unimelb.edu.au
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+## Background
+This project is part of COMP90024 Assignment 2, developed by Group 28. We have developed a cloud-based solution to analyse social media data, with a focus on Twitter data exported from the Australian Data Observatory (ADO) and data harvested from the Mastodon APIs. The project also incorporates data from the Spatial Urban Data Observatory (SUDO).
+
+The aim of this project is to use a large Twitter corpus to tell interesting stories about life in Australia, and how social media data can be used alongside, compared with, or augment the official data available within the SUDO platform to improve our knowledge of life in Australia.
+
+The system architecture is intended for use in a cloud setting, with high scalability and completely orchestratable using the Ansible scripting engine. Docker is used to manage and deploy application components across the four computer nodes assigned to this project by the course instructors.
+
+<!-- TO DO -->
+Our team is investigating the topic of Australia's electron. 
+
+## Repository Structure
+.
+├── ansible
+├── data
+├── doc
+├── harvest
+├── notebook
+├── scripts
+└── src
+├── backend
+└── frontend
+├── main.js
+├── Dockerfile
+└── package.json
+.
+├── ansible               # Ansible scripts for orchestration.
+├── data                  # Data used in the project.
+├── doc                   # Documentation files 
+├── harvest               # Scripts for harvesting data from Twitter and Mastodon APIs
+├── notebook              # Jupyter notebooks used for data analysis
+├── scripts               # Additional scripts used in the project
+├── src                   # Source code for the project
+├── backend               # Backend code for the web application
+├── frontend              # Frontend code for the web application
+├── .gitignore                   
+├── LICENSE
+└── README.md
 
 ## Project Workflow
 
