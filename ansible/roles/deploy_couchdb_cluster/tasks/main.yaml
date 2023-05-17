@@ -1,0 +1,127 @@
+---
+- name: Create Docker network
+  docker_network:
+    name: couchdb_net
+    driver: bridge
+    ipam_driver: default
+    ipam_config:
+      - subnet: "172.25.0.0/16"
+    state: present
+
+- name: Start CouchDB containers
+  docker_container:
+    name: "{{ inventory_hostname }}"
+    image: couchdb:3.2.0
+    network_mode: couchdb_net
+    hostname: "{{ inventory_hostname }}"
+    state: started
+    restart_policy: always
+    ports:
+      - "5984:5984"
+      - "9100:9100"
+      - "4369:4369"
+    env:
+      COUCHDB_USER: admin
+      COUCHDB_PASSWORD: password
+      NODENAME: "{{ inventory_hostname }}"
+
+
+- name: Wait for CouchDB containers to start
+  uri:
+    url: "http://{{ ansible_host }}:5984/"
+    method: GET
+    return_content: yes
+  register: couchdb_start
+  until: couchdb_start.status == 200
+  retries: 3
+  delay: 1
+
+- name: Configure CouchDB cluster
+  ansible.builtin.uri:
+    url: "http://{{ ansible_host }}:5984/_cluster_setup"
+    method: POST
+    user: "admin"
+    password: "password"
+    body:
+      action: "enable_cluster"
+      bind_address: "0.0.0.0"
+      username: "admin"
+      password: "password"
+      port: "5984"
+      remote_node: "{{ ansible_host }}"
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+      Authorization: "Basic {{ 'admin:password' | b64encode }}"
+  register: result
+  failed_when: result.status not in [200, 201]
+
+- name: Add nodes to CouchDB cluster
+  ansible.builtin.uri:
+    url: "http://{{ inventory_hostname }}:5984/_cluster_setup"
+    method: POST
+    body:
+      action: "add_node"
+      host: "{{ item }}"
+      port: "5984"
+      username: "admin"
+      password: "password"
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+      Authorization: "Basic {{ 'admin:password' | b64encode }}"
+    status_code: [200, 201, 409]
+    return_content: yes
+  with_items: "{{ groups['DB_INSTANCES'] }}"
+  when: inventory_hostname != item
+
+
+- name: Create _users database
+  ansible.builtin.uri:
+    url: "http://{{ ansible_host }}:5984/_users"
+    method: PUT
+    user: "admin"
+    password: "password"
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+      Authorization: "Basic {{ 'admin:password' | b64encode }}"
+  register: users_db_result
+  failed_when: users_db_result.status not in [200, 201, 202, 412]
+
+- name: Create _replicator database
+  ansible.builtin.uri:
+    url: "http://{{ ansible_host }}:5984/_replicator"
+    method: PUT
+    user: "admin"
+    password: "password"
+    body_format: json
+    headers:
+      Content-Type: "application/json"
+      Authorization: "Basic {{ 'admin:password' | b64encode }}"
+  register: replicator_db_result
+  failed_when: replicator_db_result.status not in [200, 201, 202, 412]
+
+
+# - name: Finalize CouchDB cluster setup
+#   ansible.builtin.uri:
+#     url: "http://{{ ansible_host }}:5984/_cluster_setup"
+#     method: POST
+#     body:
+#       action: "finish_cluster"
+#     body_format: json
+#     headers:
+#       Content-Type: "application/json"
+#       Authorization: "Basic {{ 'admin:password' | b64encode }}"
+#     status_code: [200, 201, 400]
+#     return_content: yes
+#   register: finalize_result
+
+# bug of couchdb 3 would return error of password not set up apparently as optional step
+
+- name: Check CouchDB cluster finalized
+  shell: "curl -u admin:password -X GET http://{{ ansible_host }}:5984/_membership"
+
+
+
+# curl -u admin:password -X GET http://localhost:5984/_membership

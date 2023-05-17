@@ -1,0 +1,30 @@
+  - name: Stop and remove the existing '{{backend_container_name}}' Docker container
+    docker_container:
+      name: '{{backend_container_name}}'
+      image: '{{backend_image_name}}'
+      state: absent
+
+  - name: Remove the '{{backend_image_name}}' Docker image
+    docker_image:
+      name: '{{backend_image_name}}'
+      state: absent
+
+  - name: Create docker '{{backend_image_name}}' docker image
+    docker_image:
+      name: '{{backend_image_name}}'
+      source: build
+      state: present
+      build: 
+        path: '{{work_dir}}/{{backend_module_name}}'
+        nocache: yes
+      
+  - name: Run the '{{backend_image_name}}' Docker image
+    docker_container:
+      name: '{{backend_container_name}}'
+      image: '{{backend_image_name}}'
+      state: started
+      networks:   # Join the same docker network
+        - name: '{{docker_network_name}}'
+      published_ports:
+        - '{{backend_host_port}}:{{backend_container_port}}'  # 8080:8080
+        
