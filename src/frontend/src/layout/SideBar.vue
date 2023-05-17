@@ -12,6 +12,9 @@
     <el-menu-item index="/dashboard/distribution">
       <span slot="title">Distribution</span>
     </el-menu-item>
+    <el-menu-item index="/dashboard/comparison">
+      <span slot="title">Comparison</span>
+    </el-menu-item>
     
   </el-menu>
 </template>
