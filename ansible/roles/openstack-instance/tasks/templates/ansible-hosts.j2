@@ -1,0 +1,8 @@
+{% for item in groups %}
+{%   if groups[item]|length > 0 %}
+[{{item}}]
+{%     for entry in groups[item] %}
+{{ entry }}
+{%     endfor %}
+{%   endif %}
+{% endfor %}
