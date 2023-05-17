@@ -24,18 +24,24 @@
         <div class="time">
           <el-radio-group v-model="time" :change="handleClick()">
             <el-radio label="pre" border
-              >&nbsp;&nbsp;&nbsp;&nbsp;pre-election&nbsp;&nbsp;&nbsp;&nbsp;</el-radio
+              >&nbsp;&nbsp;&nbsp;&nbsp;Pre-election&nbsp;&nbsp;&nbsp;&nbsp;</el-radio
             >
             <el-radio label="post" border
-              >&nbsp;&nbsp;&nbsp;post-election&nbsp;&nbsp;&nbsp;</el-radio
+              >&nbsp;&nbsp;&nbsp;Post-election&nbsp;&nbsp;&nbsp;</el-radio
             >
           </el-radio-group>
         </div>
       </el-col>
     </el-row>
 
-    <div style="width: 100%; text-align: center; color: #fff; margin: 10px 0;">
-        <div style="height: 20px; width: 30%; background: linear-gradient(to right, yellow, red);"></div>
+    <div style="width: 100%; text-align: center; color: #fff; margin: 10px 0">
+      <div
+        style="
+          height: 20px;
+          width: 30%;
+          background: linear-gradient(to right, yellow, red);
+        "
+      ></div>
     </div>
 
     <!-- map -->
@@ -48,36 +54,36 @@
       width="50%"
       :before-close="handleClose"
     >
-        <el-form label-width="150px" label-position="left">
-            <el-form-item label="avgAge: ">
-                {{ mapItem.avgAge }}
-            </el-form-item>
-            <el-form-item label="avgEducYears: ">
-                {{ mapItem.avgEducYears }}
-            </el-form-item>
-            <el-form-item label="avgWeeklyIncome: ">
-                {{ mapItem.avgWeeklyIncome }}
-            </el-form-item>
-            <el-form-item label="erp: ">
-                {{ mapItem.erp }}
-            </el-form-item>
-            <el-form-item label="netMigration: ">
-                {{ mapItem.netMigration }}
-            </el-form-item>
-        </el-form>
-        <el-divider>tweets</el-divider>
-        <p v-for="(item, index) in mapItem.tweets" :key="item.url">
-            <a :href="item.url" target="__blank"  >
-                {{ index + 1 }}.&nbsp;{{ item.title }}
-            </a>
-        </p>
-        
+      <el-form label-position="left">
+        <el-form-item label="Average Age: ">
+          {{ mapItem.avgAge }}
+        </el-form-item>
+        <el-form-item label="Average Education Years: ">
+          {{ mapItem.avgEducYears }}
+        </el-form-item>
+        <el-form-item label="Average Weekly Income: ">
+          {{ mapItem.avgWeeklyIncome }}
+        </el-form-item>
+        <el-form-item label="Estimated Resident Population: ">
+          {{ mapItem.erp }}
+        </el-form-item>
+        <el-form-item label="Net Migration Rate: ">
+          {{ mapItem.netMigration }}
+        </el-form-item>
+      </el-form>
+      <el-divider>Top Tweets</el-divider>
+      <p v-for="(item, index) in mapItem.tweets" :key="item.url">
+        <a :href="item.url" target="__blank">
+          {{ index + 1 }}.&nbsp;{{ item.title }}
+        </a>
+      </p>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import { Loader } from "@googlemaps/js-api-loader";
+import axios from "axios";
 
 export default {
   name: "Map",
@@ -96,14 +102,15 @@ export default {
       map: {},
       dialogVisible: false,
       mapItem: {
-        divisionName: undefined,
-        avgAge: undefined,
-        avgEducYears: undefined,
-        avgWeeklyIncome: undefined,
-        erp: undefined,
-        netMigration: undefined,
-        tweets: []
+        divisionName: "",
+        avgAge: null,
+        avgEducYears: null,
+        avgWeeklyIncome: null,
+        erp: null,
+        netMigration: null,
+        tweets: [],
       },
+      output: null,
     };
   },
   methods: {
@@ -117,137 +124,103 @@ export default {
     handleClose() {
       this.dialogVisible = false;
     },
-    initMap() {
+
+    _func() {
+      return axios
+        .get(
+          "http://localhost:8080/political/sentiments/avg/daterange?startdate=2022-02-09&enddate=2022-05-22&type=daily"
+        )
+        .then((res) => {
+          return res.data;
+        });
+    },
+
+    async initMap() {
       const loader = new Loader({
         apiKey: "AIzaSyA7qMWed4cLNiIl922Yy3nrZVVSASlDQJw",
         version: "weekly",
-        language: 'en'
+        language: "en",
       });
 
-      const mapData = [
-        // displayed data
-        {
-          divisionName: "Banks",
-          avgAge: 44.34516963142491,
-          avgEducYears: 10.395970873626483,
-          avgWeeklyIncome: 1724.3859379956157,
-          erp: 246738.93,
-          netMigration: -3036.45,
-          tweets: [
-            {
-                url: "https://www.baidu.com",
-                title: "Jamie Dimon’s Surprising New Move: Bailing Out First Republic Bank"
-            },
-            {
-                url: "https://www.baidu.com",
-                title: "His immediate concern is that the internet will be flooded with false photos, videos and text, and the average person will ‘not be able to know what is true anymore"
-            },
-            {
-                url: "https://www.baidu.com",
-                title: "A little bit of this and a little bit of that.No affiliation with Twitter the company.",
-            },
-            {
-                url: "https://www.baidu.com",
-                title: "ESG Investing: A Beginner’s Guide to #Investing in a Sustainable Future",
-            },
-            {
-                url: "https://www.baidu.com",
-                title: "Well I guess that's how to fell alive!"
-            },
-          ],
-          
-          color: "#67C23A",
-          // lat and lng of polygon
-          polygon: [
-            { lat: 25.774, lng: -80.19 },
-            { lat: 18.466, lng: -66.118 },
-            { lat: 32.321, lng: -64.757 },
-            { lat: 29.774, lng: -80.19 },
-            { lat: 25.774, lng: -80.19 },
-          ],
-        },
-        {
-          divisionName: "Revers",
-          avgAge: 44.34516963142491,
-          avgEducYears: 10.395970873626483,
-          avgWeeklyIncome: 1724.3859379956157,
-          erp: 246738.93,
-          netMigration: -3036.45,
-          tweets: [
-            {
-                url: "https://www.baidu.com",
-                title: "Jamie Dimon’s Surprising New Move: Bailing Out First Republic Bank"
-            },
-            {
-                url: "https://www.baidu.com",
-                title: "His immediate concern is that the internet will be flooded with false photos, videos and text, and the average person will ‘not be able to know what is true anymore"
-            },
-            {
-                url: "https://www.baidu.com",
-                title: "A little bit of this and a little bit of that.No affiliation with Twitter the company.",
-            },
-            {
-                url: "https://www.baidu.com",
-                title: "ESG Investing: A Beginner’s Guide to #Investing in a Sustainable Future",
-            },
-            {
-                url: "https://www.baidu.com",
-                title: "Well I guess that's how to fell alive!"
-            },
-          ],
-          color: "#FF0000",
-          polygon: [
-            { lat: 27.774, lng: -83.19 },
-            { lat: 20.466, lng: -69.118 },
-            { lat: 34.321, lng: -67.757 },
-            { lat: 31.774, lng: -83.19 },
-            { lat: 27.774, lng: -83.19 },
-          ],
-        },
-      ];
+      const response = await this._func();
+      this.output = response.data;
+      console.log(this.output);
 
       loader.load().then(() => {
         const map = new google.maps.Map(document.getElementById("map"), {
-          center: { lat: 24.886, lng: -70.268 },
-          zoom: 5,
+          center: { lat: -26.2744, lng: 133.7751 },
+          zoom: 4.5,
         });
 
-        mapData.forEach((item, i) => {
-          // define the parameters of polygon
-          const itemPolygon = new google.maps.Polygon({
-            paths: item.polygon,
-            strokeColor: item.color,
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: item.color,
-            fillOpacity: 0.35,
-          });
+        map.data.loadGeoJson(
+          "http://localhost:8080/electorate/geo_data",
+          null,
+          () => {
+            // Style the polygons
+            // let that = this;
+            console.log(this.output);
+            map.data.setStyle((feature) => {
+              console.log(feature.getProperty("divisionName")); //banks
+              console.log(this.output[feature.getProperty("divisionName")]);
+              const winningParty2019 = feature.getProperty("winningParty2019");
+              // const sentiment =
+              //   this.output[feature.getProperty("divisionName")][
+              //     "avg_sentiment"
+              //   ];
+              // console.log(sentiment);
+              let color;
+              if (winningParty2019 === "LP") {
+                color = "green";
+              } else if (winningParty2019 === "ALP") {
+                color = "red";
+              } else {
+                color = "grey";
+              }
 
-          itemPolygon.addListener("click", () => {
-            this.mapItem.divisionName = item.divisionName;
-            this.mapItem.avgAge = item.avgAge;
-            this.mapItem.avgEducYears = item.avgEducYears;
-            this.mapItem.avgWeeklyIncome = item.avgWeeklyIncome;
-            this.mapItem.erp = item.erp;
-            this.mapItem.netMigration = item.netMigration;
-            this.mapItem.tweets = item.tweets;
-            this.dialogVisible = true;
-          });
-          const infowindow = new google.maps.InfoWindow({
-            content: item.divisionName,
-          });
-            
-          itemPolygon.addListener("mouseover",  (event) => {
-            infowindow.setPosition(event.latLng);
-            infowindow.open(map, itemPolygon);
-          });
-          itemPolygon.addListener('mouseout', () => {
-            map.data.revertStyle();
-            infowindow.close();
-          });
-          // draw polygons in the map
-          itemPolygon.setMap(map);
-        });
+              return {
+                fillColor: color,
+                strokeWeight: 2,
+              };
+            });
+
+            // Add click and mouseover listeners
+            map.data.addListener("click", (event) => {
+              console.log("Clicked feature: ", event.feature);
+              this.mapItem.divisionName =
+                event.feature.getProperty("divisionName");
+              this.mapItem.avgAge = event.feature
+                .getProperty("averageAge")
+                .toFixed(2);
+              this.mapItem.avgEducYears = event.feature
+                .getProperty("averageEducationYears")
+                .toFixed(2);
+              this.mapItem.avgWeeklyIncome = event.feature
+                .getProperty("averageWeeklyIncome")
+                .toFixed(2);
+              this.mapItem.erp = event.feature
+                .getProperty("estimatedResidentPopulation")
+                .toFixed(2);
+              this.mapItem.netMigration = event.feature
+                .getProperty("netMigration")
+                .toFixed(2);
+              // this.mapItem.tweets = event.feature.getProperty("tweets");
+              this.dialogVisible = true;
+            });
+
+            // Define infowindow outside the listeners
+            const infowindow = new google.maps.InfoWindow();
+
+            map.data.addListener("mouseover", (event) => {
+              infowindow.setContent(event.feature.getProperty("divisionName"));
+              infowindow.setPosition(event.latLng);
+              infowindow.open(map);
+            });
+
+            map.data.addListener("mouseout", (event) => {
+              infowindow.close();
+            });
+          }
+        );
       });
     },
   },

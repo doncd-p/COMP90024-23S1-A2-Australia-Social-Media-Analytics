@@ -1,4 +1,6 @@
 flask == 2.2.3
 Flask-RESTful
+flask-cors
 gunicorn 
 couchdb
+requests
