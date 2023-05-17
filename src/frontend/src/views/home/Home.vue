@@ -33,7 +33,7 @@ export default {
 
   data() {
     return {
-      typingtext1: "<h1>Everyone has the right to fight for it</h1>",
+      typingtext1: "<h1>How good is Australia... how good are Australians.</h1>",
       typingtext2: "WELCOME TO ELECTION ANALYSIS",
     };
   },

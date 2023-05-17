@@ -715,7 +715,7 @@ a.navbar-brand span {
 	min-height:750px;
 }
 .w3layouts-banner-top1{
-	background: url(../images/bg7.jpg) no-repeat 0px 0px;
+	background: url(../images/governHouse.jpg) no-repeat 0px 0px;
     background-size: cover;	
 	-webkit-background-size: cover;	
 	-moz-background-size: cover;
@@ -1451,18 +1451,18 @@ ul.top-links li a i.fa:hover {
     width: 100%;
 }
 .packages_left{
-    background: url(../images/fedSquare.jpg) no-repeat 0px 0px;
+    background: url(../images/introduction.jpg) no-repeat 0px 0px;
 	background-size: cover;
 	min-height: 340px;
 	padding: 0 15px;
 }
 .packages_left1{
-    background: url(../images/hosier.jpg) no-repeat 0px 0px;
+    background: url(../images/dashboard.jpg) no-repeat 0px 0px;
 	background-size: cover;
 	min-height: 340px;
 }
 .packages_left2{
-    background: url(../images/stateLib.jpg) no-repeat 0px 0px;
+    background: url(../images/map.jpg) no-repeat 0px 0px;
 	background-size: cover;
 	min-height: 340px;
 }
