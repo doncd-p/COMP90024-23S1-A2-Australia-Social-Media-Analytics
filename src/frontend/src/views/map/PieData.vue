@@ -24,12 +24,22 @@ export default {
   },
 
   mounted() {
-    this.initDate();
+    this.initData();
     this.initEcharts();
   },
+  watch: {
+    pieData: {
+      handler(value) {
+       this.initData();
+       this.initEcharts()
+      },
+      deep: true,
+    },
 
+  },
   methods: {
-    initDate() {
+    initData() {
+      console.log(this.pieData)
       this.pieName = ["Negative Tweets", "Netural Tweets", "Positive Tweets"]
     },
     initEcharts() {
