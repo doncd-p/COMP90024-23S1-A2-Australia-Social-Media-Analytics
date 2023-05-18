@@ -33,17 +33,15 @@
         </div>
       </el-col>
     </el-row>
-
-    <div style="width: 100%; text-align: center; color: #fff; margin: 10px 0">
-      <div
-        style="
-          height: 20px;
-          width: 30%;
-          background: linear-gradient(to right, yellow, red);
-        "
-      ></div>
-    </div>
-
+      <el-row class="colorItem">
+       <div class="legend">{{legend.left}}</div>
+       <div class="colorRange" :style="cover" v-if="senario != 'status'"></div>
+        <div v-else class="colorRange" >
+            <div style="height: 100%; margin-right: 2%; width: 48%; background-color: #666666"></div>
+            <div style="height: 100%; width:48%;background-color: #FF0000"></div>
+        </div>
+        <div class="legend">{{legend.right}}</div>
+      </el-row>
     <!-- map -->
     <div class="map" id="map" v-loading="loading" style="height: 100vh"
       element-loading-text="loading..."
@@ -78,6 +76,11 @@
             :pieData="mapItem.sentiment">
           </pie-data>
         </div>
+          <div >
+           <line-data
+            :lineData="mapItem.lineData">
+          </line-data>
+        </div>
        
       </el-form>
     
@@ -100,10 +103,12 @@ import { Loader } from "@googlemaps/js-api-loader";
 import axios from "axios";
 import { faLandmarkFlag } from "@fortawesome/free-solid-svg-icons";
 import PieData from "./PieData.vue";
+import LineData from "./LineData";
+
 export default {
   name: "Map",
   components:{
-    PieData
+    PieData, LineData
   },
   props: {
     msg: String,
@@ -111,7 +116,7 @@ export default {
   data() {
     return {
       loading: true,
-      senario: "tweets",
+      senario: "vote",
       time: "pre",
       data: [],
       map: null,
@@ -128,11 +133,15 @@ export default {
         netMigration: null,
         posTweets: [],
         negTweets: [],
-        sentiment: []
+        sentiment: [],
+        lineData:[]
       },
       colorList:[],
       output: null,
-
+    legend:{
+      left: "50%",
+      right:"100%"
+    }
  
     };
   },
@@ -146,9 +155,9 @@ export default {
     },
     handleTimeChange(value){
       if (this.time === "pre") {
-        this.party = "LP";
+        this.party = "Liberal";
       } else {
-        this.party = "ALP";
+        this.party = "Labour";
       }
       this.initMap(this.senario);
     },
@@ -191,9 +200,9 @@ export default {
     getCloudData() {
       let url;
       if(this.time == "pre"){
-        url = "http://172.26.128.247:8080//political/sentiments/daily?startdate=2022-02-09&enddate=2022-05-21"
+        url = process.env.VUE_APP_BASE_URL + "/political/sentiments/daily?startdate=2022-02-09&enddate=2022-05-21"
       }else{
-        url = "http://172.26.128.247:8080//political/sentiments/daily?startdate=2022-05-22&enddate=2023-06-30"
+        url = process.env.VUE_APP_BASE_URL + "/political/sentiments/daily?startdate=2022-05-22&enddate=2023-06-30"
       }
       return axios
         .get(
@@ -205,27 +214,29 @@ export default {
     },
     async getDetail(eName){
       
-      const posSrc = "http://172.26.128.247:8080/tweet/top_positive?num=5&electorate="+eName;
-      const negSrc = "http://172.26.128.247:8080/tweet/top_negative?num=5&electorate="+eName;
+      const posSrc = process.env.VUE_APP_BASE_URL + "/tweet/top_positive?num=5&electorate="+eName;
+      const negSrc = process.env.VUE_APP_BASE_URL + "/tweet/top_negative?num=5&electorate="+eName;
       let sentimentSrc;
+      let lineSrc;
       if (this.time == "pre"){
-        sentimentSrc = "http://172.26.128.247:8080//political/sentiments/number?startdate=2022-02-09&enddate=2022-05-21&electorate="+eName;
+        sentimentSrc = process.env.VUE_APP_BASE_URL + "/political/sentiments/number?startdate=2022-02-09&enddate=2022-05-21&electorate="+eName;
+        lineSrc = process.env.VUE_APP_BASE_URL + "/political/sentiments/daily?startdate=2022-02-09&enddate=2022-05-21&electorate="+eName;
       }else{
-        sentimentSrc = "http://172.26.128.247:8080//political/sentiments/number?startdate=2022-05-22&enddate=2023-06-30&electorate="+eName;
+        sentimentSrc = process.env.VUE_APP_BASE_URL + "/political/sentiments/number?startdate=2022-05-22&enddate=2023-06-30&electorate="+eName;
+        lineSrc = process.env.VUE_APP_BASE_URL + "/political/sentiments/daily?startdate=2022-05-22&enddate=2023-06-30&electorate="+eName
       }
       
-      const [posResponse, negResponse, senResponse] = await Promise.all([
+      const [posResponse, negResponse, senResponse, lineResponse] = await Promise.all([
         axios.get(posSrc),
         axios.get(negSrc),
         axios.get(sentimentSrc),
+        axios.get(lineSrc)
       ]);
       this.mapItem.posTweets = posResponse.data.data;
       this.mapItem.negTweets = negResponse.data.data;
       this.mapItem.sentiment = senResponse.data.data[eName];
-      
-
-      console.log(senResponse.data.data[eName])
-      console.log(this.mapItem.sentiment)
+      this.mapItem.lineData = [lineResponse.data.data][0];
+     
       
     },
   
@@ -244,7 +255,7 @@ export default {
       loader.load().then(() => {
         const map = new google.maps.Map(document.getElementById("map"), {
           center: { lat: -26.2744, lng: 133.7751 },
-          zoom: 4.5,
+          zoom: 5,
         });
         this.loading = false;
       // ========================Icon examples=========================
@@ -280,7 +291,7 @@ export default {
       }
         
         map.data.loadGeoJson(
-          "http://172.26.128.247:8080/electorate/geo_data",
+          process.env.VUE_APP_BASE_URL + "/electorate/geo_data",
           null,
           () => {
             
@@ -310,7 +321,6 @@ export default {
                     color  = "#FF0000";
                   }
                 }
-                console.log(sentiment,color);
               }else if(label == 'tweets'){
                 const num_tweets = that.output[feature.getProperty("divisionName")]["num_tweets"];
                 color = that.gradient("#FFFFFF","#FF0000",3000)[num_tweets];
@@ -367,12 +377,12 @@ export default {
             map.data.addListener("mouseover", async (event) => {
               let value;
               if (label == 'sentiment'){
-                value = await this.output[event.feature.getProperty("divisionName")]["avg_sentiment"];
+                value = await this.output[event.feature.getProperty("divisionName")]["avg_sentiment"].toFixed(3);
               }else if (label == 'vote'){
                 if(this.time == "pre"){
-                  value = event.feature.getProperty("winningPercentage2019");
+                  value = event.feature.getProperty("winningPercentage2019").toFixed(3);
                 }else{
-                  value = event.feature.getProperty("winningPercentage2022");
+                  value = event.feature.getProperty("winningPercentage2022").toFixed(3);
                 }
                 
               }else if (label == 'tweets'){
@@ -397,9 +407,20 @@ export default {
       });
     },
   },
-  created(){
-    
-    
+  computed: {
+    cover() {
+      let startColor;
+      let endColor;
+      switch(this.senario) {
+      case 'sentiment': {
+        return "background: linear-gradient(to right, #0000FF, #FFFF00, #FF0000);"
+      } break;
+      case 'tweets': { startColor = '#FFFFFF'; endColor = '#FF0000'; } break;
+      case 'vote': { startColor = '#FFFF00'; endColor = '#FF0000'; } break;
+      default: return;
+      }
+      return "background: linear-gradient(to right, " + startColor + "," + endColor + ");"
+    }
   },
 
   mounted() {
@@ -410,6 +431,20 @@ export default {
   watch: {
     senario: {
       handler(value) {
+        if(value == "vote"){
+          this.legend.left = "50%"
+          this.legend.right = "100%"
+        }else if (value == "sentiment"){
+          this.legend.left = "-1"
+          this.legend.right = "1"
+        }else if (value == "tweets"){
+          this.legend.left = "0"
+          this.legend.right = "max"
+        }else{
+          this.legend.left = "non-changed"
+          this.legend.right = "changed"
+        }
+       
         this.handleSenarioChange(value);
       },
       deep: true,
@@ -474,5 +509,22 @@ export default {
   font-weight: 400;
   font-size: 20px;
   color: #fff;
+}
+.colorRange {
+  height: 20px;
+  width: 70%;
+  display: flex;
+}
+.colorItem{
+  display: flex;
+  align-items: center;
+  margin:1%;
+  
+}
+.legend{
+  margin:0 1%;
+  color:#fff;
+  font-size: 24px;
+  margin: auto;
 }
 </style>

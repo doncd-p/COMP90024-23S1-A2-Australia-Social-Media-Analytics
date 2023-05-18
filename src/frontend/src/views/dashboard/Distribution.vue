@@ -386,21 +386,21 @@ export default {
     getData() {
       if (this.interval == "day"){
         return this.$axios
-        .get("http://172.26.128.247:8080/board/political/sentiments/daily?startdate=2022-02-09&enddate=2023-06-30")
+        .get(process.env.VUE_APP_BASE_URL + "/board/political/sentiments/daily?startdate=2022-02-09&enddate=2023-06-30")
         .then((result) => {
           this.dayChartData = result.data.data;
           return result.data.data;
       });
       }else if( this.interval == "week"){
         return this.$axios
-        .get("http://172.26.128.247:8080/board/political/sentiments/weekly?startweek=-15&endweek=15")
+        .get(process.env.VUE_APP_BASE_URL + "/board/political/sentiments/weekly?startweek=-15&endweek=15")
         .then((result) => {
           this.weekChartData = result.data.data;
           return result.data.data;
       });
       }else{
         return this.$axios
-        .get("http://172.26.128.247:8080/board/political/sentiments/monthly?startdate=2022-02-09&enddate=2022-06-30")
+        .get(process.env.VUE_APP_BASE_URL + "/board/political/sentiments/monthly?startdate=2022-02-09&enddate=2022-06-30")
         .then((result) => {
           this.monthChartData = result.data.data;
           return result.data.data;
@@ -410,17 +410,17 @@ export default {
     },
     storeData1(){
        this.$axios
-        .get("http://172.26.128.247:8080/board/political/sentiments/daily?startdate=2022-02-09&enddate=2023-06-30")
+        .get(process.env.VUE_APP_BASE_URL + "/board/political/sentiments/daily?startdate=2022-02-09&enddate=2023-06-30")
         .then((result) => {
           this.dailyChartData = result.data.data;
       });
       this.$axios
-        .get("http://172.26.128.247:8080/board/political/sentiments/weekly?startweek=-15&endweek=15")
+        .get(process.env.VUE_APP_BASE_URL + "/board/political/sentiments/weekly?startweek=-15&endweek=15")
         .then((result) => {
           this.weekChartData = result.data.data;
       });
       this.$axios
-        .get("http://172.26.128.247:8080/board/political/sentiments/month?startdate=2022-02-09&enddate=2023-06-30")
+        .get(process.env.VUE_APP_BASE_URL + "/board/political/sentiments/month?startdate=2022-02-09&enddate=2023-06-30")
         .then((result) => {
           this.monthChartData = result.data.data;
       });
@@ -428,15 +428,15 @@ export default {
     getChart2Data(){
       let src = ""
       if(this.after == "1w"){
-        src = "http://172.26.128.247:8080/board/political/sentiments/winningchange?type=week&after=1"
+        src = process.env.VUE_APP_BASE_URL + "/board/political/sentiments/winningchange?type=week&after=1"
       }else if(this.after == "2w"){
-        src = "http://172.26.128.247:8080/board/political/sentiments/winningchange?type=week&after=2"
+        src = process.env.VUE_APP_BASE_URL + "/board/political/sentiments/winningchange?type=week&after=2"
       }else if(this.after == "1m"){
-        src = "http://172.26.128.247:8080/board/political/sentiments/winningchange?type=month&after=1"
+        src = process.env.VUE_APP_BASE_URL + "/board/political/sentiments/winningchange?type=month&after=1"
       }else if (this.after == "2m"){
-        src =  "http://172.26.128.247:8080/board/political/sentiments/winningchange?type=month&after=2"
+        src =  process.env.VUE_APP_BASE_URL + "/board/political/sentiments/winningchange?type=month&after=2"
       }else {
-        src = "http://172.26.128.247:8080/board/political/sentiments/winningchange?type=month&after=3"
+        src = process.env.VUE_APP_BASE_URL + "/board/political/sentiments/winningchange?type=month&after=3"
       }
       return this.$axios
         .get(src)

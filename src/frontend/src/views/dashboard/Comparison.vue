@@ -138,12 +138,11 @@ export default {
   methods: {
     updateFigure(){
       this.img_src = require("../../assets/images/"+this.cencus+"_"+this.election+".png")
-      console.log(this.img_src)
     },
     getData() {
       setTimeout(()=>{
         this.$axios
-            .get("http://172.26.128.247:8080/toot/meta")
+            .get(process.env.VUE_APP_BASE_URL + "/toot/meta")
             .then((result) => {
               const data = result.data.data;
               this.toots_political = data.sum;
@@ -151,12 +150,13 @@ export default {
               this.toots_rate = data.mean;
             });
          this.$axios
-            .get("http://172.26.128.247:8080/tweet/meta")
+            .get(process.env.VUE_APP_BASE_URL + "/tweet/meta")
             .then((result) => {
               const data = result.data.data;
               this.tweets_political = data.sum;
               this.tweets_total = data.count;
               this.tweets_rate = data.mean;
+              
             });
             }, 0)
     },
