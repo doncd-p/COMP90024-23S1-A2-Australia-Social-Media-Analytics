@@ -23,6 +23,14 @@ export default {
   mounted() {
     this.mycharts()
   },
+  watch: {
+     lineData: {
+      handler(value) {
+       this.mycharts();
+      },
+      deep: true,
+    },
+  },
 
   methods: {
     mycharts() {
