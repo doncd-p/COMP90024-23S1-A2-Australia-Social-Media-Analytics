@@ -293,3 +293,6 @@ dist
 .DS_Store
 
 .vscode
+*.crc
+*.parquet
+.history/
