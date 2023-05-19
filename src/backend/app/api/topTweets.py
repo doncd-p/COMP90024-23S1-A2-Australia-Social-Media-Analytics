@@ -9,7 +9,7 @@ class TopPositiveTweets(Resource):
         electorate = request.args.get('electorate')
 
         electorate = electorate.lower()
-        electorate = electorate[0].upper() + electorate[1:]
+        electorate = electorate.title()
 
         if top_k > 5:
             response = jsonify(
@@ -83,7 +83,7 @@ class TopNegativeTweets(Resource):
         electorate = request.args.get('electorate')
 
         electorate = electorate.lower()
-        electorate = electorate[0].upper() + electorate[1:]
+        electorate = electorate.title()
 
         if top_k > 5:
             response = jsonify(
