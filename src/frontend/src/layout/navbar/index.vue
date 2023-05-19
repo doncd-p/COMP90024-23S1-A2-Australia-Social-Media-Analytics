@@ -47,7 +47,7 @@ export default {
     activeMenu() {
       const route = this.$route
       const { path } = route
-      if (path === '/dashboard/distribution' || path === '/dashboard/ranking') {
+      if (path === '/dashboard/distribution' || path === '/dashboard/ranking'  || path === '/dashboard/comparison')  {
         return '/dashboard'
       }
       return path
