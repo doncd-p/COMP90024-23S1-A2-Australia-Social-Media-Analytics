@@ -1,0 +1,55 @@
+---
+title: "ccc_linear_reg"
+author: "Ying Zhu"
+date: '2023-05-14'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+data = read.csv("../data/curated/Clean_By_Electorate_SUDO.csv")
+data
+```
+
+
+```{r}
+data$ChangedWinningParty = factor(data$ChangedWinningParty)
+data = data[ -c(1,1:2) ]
+str(data)
+```
+```{r}
+pairs(data)
+```
+
+```{r}
+model1 = lm(sentiment ~ log(avg_age) + log(avg_educ_years) + log(avg_weekly_income) +log(erp) + log(net_migration), data = data)
+summary(model1)
+```
+```{r}
+model2 = lm(sentiment ~ log(avg_age) + log(avg_educ_years), data = data)
+summary(model2)
+```
+```{r}
+plot(model2)
+```
+
+```{r}
+sentiment = data['sentiment']
+log_age = data['avg_age']
+log_educ = data['avg_educ_years']
+data_m2  = data.frame(sentiment, log_age, log_educ)     
+pairs(data_m2)
+```
+
+```{r}
+model3 = lm(sentiment ~ , data = data)
+summary(model3)
+```
+
+```{r}
+]
+```

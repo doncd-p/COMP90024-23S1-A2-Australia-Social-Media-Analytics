@@ -31,6 +31,11 @@ const routes = [
             name: 'Ranking',
             component: () => import('../views/dashboard/Ranking.vue')
           },
+          {
+            path: 'comparison',
+            name: 'Comparison',
+            component: () => import('../views/dashboard/Comparison.vue')
+          },
         ]
       },
       {
