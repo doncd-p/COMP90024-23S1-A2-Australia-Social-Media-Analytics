@@ -295,3 +295,4 @@ dist
 .vscode
 *.crc
 *.parquet
+.history/

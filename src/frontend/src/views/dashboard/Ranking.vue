@@ -1,27 +1,24 @@
 <template>
-    <div id="app">  
+    <div id="app" v-loading="loading" style="height: 100vh"
+      element-loading-text="loading..."
+      element-loading-spinner="el-icon-loading"
+      element-loading-background="rgba(0, 0, 0, 0.8)">  
       <el-col :span="24" class="table">
         <el-row class="table1">
           <!-- figure1 -->
           <el-col class="tablebody" :span="20">
             <div class="tablelabel"> Sentiment Ranking</div>
             <el-table class="tablecontent" :data="tableData1" stripe height="250" border style="width: 100%"  :default-sort = "{prop: 'sentiment', order: 'descending'}" >
-                <el-table-column prop="electorate" label="Electorate" width="180"> </el-table-column>
-                <el-table-column prop="party1" label="2019 Party" width="180"> </el-table-column>
-                <el-table-column prop="party2" label="2022 Party" width="180"> </el-table-column>
-                <el-table-column prop="vote" label="2022 Vote" width="180"> </el-table-column>
-                <el-table-column prop="sentiment" label="Sentiment" sortable width="180"> </el-table-column>
+                <el-table-column prop="electorate" label="Electorate" width="150"> </el-table-column>
+                <el-table-column prop="party1" label="2019 Party" width="150"> </el-table-column>
+                <el-table-column prop="party2" label="2022 Party" width="150"> </el-table-column>
+                <el-table-column prop="vote" label="2022 Vote" width="150"> </el-table-column>
+                <el-table-column prop="state" label="State" sortable width="150"> </el-table-column>
+                <el-table-column prop="sentiment" label="Sentiment" sortable width="150"> </el-table-column>
             </el-table>
           </el-col>
           <el-col class="filter" :span="4">
-            <el-row>
-                <div class="filter1"> 
-                  <div class="filter1label"> State:</div>
-                  <el-select v-model="state1" :change="handleClick()" >
-                    <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                  </el-select>
-                </div>
-            </el-row>
+            
             <el-row>
                 <div class="filter1"> 
                   <div class="filter1label"> Timeline:</div>
@@ -36,22 +33,17 @@
           <el-col class="tablebody" :span="20">
             <div class="tablelabel"> #Tweets Ranking</div>
             <el-table class="tablecontent" :data="tableData2" stripe height="250" border style="width: 100%"  :default-sort = "{prop: 'tweets', order: 'descending'}" >
-                <el-table-column prop="electorate" label="Electorate" width="180"> </el-table-column>
-                <el-table-column prop="party1" label="2019 Party" width="180"> </el-table-column>
-                <el-table-column prop="party2" label="2022 Party" width="180"> </el-table-column>
-                <el-table-column prop="vote" label="2022 Vote" width="180"> </el-table-column>
-                <el-table-column prop="tweets" label="Tweets Number" sortable width="180"> </el-table-column>
+                <el-table-column prop="electorate" label="Electorate" width="150"> </el-table-column>
+                <el-table-column prop="party1" label="2019 Party" width="150"> </el-table-column>
+                <el-table-column prop="party2" label="2022 Party" width="150"> </el-table-column>
+                <el-table-column prop="vote" label="2022 Vote" width="150"> </el-table-column>
+                <el-table-column prop="state" label="State" sortable width="150"> </el-table-column>
+                <el-table-column prop="tweets" label="Tweets Number" sortable width="150"> </el-table-column>
+                
             </el-table>
           </el-col>
           <el-col class="filter" :span="4">
-            <el-row>
-                <div class="filter1"> 
-                  <div class="filter1label"> State:</div>
-                  <el-select v-model="state2" :change="handleClick()" >
-                    <el-option v-for="item in options2" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-                  </el-select>
-                </div>
-            </el-row>
+            
             <el-row>
                 <div class="filter1"> 
                   <div class="filter1label"> Timeline:</div>
@@ -68,185 +60,210 @@
     
 </template>
 <script>
-import { getNoParam, getParam, postParam } from '../../api/test'
 
 export default {
   name: "distribution",
   data() {
       return {
+      loading:true,
        //table1 data
-       tableData1: [{
-          electorate: 'Eleborate1',
-          party1: 'LP',
-          party2: 'ALP',
-          vote:'56%',
-          sentiment: 76,
-          state: 'vic'
-        }, {
-          electorate: 'Eleborate2',
-          party1: 'LP',
-          party2: 'GRN',
-          vote:'76%',
-          sentiment: 34,
-          state: 'vic'
-        }, {
-          electorate: 'Eleborate3',
-          party1: 'IND',
-          party2: 'ALP',
-          vote:'45%',
-          sentiment: -34,
-          state: 'nsw'
-        }, {
-          electorate: 'Eleborate4',
-          party1: 'XEN',
-          party2: 'NP',
-          vote:'78%',
-          sentiment: 5,
-          state: 'nsw'
-        },{
-          electorate: 'Eleborate5',
-          party1: 'KAP',
-          party2: 'LNP',
-          vote:'67%',
-          sentiment: -89,
-          state: 'vic'
-        }],
-        //table1 filter1
-        options: [{
-          value: 'all',
-          label: 'ALL'
-        }, {
-          value: 'vic',
-          label: 'VIC'
-        }, {
-          value: 'nsw',
-          label: 'NSW'
-        }],
-        state1: 'all',
+       tableData1: [],
         //table1 filter2
         pickerOptions1: {
-          shortcuts: [{
-            text: 'last a week',
+          shortcuts: [ {
+            text: 'a month before election',
             onClick(picker) {
               const end = new Date();
               const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              start.setFullYear(2022,3,22);
+              end.setFullYear(2022,4,22);
+              this.timeline1 = [start, end];
               picker.$emit('pick', [start, end]);
             }
           }, {
-            text: 'last a month',
+            text: 'a month after election ',
             onClick(picker) {
               const end = new Date();
               const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: 'last three months',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              start.setFullYear(2022,4,22);
+              end.setFullYear(2022,5,22);
+              this.timeline1 = [start, end];
               picker.$emit('pick', [start, end]);
             }
           }]
         },
         timeline1: [],
         //table2 data
-        tableData2: [{
-          electorate: 'Eleborate1',
-          party1: 'LP',
-          party2: 'ALP',
-          vote:'56%',
-          tweets: 2003
-        }, {
-          electorate: 'Eleborate2',
-          party1: 'LP',
-          party2: 'GRN',
-          vote:'76%',
-          tweets: 3432
-        }, {
-          electorate: 'Eleborate3',
-          party1: 'IND',
-          party2: 'ALP',
-          vote:'45%',
-          tweets: 3430
-        }, {
-          electorate: 'Eleborate4',
-          party1: 'XEN',
-          party2: 'NP',
-          vote:'78%',
-          tweets: 50000
-        },{
-          electorate: 'Eleborate5',
-          party1: 'KAP',
-          party2: 'LNP',
-          vote:'67%',
-          tweets: 34356
-        }],
-      //table2 filter1
-        options2: [{
-          value: 'all',
-          label: 'ALL'
-        }, {
-          value: 'vic',
-          label: 'VIC'
-        }, {
-          value: 'nsw',
-          label: 'NSW'
-        }],
-        state2: 'all',
+        tableData2: [],
+      
         //table2 filter2
         pickerOptions2: {
           shortcuts: [{
-            text: 'a week before eleboration',
+            text: 'a month before election',
             onClick(picker) {
               const end = new Date();
               const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              start.setFullYear(2022,3,22);
+              end.setFullYear(2022,4,22);
+              this.timeline2 = [start, end];
               picker.$emit('pick', [start, end]);
             }
           }, {
-            text: 'a month before eleboration',
+            text: 'a month after election ',
             onClick(picker) {
               const end = new Date();
               const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-              picker.$emit('pick', [start, end]);
-            }
-          }, {
-            text: 'a month after eleboration',
-            onClick(picker) {
-              const end = new Date();
-              const start = new Date();
-              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              start.setFullYear(2022,4,22);
+              end.setFullYear(2022,5,22);
+              this.timeline2 = [start, end];
               picker.$emit('pick', [start, end]);
             }
           }]
         },
         timeline2: [],
-      
       }
     },
 
   mounted() {
     const end = new Date();
     const start = new Date();
-    start.setFullYear(2019,0,14);
-    end.setFullYear(2022,11,24);
+    start.setFullYear(2022,1,9);
+    end.setFullYear(2023,5,30);
     this.timeline1 = [start, end];
     this.timeline2 = [start, end];
     
+    this.initData();
   },
-
-  methods: {
-
-    handleClick() {
-      this.updateData();
-
+  watch:{
+     timeline1: {
+      handler(value) {
+        this.updateData1();
+      },
+      deep: true,
     },
-    updateData(){
+     timeline2: {
+      handler(value) {
+        this.updateData2();
+      },
+      deep: true,
+    },
+  },
+methods: {
+
+    
+  getDate(date){
+    let year = date.getFullYear(); 
+    let month = (date.getMonth()+1)< 10?'0'+ (date.getMonth()+1) : (date.getMonth()+1);
+    let day   = date.getDate() < 10?'0'+ date.getDate(): date.getDate();
+    return ""+year+"-"+month+"-"+day
+  },
+  async updateData1(){
+    this.loading = true
+    const senSrc = process.env.VUE_APP_BASE_URL + "/political/sentiments/daily?startdate="+this.getDate(this.timeline1[0])+"&enddate="+this.getDate(this.timeline1[1])
+    const senTweets = await this.$axios.get(senSrc).then((result) => {return result.data.data;});
+
+    let tableData = []
+    for(let i=0; i<this.tableData1.length; i++){
+        // Get the name and value of the old object
+        let name = this.tableData1[i]["electorate"];
+        let party1 = this.tableData1[i]["party1"];
+        let party2 = this.tableData1[i]["party2"];
+        let vote = this.tableData1[i]["vote"];
+        let state = this.tableData1[i]["state"];
+        let sentiment;
+        if(senTweets[name]){
+          sentiment = senTweets[name]["avg_sentiment"];
+          // Create the new object
+          let newObj = {
+            electorate: name,
+            party1: party1,
+            party2: party2,
+            vote: vote,
+            state: state,
+            sentiment: sentiment.toFixed(3)
+          }
+          // Push the new object into the array of objects
+          tableData.push(newObj);
+        }
+        
+      
+      }
+      this.tableData1 = tableData;
+      this.loading = false
+    },
+    async updateData2(){
+      this.loading = true
+      const senSrc = process.env.VUE_APP_BASE_URL + "/political/sentiments/daily?startdate="+this.getDate(this.timeline2[0])+"&enddate="+this.getDate(this.timeline2[1])
+      const senTweets = await this.$axios.get(senSrc).then((result) => {return result.data.data;});
+
+      let tableData = []
+      for(let i=0; i<this.tableData1.length; i++){
+          // Get the name and value of the old object
+          let name = this.tableData1[i]["electorate"];
+          let party1 = this.tableData1[i]["party1"];
+          let party2 = this.tableData1[i]["party2"];
+          let vote = this.tableData1[i]["vote"];
+          let state = this.tableData1[i]["state"];
+           if(senTweets[name]){
+              let tweets = senTweets[name]["num_tweets"];
+              // Create the new object
+              let newObj = {
+                electorate: name,
+                party1: party1,
+                party2: party2,
+                vote: vote,
+                state: state,
+                tweets: tweets
+              }
+              // Push the new object into the array of objects
+              tableData.push(newObj);
+           }
+        }
+        this.tableData2 = tableData;
+        this.loading = false
+    },
+    async initData(){
        //tabledata
+      const src = process.env.VUE_APP_BASE_URL + "/electorate/sudo_data/all"
+      const senSrc = process.env.VUE_APP_BASE_URL + "/political/sentiments/daily?startdate="+this.getDate(this.timeline1[0])+"&enddate="+this.getDate(this.timeline1[1])
+     
+      const senTweets = await this.$axios.get(senSrc).then((result) => {return result.data.data;});
+      let tableData1 = [];
+      let tableData2 = [];
+      this.$axios.get(src).then((result) => {
+        const obj = result.data.data;
+        for(let i=0; i<Object.keys(obj).length; i++){
+          // Get the name and value of the old object
+          let name = Object.keys(obj)[i];
+          let values = obj[name];
+          let sentiment = senTweets[name]["avg_sentiment"];
+          let tweet_num = senTweets[name]["num_tweets"];
+          // Create the new object
+          let newObj1 = {
+            electorate: name,
+            party1: values.winningParty2019,
+            party2: values.winningParty2022,
+            vote: values.winningPercentage2022.toFixed(3),
+            state: values.state,
+            sentiment: sentiment.toFixed(3)
+          }
+          let newObj2 = {
+            electorate: name,
+            party1: values.winningParty2019,
+            party2: values.winningParty2022,
+            vote: values.winningPercentage2022.toFixed(3),
+            state: values.state,
+            tweets: tweet_num
+          }
+          // Push the new object into the array of objects
+          tableData1.push(newObj1);
+          tableData2.push(newObj2);
+        }
+      });
+      this.tableData1 = tableData1;
+      this.tableData2 = tableData2;
+
+      this.loading = false
     },
    
     

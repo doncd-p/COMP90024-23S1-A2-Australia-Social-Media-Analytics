@@ -9,7 +9,7 @@
             </div>
           </li>
         </ul>
-        <div class="callbacks_container" style="padding-top: 78px;">
+        <div class="callbacks_container" style="padding-top: 78px">
           <div class="slider-info">
             <div>
               <div class="border-top h2" id="info1" v-html="typingtext1"></div>
@@ -33,22 +33,24 @@ export default {
 
   data() {
     return {
-      typingtext1: "<h1>Everyone has the right to fight for it</h1>",
+
+      typingtext1: "<h1>How good is Australia... how good are Australians.</h1>",
+
       typingtext2: "WELCOME TO ELECTION ANALYSIS",
     };
   },
 
-  mounted() {
-  },
+  mounted() {},
 
-  methods: {
-  },
+  methods: {},
 };
 </script>
+ 
 
 <style lang="scss" scoped>
 .banner {
   height: calc(100vh - 78px);
-  background: url('../../assets/images/bg7.jpg')  center center / cover no-repeat;
+  background: url('../../assets/images/governHouse.jpg')  center center / cover no-repeat;
 }
 </style>
+
