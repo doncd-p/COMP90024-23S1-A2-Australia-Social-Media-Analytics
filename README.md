@@ -59,6 +59,18 @@ Our team is investigating the topic of Australia's electron.
     ├─ LICENSE
     ├─ README.md
 
+* [ansible/](./COMP90024-23S1-A2-Australia-Social-Media-Analytics/ansible)
+* [data/](./COMP90024-23S1-A2-Australia-Social-Media-Analytics/data)
+* [doc/](./COMP90024-23S1-A2-Australia-Social-Media-Analytics/doc)
+* [harvest/](./COMP90024-23S1-A2-Australia-Social-Media-Analytics/harvest)
+* [mrc/](./COMP90024-23S1-A2-Australia-Social-Media-Analytics/mrc)
+* [notebook/](./COMP90024-23S1-A2-Australia-Social-Media-Analytics/notebook)
+* [scripts/](./COMP90024-23S1-A2-Australia-Social-Media-Analytics/scripts)
+* [src/](./COMP90024-23S1-A2-Australia-Social-Media-Analytics/src)
+* [.gitignore](./COMP90024-23S1-A2-Australia-Social-Media-Analytics/.gitignore)
+* [LICENSE](./COMP90024-23S1-A2-Australia-Social-Media-Analytics/LICENSE)
+* [README.md](./COMP90024-23S1-A2-Australia-Social-Media-Analytics/README.md)
+
 ## Project Workflow
 
 ![workflow](/doc/images/workflow.jpg)

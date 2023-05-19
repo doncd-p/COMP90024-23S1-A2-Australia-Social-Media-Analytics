@@ -91,8 +91,11 @@ export default {
         }],
         cencus: 'migration',
         options2: [{
-          value: 'percentage',
-          label: 'Percentage of Support'
+          value: '2019percentage',
+          label: 'Percentage of Support in 2019'
+        },{
+          value: '2022percentage',
+          label: 'Percentage of Support in 2022'
         }, {
           value: 'sentiment',
           label: 'Sentiment'
