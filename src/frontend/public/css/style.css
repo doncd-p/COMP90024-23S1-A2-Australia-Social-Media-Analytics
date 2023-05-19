@@ -1466,7 +1466,11 @@ ul.top-links li a i.fa:hover {
 	background-size: cover;
 	min-height: 340px;
 }
-
+.packages_left3{
+    background: url(../images/Party.jpg) no-repeat 0px 0px;
+	background-size: cover;
+	min-height: 340px;
+}
 .packages_right h3 {
     font-size: 26px;
     font-weight: 400;
