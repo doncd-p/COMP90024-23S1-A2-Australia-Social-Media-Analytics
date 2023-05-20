@@ -18,21 +18,41 @@ data
 
 ```{r}
 data$ChangedWinningParty = factor(data$ChangedWinningParty)
-data = data[ -c(1,1:2) ]
+data = data[-c(1,1:3)]
 str(data)
 ```
 ```{r}
-pairs(data)
+# pair plot
+pairs(data, main = "Census Data and Sentiment Pairs Plot")
+```
+age is negatively correlated to both age and income. 
+educ is positively corrected to income.
+
+```{r}
+# check for nan
+sum(is.na(df))
+```
+
+
+```{r}
+# pair plot in logs
+library(dplyr)
+df2 <- data %>%
+  mutate(across(-sentiment, ~log(. + 0.001)))
+pairs(df2, main = "Census Data and Sentiment Pairs Plot in Logs")
 ```
 
 ```{r}
-model1 = lm(sentiment ~ log(avg_age) + log(avg_educ_years) + log(avg_weekly_income) +log(erp) + log(net_migration), data = data)
+model1 = lm(sentiment ~ log(avg_age) + log(avg_educ_years) + log(avg_weekly_income) + log(net_migration), data = data)
 summary(model1)
 ```
+According to p-values, log(avg_age) is the only effective variable.
+
 ```{r}
-model2 = lm(sentiment ~ log(avg_age) + log(avg_educ_years), data = data)
+model2 = lm(sentiment ~ log(avg_age), data = data)
 summary(model2)
 ```
+
 ```{r}
 plot(model2)
 ```
@@ -40,14 +60,20 @@ plot(model2)
 ```{r}
 sentiment = data['sentiment']
 log_age = data['avg_age']
-log_educ = data['avg_educ_years']
-data_m2  = data.frame(sentiment, log_age, log_educ)     
+data_m2  = data.frame(sentiment, log_age)     
 pairs(data_m2)
 ```
 
 ```{r}
-model3 = lm(sentiment ~ , data = data)
-summary(model3)
+library(ggplot2)
+
+# Create the scatter plot with the fit line
+ggplot(data, aes(x = log(avg_age), y = sentiment)) +
+  geom_point() +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red") +
+  xlab("Log of Average Age") +
+  ylab("Sentiment")
+
 ```
 
 ```{r}
