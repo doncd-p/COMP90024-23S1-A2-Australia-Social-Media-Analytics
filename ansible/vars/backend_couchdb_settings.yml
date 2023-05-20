@@ -1,0 +1,13 @@
+docker_network_name: comp90024
+ini_file: inventory/instance_addresses.ini
+# backend
+backend_module_name: backend
+backend_image_name: backend
+backend_container_name: backend
+backend_container_port: 8080
+backend_host_port: 8080
+
+# couchdb
+couchdb_username: admin
+couchdb_password: password
+couchdb_port: 5984

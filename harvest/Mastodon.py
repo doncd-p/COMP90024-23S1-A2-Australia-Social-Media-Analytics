@@ -9,6 +9,7 @@ nltk.download('vader_lexicon')
 import numpy as np
 import re
 import subprocess
+import os
 
 #http://172.26.133.251:5984/test_running_toot_db
 
@@ -20,26 +21,24 @@ admin = 'group9_admin'
 password = 'group9_H1'
 # url = f'http://{admin}:{password}@172.26.130.136:5984/'
 url = 'http://172.26.133.251:5984/'
-database = 'test_running_toot_db'
+database = 'toot_database'
 
 # get couchdb instance
 couch = couchdb.Server(f'http://{admin}:{password}@172.26.133.251:5984/')
 
 # indicate the db name
-db_names = ['test_running_toot_db']
+db_names = ['toot_database']
 
 # if not exist, create one
 for db_name in db_names:
     if db_name not in couch:
         couch.create(db_name)
 
-token = '2UqOce-h-VscNrEnWll30zPvmhyp0VfD4Vrv8Ks25h8'
+# token = '2UqOce-h-VscNrEnWll30zPvmhyp0VfD4Vrv8Ks25h8'
 m = Mastodon(
-    # your server here
-    api_base_url=f'https://mastodon.social',
-    access_token=token
+    api_base_url = os.getenv('MASTODON_SERVER'),
+    access_token = os.getenv('MASTODON_TOKEN')
 )
-
 poli_key_words = pd.read_excel('Copy of Voting Keyword.xlsx')
 poli_key_words = poli_key_words['keywords'].tolist()
 

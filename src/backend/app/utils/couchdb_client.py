@@ -2,6 +2,7 @@ import couchdb
 import requests
 import json
 import random
+from urllib.parse import quote
 from ..app_config import Config
 
 
@@ -31,7 +32,10 @@ class CouchDBClient:
         server_url, server = random.choice(self.servers)
         remote_db_name = self.get_remote_db_name(db_name, server)
 
-        url = f"{server_url}{remote_db_name}/_partition/{partition_key}/_find"
+        # Encode partition key to ensure any special characters are URL safe
+        encoded_partition_key = quote(partition_key)
+
+        url = f"{server_url}{remote_db_name}/_partition/{encoded_partition_key}/_find"
         response = requests.post(url, data=json.dumps(query), headers={
                                  "Content-Type": "application/json"})
 
