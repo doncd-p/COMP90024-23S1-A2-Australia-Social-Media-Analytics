@@ -34,7 +34,7 @@
         </el-row>
         <el-row class="scatter2">
           <el-col class="figure" :span="20">
-            <div class="c scatter" ref="scatterchart" ></div>
+            <div class="c scatter" id="scatterchart" ref="scatterchart" ></div>
           </el-col>
           <el-col class="filter" :span="4">
             <el-row>
@@ -65,7 +65,8 @@
     
 </template>
 <script>
-import echarts from 'echarts';
+// import echarts from 'echarts';
+import * as echarts from 'echarts'
 
 export default {
   name: "distribution",
@@ -76,6 +77,7 @@ export default {
         dailyChartData:null,
         weekChartData:null,
         monthChartData:null,
+        scatterchart:{},
         options: [{
           value: 'day',
           label: 'Day'
@@ -107,15 +109,14 @@ export default {
         }
         ],
         after: '1w',
-        description1: 'This graph denotes the change in aggregated overall sentiment for whole Australia for the period of analysis; with option of selecting daily interval, weekly interval, or monthly interval for measuring sentiment.',
-        description2: 'This graph denotes the sentiment distribution for electorates that changed governing parties in the recent election and those that doesn’t; for aggregations of sentiments are based on 1 week, 2 weeks, 1 months, 2 months and 3 months after the election.'
-      }
+        description1: 'This graph denotes the aggregated National Political Sentiment on Twitter over the period of analysis. You can select levels of time granularity for aggregation. ',
+        description2: 'This graph denotes the sentiment distribution for electorates that changed vs didn’t change governing parties in the recent election. You can select time periods of aggregation relative to the election date.' }
     },
   created(){
     this.initEcharts();
-    this.getChart2Data();
     setTimeout(() => {
       this.storeData1();
+      this.getChart2Data();
    }, 0);
   },
   mounted() {
@@ -123,14 +124,12 @@ export default {
   watch: {
     interval: {
       handler(value) {
-       
         this.loadEcharts1()
       },
       deep: true,
     },
      after: {
       handler(value) {
-       
         this.loadEcharts2()
       },
       deep: true,
@@ -190,10 +189,6 @@ export default {
             max:0.2
           }
         ],
-        grid: [
-          {
-          }
-        ],
         series: [
           {
             type: 'line',
@@ -206,60 +201,126 @@ export default {
       let linechart = echarts.init(this.$refs.linechart)
       linechart.setOption(options)
       
+      //chart2:
       let chartData2 =  await this.getChart2Data();
-      const status = ['non-changed', 'changed'];
-      const title = [];
-      const singleAxis = [];
-      const series = [];
-      status.forEach(function (sta, idx) {
-        title.push({
-          textBaseline: 'middle',
-          top: ((idx + 0.5) * 100) / 2 + '%',
-          text: sta
-        });
-        singleAxis.push({
-          left: 150,
-          type: 'value',
-          min:-1,
-          max:1,
-          boundaryGap: false,
-          top: (idx * 100) / 2 + 5 + '%',
-          height: 100 / 2 - 13 + '%',
-        });
-        series.push({
-          singleAxisIndex: idx,
-          coordinateSystem: 'singleAxis',
-          type: 'scatter',
-          data: [],
-          markLine: {}
-          });
-      });
-      chartData2.forEach(function (dataItem) {
-        series[dataItem[0]].data.push([dataItem[1]]);
-      });
-      series.markLine = {
-        lineStyle: {
-          type: 'solid'
+      let changed = []
+      let not_changed = []
+      for(let i = 0 ; i< chartData2.length ; i++){
+        if (chartData2[i][0]==1){
+          changed.push(chartData2[i][1])
+        }else{
+          not_changed.push(chartData2[i][1])
+        }
+      }
+       const options2 = {
+      title: [
+        {
+          text: 'Comparison of the sentiment according to whether changed governing party',
+          left: 'center'
         },
-        data: [{ type: 'average', name: 'avg' }]
-      };
+        {
+        
+          left: '10%',
+          top: '90%'
+        }
+      ],
+      dataset: [
+        {
+          source: [
+            not_changed, changed
+          ]
+        },
       
-      const options2= {
-        emphasis: {
-        focus: 'series'
+        {
+          transform: {
+            type: 'boxplot',
+            config: { itemNameFormatter: function (params) {
+              if (params.value == 1) {
+                return "changed"
+              }
+              return "non-changed"
+            }}
+          }
         },
-        tooltip: {
-          position: 'top'
+        {
+          fromDatasetIndex: 1,
+          fromTransformResult: 1
+        }
+      ],
+      tooltip: {
+        trigger: 'item',
+        axisPointer: {
+          type: 'shadow'
+        }
+      },
+      grid: {
+        left: '10%',
+        right: '10%',
+        bottom: '15%'
+      },
+      xAxis: {
+        type: 'value',
+        name: 'Sentiment',
+        min: -1,
+        max:1
+      },
+      yAxis: {
+        type: 'category',
+        boundaryGap: true,
+        nameGap: 15,
+        splitArea: {
+          show: false
         },
-        title: title,
-        singleAxis: singleAxis,
-        series: series
-      };
+        splitLine: {
+          show: true
+        }
+      },
+      color:[
+        "#ee6666",
+      ],
+      series: [
+        {
+          name: 'non-changed',
+          type: 'boxplot',
+          datasetIndex: 1,
+          tooltip: {formatter: function(params){
+            return [
+              'Type:' + params.name,
+              'min:'+params.data[1], 
+              'Q1: ' + params.data[2],
+              'median:'+params.data[3],
+              'Q3:'+params.data[4],
+              'max:'+params.data[5],
+            ].join('<br/>')
+          }},
+          itemStyle: {color: '#ffd04b'},
+        },
+        {
+          name: 'changed',
+          type: 'scatter',
+          datasetIndex: 2,
+          tooltip: {formatter: function(params){
+            return [
+              'Type:' + params.name,
+              'min:'+params.data[1], 
+              'Q1: ' + params.data[2],
+              'median:'+params.data[3],
+              'Q3:'+params.data[4],
+              'max:'+params.data[5],
+            ].join('<br/>')
+          }},
+          itemStyle: {color: '#dd0000'},
+        },
+      
+      ]
+    };
+
       let scatterchart = echarts.init(this.$refs.scatterchart)
       scatterchart.setOption(options2)
-      this.loading = false;
+      this.loading = false
       
     },
+    
     async loadEcharts1() {
       this.loading = true;
       let chartData;
@@ -326,54 +387,129 @@ export default {
 
       let linechart = echarts.init(this.$refs.linechart)
       linechart.setOption(options)
-      this.loading=false
+      this.loading = false
       
     },
+    
     async loadEcharts2() {
       this.loading = true;
       let chartData2 =  await this.getChart2Data();
-      const status = ['non-changed', 'changed'];
-      const title = [];
-      const singleAxis = [];
-      const series = [];
-      status.forEach(function (sta, idx) {
-        title.push({
-          textBaseline: 'middle',
-          top: ((idx + 0.5) * 100) / 2 + '%',
-          text: sta
-        });
-        singleAxis.push({
-          left: 150,
-          type: 'value',
-          min:-1,
-          max:1,
-          boundaryGap: false,
-          top: (idx * 100) / 2 + 5 + '%',
-          height: 100 / 2 - 13 + '%',
-        });
-        series.push({
-          singleAxisIndex: idx,
-          coordinateSystem: 'singleAxis',
-          type: 'scatter',
-          data: [],
-          markLine: {}
-          });
-      });
-      chartData2.forEach(function (dataItem) {
-        series[dataItem[0]].data.push([dataItem[1]]);
-      });
+      let changed = []
+      let not_changed = []
+      for(let i = 0 ; i< chartData2.length ; i++){
+        if (chartData2[i][0]==1){
+          changed.push(chartData2[i][1])
+        }else{
+          not_changed.push(chartData2[i][1])
+        }
+      }
+
     
-      const options2= {
-        emphasis: {
-        focus: 'series'
+    const options2 = {
+      title: [
+        {
+          text: 'Comparison of the sentiment according to whether changed governing party',
+          left: 'center'
         },
-        tooltip: {
-          position: 'top'
+        {
+        
+          left: '10%',
+          top: '90%'
+        }
+      ],
+      dataset: [
+        {
+          source: [
+            not_changed, changed
+          ]
         },
-        title: title,
-        singleAxis: singleAxis,
-        series: series
-      };
+      
+        {
+          transform: {
+            type: 'boxplot',
+            config: { itemNameFormatter: function (params) {
+              if (params.value == 1) {
+                return "changed"
+              }
+              return "non-changed"
+            }}
+          }
+        },
+        {
+          fromDatasetIndex: 1,
+          fromTransformResult: 1
+        }
+      ],
+      tooltip: {
+        trigger: 'item',
+        axisPointer: {
+          type: 'shadow'
+        }
+      },
+      grid: {
+        left: '10%',
+        right: '10%',
+        bottom: '15%'
+      },
+      xAxis: {
+        type: 'value',
+        name: 'Sentiment',
+        min: -1,
+        max:1
+      },
+      yAxis: {
+        type: 'category',
+        boundaryGap: true,
+        nameGap: 15,
+        splitArea: {
+          show: false
+        },
+        splitLine: {
+          show: true
+        }
+      },
+      color:[
+        "#ee6666",
+      ],
+      series: [
+        {
+          name: 'boxplot',
+          type: 'boxplot',
+          datasetIndex: 1,
+          tooltip: {formatter: function(params){
+            return [
+              'Type:' + params.name,
+              'min:'+params.data[1], 
+              'Q1: ' + params.data[2],
+              'median:'+params.data[3],
+              'Q3:'+params.data[4],
+              'max:'+params.data[5],
+            ].join('<br/>')
+          }},
+          itemStyle: {color: '#ffd04b'},
+          lineStyle: { weight:3},
+        },
+        {
+          name: 'outlier',
+          type: 'scatter',
+          datasetIndex: 2,
+          tooltip: {formatter: function(params){
+            return [
+              'Type:' + params.name,
+              'min:'+params.data[1], 
+              'Q1: ' + params.data[2],
+              'median:'+params.data[3],
+              'Q3:'+params.data[4],
+              'max:'+params.data[5],
+            ].join('<br/>')
+          }},
+          itemStyle: {color: '#dd0000'},
+        },
+      
+      ]
+    };
+
+    
       let scatterchart = echarts.init(this.$refs.scatterchart)
       scatterchart.setOption(options2)
       this.loading = false;
@@ -382,21 +518,21 @@ export default {
     getData() {
       if (this.interval == "day"){
         return this.$axios
-        .get(process.env.VUE_APP_BASE_URL + "/board/political/sentiments/daily?startdate=2022-02-09&enddate=2023-06-30")
+        .get("http://"+process.env.VUE_APP_BASE_URL + ":8080/board/political/sentiments/daily?startdate=2022-02-09&enddate=2023-06-30")
         .then((result) => {
           this.dayChartData = result.data.data;
           return result.data.data;
       });
       }else if( this.interval == "week"){
         return this.$axios
-        .get(process.env.VUE_APP_BASE_URL + "/board/political/sentiments/weekly?startweek=-15&endweek=15")
+        .get("http://"+process.env.VUE_APP_BASE_URL + ":8080/board/political/sentiments/weekly?startweek=-15&endweek=15")
         .then((result) => {
           this.weekChartData = result.data.data;
           return result.data.data;
       });
       }else{
         return this.$axios
-        .get(process.env.VUE_APP_BASE_URL + "/board/political/sentiments/monthly?startdate=2022-02-09&enddate=2023-06-30")
+        .get("http://"+process.env.VUE_APP_BASE_URL + ":8080/board/political/sentiments/monthly?startdate=2022-02-09&enddate=2023-06-30")
         .then((result) => {
           this.monthChartData = result.data.data;
           return result.data.data;
@@ -406,17 +542,17 @@ export default {
     },
     storeData1(){
        this.$axios
-        .get(process.env.VUE_APP_BASE_URL + "/board/political/sentiments/daily?startdate=2022-02-09&enddate=2023-06-30")
+        .get("http://"+process.env.VUE_APP_BASE_URL + ":8080/board/political/sentiments/daily?startdate=2022-02-09&enddate=2023-06-30")
         .then((result) => {
           this.dailyChartData = result.data.data;
       });
       this.$axios
-        .get(process.env.VUE_APP_BASE_URL + "/board/political/sentiments/weekly?startweek=-15&endweek=15")
+        .get("http://"+process.env.VUE_APP_BASE_URL + ":8080/board/political/sentiments/weekly?startweek=-15&endweek=15")
         .then((result) => {
           this.weekChartData = result.data.data;
       });
       this.$axios
-        .get(process.env.VUE_APP_BASE_URL + "/board/political/sentiments/month?startdate=2022-02-09&enddate=2023-06-30")
+        .get("http://"+process.env.VUE_APP_BASE_URL + ":8080/board/political/sentiments/month?startdate=2022-02-09&enddate=2023-06-30")
         .then((result) => {
           this.monthChartData = result.data.data;
       });
@@ -424,15 +560,15 @@ export default {
     getChart2Data(){
       let src = ""
       if(this.after == "1w"){
-        src = process.env.VUE_APP_BASE_URL + "/board/political/sentiments/winningchange?type=week&after=1"
+        src = "http://"+process.env.VUE_APP_BASE_URL + ":8080/board/political/sentiments/winningchange?type=week&after=1"
       }else if(this.after == "2w"){
-        src = process.env.VUE_APP_BASE_URL + "/board/political/sentiments/winningchange?type=week&after=2"
+        src = "http://"+process.env.VUE_APP_BASE_URL + ":8080/board/political/sentiments/winningchange?type=week&after=2"
       }else if(this.after == "1m"){
-        src = process.env.VUE_APP_BASE_URL + "/board/political/sentiments/winningchange?type=month&after=1"
+        src = "http://"+process.env.VUE_APP_BASE_URL + ":8080/board/political/sentiments/winningchange?type=month&after=1"
       }else if (this.after == "2m"){
-        src =  process.env.VUE_APP_BASE_URL + "/board/political/sentiments/winningchange?type=month&after=2"
+        src = "http://"+process.env.VUE_APP_BASE_URL + ":8080/board/political/sentiments/winningchange?type=month&after=2"
       }else {
-        src = process.env.VUE_APP_BASE_URL + "/board/political/sentiments/winningchange?type=month&after=3"
+        src = "http://"+process.env.VUE_APP_BASE_URL + ":8080/board/political/sentiments/winningchange?type=month&after=3"
       }
       return this.$axios
         .get(src)
@@ -504,7 +640,7 @@ export default {
     width:98%;
   }
   .description{
-    height:220px;
+    height:240px;
     overflow: scroll;
     width:91%;
     margin-left: 5%;

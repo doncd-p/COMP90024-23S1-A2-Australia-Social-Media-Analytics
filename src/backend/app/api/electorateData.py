@@ -83,13 +83,9 @@ class ElectorateSudoDataAll(Resource):
 
         if data_dict:
             response = jsonify(
-<<<<<<< HEAD
                 code=200,
                 msg="ok",
                 data=data_dict
-=======
-                doc
->>>>>>> ad382b9b (fix: backend update)
             )
             response.status_code = 200
             return response

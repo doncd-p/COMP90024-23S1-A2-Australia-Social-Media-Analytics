@@ -4,13 +4,8 @@ from .electoratePoliticalTweets import NumberSentimentPolitical, DailyAvgSentime
 from .tweetsMeta import TweetsMeta
 from .tootMeta import TootMeta
 from .topTweets import TopPositiveTweets, TopNegativeTweets
-<<<<<<< HEAD
 from .electorateData import ElectorateGeoData, ElectorateSudoData, ElectorateSudoDataAll
 from .boardPolitical import BoardWeeklyAvgSentimentPolitical, BoardDailyAvgSentimentPolitical, BoardMonthlyAvgSentimentPolitical, BoardWinningChangeSentiment
-=======
-from .electorateData import ElectorateData, ElectorateGeoData
-from .boardPolitical import BoardWeeklyAvgSentimentPolitical, BoardDailyAvgSentimentPolitical, BoardMonthlyAvgSentimentPolitical
->>>>>>> ad382b9b (fix: backend update)
 from .boardAll import BoardWeeklyAvgSentimentAll, BoardDailyAvgSentimentAll, BoardMonthlyAvgSentimentAll
 
 
@@ -56,10 +51,7 @@ def init_api(app):
                      '/board/sentiments/monthly')
     api.add_resource(BoardMonthlyAvgSentimentPolitical,
                      '/board/political/sentiments/monthly')
-<<<<<<< HEAD
     api.add_resource(BoardWinningChangeSentiment,
                      '/board/political/sentiments/winningchange')
-=======
->>>>>>> ad382b9b (fix: backend update)
 
     api.init_app(app)

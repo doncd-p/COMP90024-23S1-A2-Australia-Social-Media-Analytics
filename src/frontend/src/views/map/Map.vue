@@ -236,9 +236,9 @@ export default {
     getCloudData() {
       let url;
       if(this.time == "pre"){
-        url = process.env.VUE_APP_BASE_URL + "/political/sentiments/daily?startdate=2022-02-09&enddate=2022-05-21"
+        url = "http://"+process.env.VUE_APP_BASE_URL + ":8080/political/sentiments/daily?startdate=2022-02-09&enddate=2022-05-21"
       }else{
-        url = process.env.VUE_APP_BASE_URL + "/political/sentiments/daily?startdate=2022-05-22&enddate=2023-06-30"
+        url = "http://"+process.env.VUE_APP_BASE_URL + ":8080/political/sentiments/daily?startdate=2022-05-22&enddate=2023-06-30"
       }
       return axios
         .get(
@@ -250,16 +250,16 @@ export default {
     },
     async getDetail(eName){
       
-      const posSrc = process.env.VUE_APP_BASE_URL + "/tweet/top_positive?num=5&electorate="+eName;
-      const negSrc = process.env.VUE_APP_BASE_URL + "/tweet/top_negative?num=5&electorate="+eName;
+      const posSrc = "http://"+process.env.VUE_APP_BASE_URL + ":8080/tweet/top_positive?num=5&electorate="+eName;
+      const negSrc = "http://"+process.env.VUE_APP_BASE_URL + ":8080/tweet/top_negative?num=5&electorate="+eName;
       let sentimentSrc;
       let lineSrc;
       if (this.time == "pre"){
-        sentimentSrc = process.env.VUE_APP_BASE_URL + "/political/sentiments/number?startdate=2022-02-09&enddate=2022-05-21&electorate="+eName;
-        lineSrc = process.env.VUE_APP_BASE_URL + "/political/sentiments/weekly?startweek=-5&endweek=-1&electorate="+eName;
+        sentimentSrc = "http://"+process.env.VUE_APP_BASE_URL + ":8080/political/sentiments/number?startdate=2022-02-09&enddate=2022-05-21&electorate="+eName;
+        lineSrc = "http://"+process.env.VUE_APP_BASE_URL + ":8080/political/sentiments/weekly?startweek=-5&endweek=-1&electorate="+eName;
       }else{
-        sentimentSrc = process.env.VUE_APP_BASE_URL + "/political/sentiments/number?startdate=2022-05-22&enddate=2023-06-30&electorate="+eName;
-        lineSrc = process.env.VUE_APP_BASE_URL + "/political/sentiments/weekly?startweek=1&endweek=5&electorate="+eName
+        sentimentSrc = "http://"+process.env.VUE_APP_BASE_URL + ":8080/political/sentiments/number?startdate=2022-05-22&enddate=2023-06-30&electorate="+eName;
+        lineSrc = "http://"+process.env.VUE_APP_BASE_URL + ":8080/political/sentiments/weekly?startweek=1&endweek=5&electorate="+eName
       }
       
       const [posResponse, negResponse, senResponse, lineResponse] = await Promise.all([
@@ -332,7 +332,7 @@ export default {
       }
         
         map.data.loadGeoJson(
-          process.env.VUE_APP_BASE_URL + "/electorate/geo_data",
+          "http://"+process.env.VUE_APP_BASE_URL + ":8080/electorate/geo_data",
           null,
           () => {
             

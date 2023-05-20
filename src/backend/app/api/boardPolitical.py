@@ -1,17 +1,11 @@
 from flask import jsonify, request
 from flask_restful import Resource
-<<<<<<< HEAD
 from flask import current_app as app
 from app.utils.couchdb_client import client
 import requests
 
 import calendar
 from datetime import datetime, timedelta
-=======
-from app.utils.couchdb_client import client
-import calendar
-from datetime import datetime
->>>>>>> ad382b9b (fix: backend update)
 
 
 class BoardDailyAvgSentimentPolitical(Resource):
@@ -201,7 +195,6 @@ class BoardMonthlyAvgSentimentPolitical(Resource):
             )
             response.status_code = 500
             return response
-<<<<<<< HEAD
 
 
 class BoardWinningChangeSentiment(Resource):
@@ -287,5 +280,3 @@ class BoardWinningChangeSentiment(Resource):
             }
 
         return merged_data
-=======
->>>>>>> ad382b9b (fix: backend update)
