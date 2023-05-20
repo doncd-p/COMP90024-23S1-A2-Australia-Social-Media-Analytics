@@ -6,6 +6,7 @@
       <div class="container">
         <h3 class="heading">WELCOME TO ELEFEEL</h3>
         <div class="popular_packages_grids">
+
           <div class="package_top_grid">
             <div class="col-md-6">
               <div class="packages_left"></div>
@@ -51,7 +52,7 @@
               <div class="packages_left2"></div>
             </div>
             <div class="col-md-6">
-              <div class="packages_right packages_right2" style="height: 340px">
+              <div class="packages_right packages_right2" style="height: 350px">
                 <h3>MAP</h3>
                 <p>
                   Explore our Electorate Map feature to delve into detailed information about
@@ -66,6 +67,30 @@
             </div>
             <div class="clearfix"></div>
           </div>
+
+          <div class="package_middle_grid">
+            <div class="col-md-6">
+              <div class="packages_right packages_right" style="height: 340px">
+                <h3>Australian Party</h3>
+                <p>
+                  The Australian political parties mentioned on this website are represented
+                  by their abbreviations. For easy reference, a table is provided alongside
+                  listing the full names of the parties along with their respective logos.
+                  This allows users to quickly identify and familiarize themselves with
+                  the parties featured on the site.
+                </p>
+                <a href="https://www.aph.gov.au/About_Parliament/House_of_Representatives/Powers_practice_and_procedure/00_-_Infosheets/Infosheet_22_-_Political_parties#:~:text=There%20are%20three%20main%20parties,of%20Australia%2C%20and%20the%20Nationals."
+                  >Learn More <span class="fa fa-long-arrow-right"></span
+                ></a>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="packages_left3"></div>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+
+
         </div>
       </div>
     </section>

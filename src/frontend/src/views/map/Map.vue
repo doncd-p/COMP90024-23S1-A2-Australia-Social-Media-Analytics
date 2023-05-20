@@ -10,7 +10,7 @@
             >&nbsp;&nbsp;&nbsp;Sentiment&nbsp;&nbsp;&nbsp;</el-radio-button
           ><br />
           <el-radio-button label="tweets" >Number of Tweets</el-radio-button>
-          <el-radio-button label="status" >Changed Status</el-radio-button>
+          <el-radio-button label="status" >changed governing party</el-radio-button>
         </el-radio-group>
       </el-col>
       <el-col :span="6">
@@ -43,10 +43,11 @@
         <div class="legend">{{legend.right}}</div>
       </el-row>
     <!-- map -->
-    <div class="map" id="map" v-loading="loading" style="height: 100vh"
+    <div class="map" id="map" v-loading="loading" style="height: 800px; margin-bottom:0;"
       element-loading-text="loading..."
       element-loading-spinner="el-icon-loading"
       element-loading-background="rgba(0, 0, 0, 0.8)"></div>
+    <div style="color:white;"> Note: Percentage of votes won is votes according to Two Candidate Preferences.</div>
 
     <el-dialog
       :title="mapItem.divisionName"
@@ -56,7 +57,7 @@
       :before-close="handleClose"
     >
       <el-form label-position="left">
-        <el-form-item label="Average Age: ">
+        <el-form-item label="Average Voting Age: ">
           {{ mapItem.avgAge }}
         </el-form-item>
         <el-form-item label="Average Education Years: ">
@@ -65,35 +66,65 @@
         <el-form-item label="Average Weekly Income: ">
           {{ mapItem.avgWeeklyIncome }}
         </el-form-item>
-        <el-form-item label="Estimated Resident Population: ">
-          {{ mapItem.erp }}
-        </el-form-item>
-        <el-form-item label="Net Migration Rate: ">
+        <el-form-item label="Net Migration: ">
           {{ mapItem.netMigration }}
         </el-form-item>
+        <el-form-item label="Winning Party in 2019: ">
+          {{ mapItem.winparty19 }}
+        </el-form-item>
+        <el-form-item label="Winning Party Vote Rate in 2019: ">
+          {{ mapItem.winpartyvote19 }}
+        </el-form-item>
+        <el-form-item label="Winning Party in 2022: ">
+          {{ mapItem.winparty22 }}
+        </el-form-item>
+        <el-form-item label="Winning Party Vote Rate in 2022: ">
+          {{ mapItem.winpartyvote22 }}
+        </el-form-item>
+
+        <el-form-item label="Overall Sentiment: ">
+          {{ mapItem.overall_sentiment }}
+        </el-form-item>
+         <el-form-item label="The Number of Tweets: ">
+          {{ mapItem.tweets_num }}
+        </el-form-item>
           <div >
+          <el-divider >Sentiment Analysis</el-divider>
            <pie-data
             :pieData="mapItem.sentiment">
           </pie-data>
         </div>
           <div >
+          <el-divider>Weekly Sentiment</el-divider>
            <line-data
             :lineData="mapItem.lineData">
           </line-data>
+          <div style="font-size:10px; display:flex; justify-content:center;">Note: "-5" on xAxis refers “the 5th week before the election day", "5" on xAxis refers "the 5th week after the election day".</div>
         </div>
        
       </el-form>
     
       <el-divider>Top Tweets</el-divider>
-      <div>Positive:</div>
-      <p v-for="item in mapItem.posTweets" :key="item.tweet_id">
-          &nbsp;{{ item.text }}
-      </p>
+      <div style="font-weight:bolder;">Positive:</div>
+      <div class="tweets" v-for="item in mapItem.posTweets" :key="item.tweet_id">
+        <div style="font-weight:bold; margin-bottom:2px;">
+          &nbsp;{{ item.author}}:
+        </div>
+         <p>
+          &nbsp;&nbsp;&nbsp;{{ item.text }}
+        </p>
+      </div>
+     
       <br>
-      <div>Negative:</div>
-      <p v-for="item in mapItem.negTweets" :key="item.tweet_id">
-          &nbsp;{{ item.text }}
-      </p>
+      <div style="font-weight:bolder;">Negative:</div>
+      <div class="tweets" v-for="item in mapItem.negTweets" :key="item.tweet_id">
+        <div style="font-weight:bold; margin-bottom:2px;">
+          &nbsp;{{ item.author}}:
+        </div>
+         <p>
+          &nbsp;&nbsp;&nbsp;{{ item.text }}
+        </p>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -121,7 +152,7 @@ export default {
       data: [],
       map: null,
       mapData: null,
-      party: "Libera",
+      party: "Liberal National Coalition",
       map: {},
       dialogVisible: false,
       mapItem: {
@@ -129,8 +160,13 @@ export default {
         avgAge: null,
         avgEducYears: null,
         avgWeeklyIncome: null,
-        erp: null,
         netMigration: null,
+        winparty19: null,
+        winpartyvote19: null,
+        winparty22: null,
+        winpartyvote22: null,
+        overall_sentiment: null,
+        tweets_num: null,
         posTweets: [],
         negTweets: [],
         sentiment: [],
@@ -155,13 +191,13 @@ export default {
     },
     handleTimeChange(value){
       if (this.time === "pre") {
-        this.party = "Liberal";
+        this.party = "Liberal National Coalition";
       } else {
-        this.party = "Labour";
+        this.party = "Australian Labour Party";
       }
       this.initMap(this.senario);
     },
-    //////////////////
+
     rgbToHex(r, g, b) {
       var hex = ((r << 16) | (g << 8) | b).toString(16);
       return "#" + new Array(Math.abs(hex.length - 7)).join("0") + hex;
@@ -196,7 +232,7 @@ export default {
       }
       return gradientColorArr;
     },
-    ///////////////////
+
     getCloudData() {
       let url;
       if(this.time == "pre"){
@@ -220,10 +256,10 @@ export default {
       let lineSrc;
       if (this.time == "pre"){
         sentimentSrc = process.env.VUE_APP_BASE_URL + "/political/sentiments/number?startdate=2022-02-09&enddate=2022-05-21&electorate="+eName;
-        lineSrc = process.env.VUE_APP_BASE_URL + "/political/sentiments/daily?startdate=2022-02-09&enddate=2022-05-21&electorate="+eName;
+        lineSrc = process.env.VUE_APP_BASE_URL + "/political/sentiments/weekly?startweek=-5&endweek=-1&electorate="+eName;
       }else{
         sentimentSrc = process.env.VUE_APP_BASE_URL + "/political/sentiments/number?startdate=2022-05-22&enddate=2023-06-30&electorate="+eName;
-        lineSrc = process.env.VUE_APP_BASE_URL + "/political/sentiments/daily?startdate=2022-05-22&enddate=2023-06-30&electorate="+eName
+        lineSrc = process.env.VUE_APP_BASE_URL + "/political/sentiments/weekly?startweek=1&endweek=5&electorate="+eName
       }
       
       const [posResponse, negResponse, senResponse, lineResponse] = await Promise.all([
@@ -235,9 +271,14 @@ export default {
       this.mapItem.posTweets = posResponse.data.data;
       this.mapItem.negTweets = negResponse.data.data;
       this.mapItem.sentiment = senResponse.data.data[eName];
-      this.mapItem.lineData = [lineResponse.data.data][0];
-     
-      
+      let tempLineData = lineResponse.data.data[eName];
+      let lineData = [];
+      for (let i =0; i<Object.entries(tempLineData).length;i++){
+        lineData.push(Object.entries(tempLineData)[i])
+
+      }
+      this.mapItem.lineData = lineData;
+
     },
   
     // ========================== Init Map ==================================================
@@ -359,12 +400,21 @@ export default {
               this.mapItem.avgWeeklyIncome = event.feature
                 .getProperty("averageWeeklyIncome")
                 .toFixed(2);
-              this.mapItem.erp = event.feature
-                .getProperty("estimatedResidentPopulation")
-                .toFixed(2);
               this.mapItem.netMigration = event.feature
                 .getProperty("netMigration")
                 .toFixed(2);
+              this.mapItem.winparty19 = event.feature
+                .getProperty("winningParty2019");
+              this.mapItem.winpartyvote19 = event.feature
+                .getProperty("winningPercentage2019")
+                .toFixed(2);
+              this.mapItem.winparty22 = event.feature
+                .getProperty("winningParty2022")
+              this.mapItem.winpartyvote22 = event.feature
+                .getProperty("winningPercentage2022")
+                .toFixed(2);
+              this.mapItem.overall_sentiment = that.output[event.feature.getProperty("divisionName")]["avg_sentiment"].toFixed(3)
+              this.mapItem.tweets_num = that.output[event.feature.getProperty("divisionName")]["num_tweets"]
               await that.getDetail(event.feature.getProperty("divisionName"));
           
               this.dialogVisible = true;
@@ -526,5 +576,9 @@ export default {
   color:#fff;
   font-size: 24px;
   margin: auto;
+}
+.tweets{
+  margin: 1em;
+  border-style: outset;
 }
 </style>

@@ -38,7 +38,7 @@ export default {
           return item[0];
         });
       const valueList = this.lineData.map(function (item) {
-          return item[1];
+          return  Math.round((item[1]) * 1000) / 1000;
         });
       const options = {
            // Make gradient line here
@@ -51,24 +51,21 @@ export default {
             max: 1
           }
         ],
-        title: [
-          {
-            left: 'center',
-            text: "Daily Sentiment"
-          }
-        ],
+        
         tooltip: {
           trigger: 'axis'
         },
         xAxis: [
           {
-            data: dateList
+            data: dateList,
+            name: 'Week',
           }
         ],
         yAxis: [
           {
             min:-1,
-            max:1
+            max:1,
+            name: 'Sentiment',
           }
         ],
         grid: [
