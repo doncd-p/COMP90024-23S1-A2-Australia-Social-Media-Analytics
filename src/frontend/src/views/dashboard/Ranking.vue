@@ -9,7 +9,7 @@
           <el-col class="tablebody" :span="20">
             <div class="tablelabel"> Sentiment Ranking</div>
             <el-table class="tablecontent" :data="tableData1" stripe height="250" style="width: 100%"  :default-sort = "{prop: 'sentiment', order: 'descending'}" >
-                <el-table-column type="index" :index="indexMethod" width="width:10%" align="center"> </el-table-column>
+                <el-table-column type="index" width="width:10%" align="center"> </el-table-column>
                 <el-table-column prop="electorate" label="Electorate" width="width:18%" align="center"> </el-table-column>
                 <el-table-column prop="party1" label="2019 Party" width="width:18%" align="center"> </el-table-column>
                 <el-table-column prop="party2" label="2022 Party" width="width:18%" align="center"> </el-table-column>
@@ -33,7 +33,7 @@
           <el-col class="tablebody" :span="20">
             <div class="tablelabel"> #Tweets Ranking</div>
             <el-table class="tablecontent" :data="tableData2" stripe height="250" style="width: 100%"  :default-sort = "{prop: 'tweets', order: 'descending'}" >
-                <el-table-column type="index" :index="indexMethod" width="width:10%" align="center"> </el-table-column>
+                <el-table-column type="index" width="width:10%" align="center"> </el-table-column>
                 <el-table-column prop="electorate" label="Electorate" width="width:18%" align="center"> </el-table-column>
                 <el-table-column prop="party1" label="2019 Party" width="width:18%" align="center"> </el-table-column>
                 <el-table-column prop="party2" label="2022 Party" width="width:18%" align="center"> </el-table-column>

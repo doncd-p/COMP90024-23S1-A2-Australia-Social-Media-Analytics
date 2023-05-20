@@ -286,11 +286,11 @@ export default {
           tooltip: {formatter: function(params){
             return [
               'Type:' + params.name,
-              'min:'+params.data[1], 
-              'Q1: ' + params.data[2],
-              'median:'+params.data[3],
-              'Q3:'+params.data[4],
-              'max:'+params.data[5],
+              'min:'+ Math.round(params.data[1] * 100) / 100, 
+              'Q1: ' + Math.round(params.data[2] * 100) / 100,
+              'median:'+Math.round(params.data[3] * 100) / 100,
+              'Q3:'+Math.round(params.data[4] * 100) / 100,
+              'max:'+Math.round(params.data[5] * 100) / 100,
             ].join('<br/>')
           }},
           itemStyle: {color: '#ffd04b'},
@@ -302,11 +302,11 @@ export default {
           tooltip: {formatter: function(params){
             return [
               'Type:' + params.name,
-              'min:'+params.data[1], 
-              'Q1: ' + params.data[2],
-              'median:'+params.data[3],
-              'Q3:'+params.data[4],
-              'max:'+params.data[5],
+              'min:'+ Math.round(params.data[1] * 100) / 100, 
+              'Q1: ' + Math.round(params.data[2] * 100) / 100,
+              'median:'+Math.round(params.data[3] * 100) / 100,
+              'Q3:'+Math.round(params.data[4] * 100) / 100,
+              'max:'+Math.round(params.data[5] * 100) / 100,
             ].join('<br/>')
           }},
           itemStyle: {color: '#dd0000'},
@@ -479,11 +479,11 @@ export default {
           tooltip: {formatter: function(params){
             return [
               'Type:' + params.name,
-              'min:'+params.data[1], 
-              'Q1: ' + params.data[2],
-              'median:'+params.data[3],
-              'Q3:'+params.data[4],
-              'max:'+params.data[5],
+              'min:'+ Math.round(params.data[1] * 100) / 100, 
+              'Q1: ' + Math.round(params.data[2] * 100) / 100,
+              'median:'+Math.round(params.data[3] * 100) / 100,
+              'Q3:'+Math.round(params.data[4] * 100) / 100,
+              'max:'+Math.round(params.data[5] * 100) / 100,
             ].join('<br/>')
           }},
           itemStyle: {color: '#ffd04b'},
@@ -496,11 +496,11 @@ export default {
           tooltip: {formatter: function(params){
             return [
               'Type:' + params.name,
-              'min:'+params.data[1], 
-              'Q1: ' + params.data[2],
-              'median:'+params.data[3],
-              'Q3:'+params.data[4],
-              'max:'+params.data[5],
+              'min:'+ Math.round(params.data[1] * 100) / 100, 
+              'Q1: ' + Math.round(params.data[2] * 100) / 100,
+              'median:'+Math.round(params.data[3] * 100) / 100,
+              'Q3:'+Math.round(params.data[4] * 100) / 100,
+              'max:'+Math.round(params.data[5] * 100) / 100,
             ].join('<br/>')
           }},
           itemStyle: {color: '#dd0000'},

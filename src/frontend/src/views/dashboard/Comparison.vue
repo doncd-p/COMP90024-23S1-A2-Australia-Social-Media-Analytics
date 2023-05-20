@@ -1,10 +1,10 @@
 <template>
     <div id="app">  
       <el-col :span="24" class="chart">
-        <el-row class="figurerow">
+        <el-row class="figurerow1">
           <!-- figure1 -->
-          <el-col class="figureitem" :span="20">
-           <div class="tablelabel">Census Data Trends on Tweets Data</div>
+          <el-col class="figureitem1" :span="20">
+           <div class="tablelabel3">Census Data Trends on Tweets Data</div>
             <div class="ch" ><img :src="img_src" width="700" height="480"></div>
           </el-col>
            <el-col class="filter" :span="4">
@@ -26,13 +26,13 @@
             </el-row>
           </el-col>
         </el-row>
-        <el-row class="tablerow">
+        <el-row class="tablerow3">
             <!-- table1 -->
-          <el-col class="tablebody" :span="20">
-            <div class="tablelabel">Tweets vs Toots</div>
+          <el-col class="tablebody3" :span="20">
+            <div class="tablelabel3">Tweets vs Toots</div>
             <table>
                 <tr>
-                    <th style="width:400px;"></th>
+                    <th style="width:44%;"></th>
                     <th style="width:28%; ">Tweet</th>
                     <th style="width:28%;">Toots</th>
                 </tr>
@@ -54,12 +54,7 @@
             </table>
           </el-col>
           <el-col class="filter" :span="4">
-            <el-row>
-                <!-- button -->
-            </el-row>
-            <el-row>
             
-            </el-row>
           </el-col>
         </el-row>
       </el-col>
@@ -171,7 +166,7 @@ export default {
   .el-menu-vertical-demo{
     height:100vh;
   }
-  .figurerow{
+  .figurerow1{
     height: 50em;
     display:flex;
     background-color: #5f4848;
@@ -179,7 +174,7 @@ export default {
     align-items: center;
     border-bottom:0.1em solid #fff;
   }
-  .figureitem{
+  .figureitem1{
     height: 80%;
     width:65%;
     border: 0.5em solid #cb7f67;
@@ -215,10 +210,7 @@ export default {
     background-color:#5f4848;
     border:0.5em solid#cb7f67;
   }
-  .table{
-    height: 100px;
-  }
-  .tablerow{
+  .tablerow3{
     height:20em;
     display: flex;
     background-color: #444a5b;
@@ -226,7 +218,7 @@ export default {
     align-items: center;
     border-bottom:0.1em solid #fff;
   }
-  .tablebody{
+  .tablebody3{
     height: 80%;
     width:65%;
     border: 0.5em solid #cb7f67;
@@ -235,7 +227,7 @@ export default {
     flex-direction: column;
     padding: 10px;
   }
-  .tablelabel{
+  .tablelabel3{
     font-size: 24px;
     font-weight: 500;
     margin-left:10px;
@@ -260,11 +252,7 @@ export default {
     font-size: 20px;
     margin-bottom: 10px;
   }
-  table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-}
+
 
 td, th {
   border: 1px solid #dddddd;
