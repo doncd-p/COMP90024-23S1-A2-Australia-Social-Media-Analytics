@@ -65,6 +65,3 @@ class CouchDBClient:
             return best_match
         else:
             raise ValueError(f"Unknown database: {db_name}")
-
-
-client = CouchDBClient()

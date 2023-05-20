@@ -1,6 +1,6 @@
 from flask import jsonify, request
 from flask_restful import Resource
-from app.utils.couchdb_client import client
+from app.utils.couchdb_client import CouchDBClient
 
 
 class TopPositiveTweets(Resource):
@@ -43,6 +43,7 @@ class TopPositiveTweets(Resource):
         }
 
         try:
+            client = CouchDBClient()
             result = client.find_in_partition(
                 'tweet_database__electorate', electorate, query)
         except Exception as e:
@@ -117,6 +118,7 @@ class TopNegativeTweets(Resource):
         }
 
         try:
+            client = CouchDBClient()
             result = client.find_in_partition(
                 'tweet_database__electorate', electorate, query)
         except Exception as e:
