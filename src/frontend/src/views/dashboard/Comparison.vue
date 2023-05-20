@@ -4,7 +4,7 @@
         <el-row class="figurerow">
           <!-- figure1 -->
           <el-col class="figureitem" :span="20">
-           <div class="tablelabel">Sudo Data Trends on Tweets Data</div>
+           <div class="tablelabel">Census Data Trends on Tweets Data</div>
             <div class="ch" ><img :src="img_src" width="700" height="480"></div>
           </el-col>
            <el-col class="filter" :span="4">
@@ -37,17 +37,17 @@
                     <th style="width:28%;">Toots</th>
                 </tr>
                 <tr>
-                    <td>The Number of Total Non-partial Match Political Items </td>
+                    <td>total number of political posts/partial matched posts</td>
                     <td>{{tweets_political}}</td>
                     <td>{{toots_political}}</td>
                 </tr>
                 <tr>
-                    <td >Total Items Number</td>
+                    <td >Total number of posts</td>
                     <td>{{tweets_total}}</td>
                     <td>{{toots_total}}</td>
                 </tr>
                 <tr>
-                    <td >Percentage of Non-partial Match Political Items</td>
+                    <td >Percentage of political posts/partiao matched posts</td>
                     <td>{{tweets_rate}}</td>
                     <td>{{toots_rate}}</td>
                 </tr>
@@ -104,7 +104,7 @@ export default {
           label: 'Change Status'
         },
         ],
-        election: 'percentage',
+        election: '2019percentage',
         tweets_political: 0,
         tweets_total: 0,
         tweets_rate: 0,
@@ -219,9 +219,9 @@ export default {
     height: 100px;
   }
   .tablerow{
-    height: 20em;
+    height:20em;
     display: flex;
-     background-color: #444a5b;
+    background-color: #444a5b;
     justify-content:center;
     align-items: center;
     border-bottom:0.1em solid #fff;
