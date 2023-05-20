@@ -1,5 +1,5 @@
 <template>
-    <div id="app" v-loading="loading" style="height: 100vh"
+    <div id="app" v-loading="loading" style="height: 80em"
       element-loading-text="loading..."
       element-loading-spinner="el-icon-loading"
       element-loading-background="rgba(0, 0, 0, 0.8)">  
@@ -107,8 +107,8 @@ export default {
         }
         ],
         after: '1w',
-        description1: '',
-        description2: ''
+        description1: 'This graph denotes the change in aggregated overall sentiment for whole Australia for the period of analysis; with option of selecting daily interval, weekly interval, or monthly interval for measuring sentiment.',
+        description2: 'This graph denotes the sentiment distribution for electorates that changed governing parties in the recent election and those that doesn’t; for aggregations of sentiments are based on 1 week, 2 weeks, 1 months, 2 months and 3 months after the election.'
       }
     },
   created(){
@@ -123,11 +123,7 @@ export default {
   watch: {
     interval: {
       handler(value) {
-        if (this.interval == "week"){
-          this.description1 = "(-15) refers 15 weeks before the election, 15 refers 15 weeks after the election."
-        }else{
-          this.description1 = ""
-        }
+       
         this.loadEcharts1()
       },
       deep: true,
@@ -161,7 +157,7 @@ export default {
           return item[0];
         });
       this.valueList = chartData.map(function (item) {
-          return item[1];
+          return Math.round(item[1] * 1000) / 1000;
         });
       const options = {
            // Make gradient line here
@@ -170,8 +166,8 @@ export default {
             show: false,
             type: 'continuous',
             seriesIndex: 0,
-            min: -0.4,
-            max: 0.4
+            min: -0.2,
+            max: 0.2
           }
         ],
         title: [
@@ -190,8 +186,8 @@ export default {
         ],
         yAxis: [
           {
-            min:-0.4,
-            max:0.4
+            min:-0.2,
+            max:0.2
           }
         ],
         grid: [
@@ -282,7 +278,7 @@ export default {
           return item[0];
         });
       const valueList = chartData.map(function (item) {
-          return item[1];
+          return Math.round(item[1] * 1000) / 1000;
         });
       const options = {
            // Make gradient line here
@@ -291,8 +287,8 @@ export default {
             show: false,
             type: 'continuous',
             seriesIndex: 0,
-            min: -0.4,
-            max: 0.4
+            min: -0.2,
+            max: 0.2
           }
         ],
         title: [
@@ -311,8 +307,8 @@ export default {
         ],
         yAxis: [
           {
-            min:-0.4,
-            max:0.4
+            min:-0.2,
+            max:0.2
           }
         ],
         grid: [
@@ -400,7 +396,7 @@ export default {
       });
       }else{
         return this.$axios
-        .get(process.env.VUE_APP_BASE_URL + "/board/political/sentiments/monthly?startdate=2022-02-09&enddate=2022-06-30")
+        .get(process.env.VUE_APP_BASE_URL + "/board/political/sentiments/monthly?startdate=2022-02-09&enddate=2023-06-30")
         .then((result) => {
           this.monthChartData = result.data.data;
           return result.data.data;
@@ -462,10 +458,11 @@ export default {
 </script>
 <style>
   .el-menu-vertical-demo{
-    height:100vh;
+    height:80em;
+    
   }
   .scatter1{
-    height: 30em;
+    height: 40em;
     display:flex;
     background-color: #5f4848;
     justify-content:center;
@@ -473,7 +470,7 @@ export default {
     border-bottom:0.1em solid #fff;
   }
   .scatter2{
-    height: 30em;
+    height: 40em;
     background-color: #444a5b;
     display:flex;
     justify-content:center;
@@ -508,11 +505,13 @@ export default {
   }
   .description{
     height:220px;
+    overflow: scroll;
     width:91%;
     margin-left: 5%;
     margin-top:2%;
     background-color:#5f4848;
     border:0.5em solid#cb7f67;
+    word-wrap: break-word;
+    word-break: break-all;
   }
 </style>
-

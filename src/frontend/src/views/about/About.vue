@@ -52,7 +52,7 @@
               <div class="packages_left2"></div>
             </div>
             <div class="col-md-6">
-              <div class="packages_right packages_right2" style="height: 340px">
+              <div class="packages_right packages_right2" style="height: 350px">
                 <h3>MAP</h3>
                 <p>
                   Explore our Electorate Map feature to delve into detailed information about
@@ -70,7 +70,7 @@
 
           <div class="package_middle_grid">
             <div class="col-md-6">
-              <div class="packages_right packages_right">
+              <div class="packages_right packages_right" style="height: 340px">
                 <h3>Australian Party</h3>
                 <p>
                   The Australian political parties mentioned on this website are represented
