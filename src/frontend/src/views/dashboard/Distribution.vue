@@ -1,5 +1,5 @@
 <template>
-    <div id="app" v-loading="loading" style="height: 80em"
+    <div id="app" v-loading="loading" style="height: 100vh"
       element-loading-text="loading..."
       element-loading-spinner="el-icon-loading"
       element-loading-background="rgba(0, 0, 0, 0.8)">  
@@ -12,8 +12,8 @@
           <el-col class="filter" :span="4">
             
             <el-row>
-              <div class="filter1"> 
-                  <div class="filter1label"> Interval:</div>
+              <div class="filter2"> 
+                  <div class="filter2label"> Interval:</div>
                   <el-select v-model="interval"  >
                   <el-option
                     v-for="item in options"
@@ -38,8 +38,8 @@
           </el-col>
           <el-col class="filter" :span="4">
             <el-row>
-              <div class="filter1"> 
-                  <div class="filter1label"> Time After Election:</div>
+              <div class="filter2"> 
+                  <div class="filter2label"> Time After Election:</div>
                   <el-select v-model="after">
                   <el-option
                     v-for="item in options2"
@@ -598,7 +598,7 @@ export default {
     
   }
   .scatter1{
-    height: 40em;
+    height: 50vh;
     display:flex;
     background-color: #5f4848;
     justify-content:center;
@@ -606,30 +606,36 @@ export default {
     border-bottom:0.1em solid #fff;
   }
   .scatter2{
-    height: 40em;
+    height: 50vh;
     background-color: #444a5b;
     display:flex;
     justify-content:center;
     align-items: center;
   }
   .figure{
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: 80%;
     width:65%;
     border: 0.5em solid #cb7f67;
     background-color: #fff;
+
   }
   .c{
-    margin: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height:100%;
     width:100%;
   }
-  .filter1{
+  .filter2{
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
   }
-  .filter1label{
+  .filter2label{
     color:#cb7f67;
     font-weight: 600;
     font-size: 20px;
@@ -640,11 +646,11 @@ export default {
     width:98%;
   }
   .description{
-    height:240px;
+    height:80%;
     overflow: scroll;
     width:91%;
     margin-left: 5%;
-    margin-top:2%;
+    margin-top:4%;
     background-color:#5f4848;
     border:0.5em solid#cb7f67;
     word-wrap: break-word;
