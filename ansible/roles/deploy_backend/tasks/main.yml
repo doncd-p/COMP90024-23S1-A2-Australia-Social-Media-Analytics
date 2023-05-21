@@ -1,0 +1,39 @@
+- name: Install docker-compose python package
+  pip:
+    name: docker-compose
+
+- name: Execute pwd
+  command: pwd
+  register: pwd_output
+
+- name: Print pwd output
+  debug: 
+    var: pwd_output.stdout
+
+
+- name: Read INI file
+  slurp:
+    src: "{{ ini_file }}"
+  register: ini_content
+
+- name: Convert INI content from base64 to string
+  set_fact:
+    ini_string: "{{ ini_content.content | b64decode }}"
+
+- name: Extract COUCHDB_INSTANCES
+  set_fact:
+    COUCHDB_HOSTS: "{{ (ini_string.split('[COUCHDB_INSTANCES]')[1].split('[FRONTEND_INSTANCE]')[0]).strip().split('\n') | join(',') }}"
+
+- name: Take down existing backend container
+  command:
+    cmd: "docker-compose -f /home/ubuntu/COMP90024/src/backend/docker-compose.yml down --rmi local"
+  ignore_errors: true
+
+- name: Generate Docker Compose file for backend
+  template:
+    src: roles/deploy_backend/templates/docker-compose.j2
+    dest: "/home/ubuntu/COMP90024/src/backend/docker-compose.yml"
+
+- name: Run Docker Compose
+  command:
+    cmd: "docker-compose -f /home/ubuntu/COMP90024/src/backend/docker-compose.yml up --build -d"

@@ -1,5 +1,5 @@
 docker_network_name: comp90024
-ini_file: inventory/instance_addresses.ini
+ini_file: COMP90024/ansible/inventory/instance_addresses.ini
 # backend
 backend_module_name: backend
 backend_image_name: backend

@@ -1,0 +1,16 @@
+version: '3'
+services:
+    backend:
+        build: .
+        image: {{ backend_image_name }}
+        container_name: {{ backend_container_name }}
+        ports:
+            - {{backend_host_port}}:{{backend_container_port}}
+        environment:
+            COUCHDB_USERNAME: {{couchdb_username}}
+            COUCHDB_PASSWORD: {{couchdb_password}}
+            COUCHDB_PORT: {{couchdb_port}}
+            COUCHDB_HOSTS: {{ COUCHDB_HOSTS }}
+        
+
+        
