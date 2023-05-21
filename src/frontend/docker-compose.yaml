@@ -5,6 +5,12 @@ services:
       context: .
       dockerfile: Dockerfile
     image: frontendapp:latest
+    env_file:
+      - .env
+    # environment:
+    #   VUE_APP_BASE_URL: 'http://172.26.136.11:8080'
+    #   NODE_ENV: 'dev'
+    #   VUE_APP_TEXT: 'environment'
     ports:
       - 8081:80
     restart: always
