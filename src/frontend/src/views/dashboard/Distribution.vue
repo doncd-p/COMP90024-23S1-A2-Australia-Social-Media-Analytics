@@ -1,5 +1,5 @@
 <template>
-    <div id="app" v-loading="loading" style="height: 80em"
+    <div id="app" v-loading="loading" style="height: 100vh"
       element-loading-text="loading..."
       element-loading-spinner="el-icon-loading"
       element-loading-background="rgba(0, 0, 0, 0.8)">  
@@ -640,3 +640,4 @@ export default {
     word-break: break-all;
   }
 </style>
+
