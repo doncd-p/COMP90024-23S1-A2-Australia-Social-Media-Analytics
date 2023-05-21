@@ -145,7 +145,7 @@ export default {
       setTimeout(()=>{
         this.loading = true
         this.$axios
-            .get("http://"+process.env.VUE_APP_BASE_URL + ":8080/toot/meta")
+            .get(process.env.VUE_APP_BASE_URL + "/toot/meta")
             .then((result) => {
               const data = result.data.data;
               this.toots_political = data.sum;
@@ -153,7 +153,7 @@ export default {
               this.toots_rate = data.mean;
             });
          this.$axios
-            .get("http://"+process.env.VUE_APP_BASE_URL + ":8080/tweet/meta")
+            .get(process.env.VUE_APP_BASE_URL + "/tweet/meta")
             .then((result) => {
               const data = result.data.data;
               this.tweets_political = data.sum;

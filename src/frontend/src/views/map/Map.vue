@@ -236,9 +236,9 @@ export default {
     getCloudData() {
       let url;
       if(this.time == "pre"){
-        url = "http://"+process.env.VUE_APP_BASE_URL + ":8080/political/sentiments/daily?startdate=2022-02-09&enddate=2022-05-21"
+        url = process.env.VUE_APP_BASE_URL + "/political/sentiments/daily?startdate=2022-02-09&enddate=2022-05-21"
       }else{
-        url = "http://"+process.env.VUE_APP_BASE_URL + ":8080/political/sentiments/daily?startdate=2022-05-22&enddate=2023-06-30"
+        url = process.env.VUE_APP_BASE_URL + "/political/sentiments/daily?startdate=2022-05-22&enddate=2023-06-30"
       }
       return axios
         .get(
@@ -250,16 +250,16 @@ export default {
     },
     async getDetail(eName){
       
-      const posSrc = "http://"+process.env.VUE_APP_BASE_URL + ":8080/tweet/top_positive?num=5&electorate="+eName;
-      const negSrc = "http://"+process.env.VUE_APP_BASE_URL + ":8080/tweet/top_negative?num=5&electorate="+eName;
+      const posSrc = process.env.VUE_APP_BASE_URL + "/tweet/top_positive?num=5&electorate="+eName;
+      const negSrc = process.env.VUE_APP_BASE_URL + "/tweet/top_negative?num=5&electorate="+eName;
       let sentimentSrc;
       let lineSrc;
       if (this.time == "pre"){
-        sentimentSrc = "http://"+process.env.VUE_APP_BASE_URL + ":8080/political/sentiments/number?startdate=2022-02-09&enddate=2022-05-21&electorate="+eName;
-        lineSrc = "http://"+process.env.VUE_APP_BASE_URL + ":8080/political/sentiments/weekly?startweek=-5&endweek=-1&electorate="+eName;
+        sentimentSrc = process.env.VUE_APP_BASE_URL + "/political/sentiments/number?startdate=2022-02-09&enddate=2022-05-21&electorate="+eName;
+        lineSrc = process.env.VUE_APP_BASE_URL + "/political/sentiments/weekly?startweek=-5&endweek=-1&electorate="+eName;
       }else{
-        sentimentSrc = "http://"+process.env.VUE_APP_BASE_URL + ":8080/political/sentiments/number?startdate=2022-05-22&enddate=2023-06-30&electorate="+eName;
-        lineSrc = "http://"+process.env.VUE_APP_BASE_URL + ":8080/political/sentiments/weekly?startweek=1&endweek=5&electorate="+eName
+        sentimentSrc = process.env.VUE_APP_BASE_URL + "/political/sentiments/number?startdate=2022-05-22&enddate=2023-06-30&electorate="+eName;
+        lineSrc = process.env.VUE_APP_BASE_URL + "/political/sentiments/weekly?startweek=1&endweek=5&electorate="+eName
       }
       
       const [posResponse, negResponse, senResponse, lineResponse] = await Promise.all([
@@ -298,7 +298,7 @@ export default {
           center: { lat: -26.2744, lng: 133.7751 },
           zoom: 5,
         });
-        this.loading = false;
+        
       // ========================Icon examples=========================
       const icon=  {
             path: faLandmarkFlag.icon[4],
@@ -332,7 +332,7 @@ export default {
       }
         
         map.data.loadGeoJson(
-          "http://"+process.env.VUE_APP_BASE_URL + ":8080/electorate/geo_data",
+          process.env.VUE_APP_BASE_URL + "/electorate/geo_data",
           null,
           () => {
             
@@ -377,6 +377,7 @@ export default {
                   color = "#FF0000";
                 }
               }
+              this.loading = false;
               return {
                 fillColor: color,
                 strokeColor: "#000",
