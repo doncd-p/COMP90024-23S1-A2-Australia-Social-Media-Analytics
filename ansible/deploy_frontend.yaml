@@ -1,9 +1,4 @@
 - hosts: FRONTEND_INSTANCE
   become: yes
-  vars:
-    git_repo: "https://github.com/andersonkam/group-frontend.git"
-    docker_image_name: "frontendapp"
-    docker_container_name: "frontendapp"
-    docker_port: 8081:80
   roles:
     - role: deploy_frontend
