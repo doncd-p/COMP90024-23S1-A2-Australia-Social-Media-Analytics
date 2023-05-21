@@ -115,7 +115,6 @@ export default {
   created(){
     this.initEcharts();
     setTimeout(() => {
-      this.storeData1();
       this.getChart2Data();
    }, 0);
   },
@@ -540,23 +539,7 @@ export default {
       }
    
     },
-    storeData1(){
-       this.$axios
-        .get(process.env.VUE_APP_BASE_URL + "/board/political/sentiments/daily?startdate=2022-02-09&enddate=2023-06-30")
-        .then((result) => {
-          this.dailyChartData = result.data.data;
-      });
-      this.$axios
-        .get(process.env.VUE_APP_BASE_URL + "/board/political/sentiments/weekly?startweek=-15&endweek=15")
-        .then((result) => {
-          this.weekChartData = result.data.data;
-      });
-      this.$axios
-        .get(process.env.VUE_APP_BASE_URL + "/board/political/sentiments/month?startdate=2022-02-09&enddate=2023-06-30")
-        .then((result) => {
-          this.monthChartData = result.data.data;
-      });
-    },
+
     getChart2Data(){
       let src = ""
       if(this.after == "1w"){
