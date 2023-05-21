@@ -283,6 +283,7 @@ export default {
   
     // ========================== Init Map ==================================================
     async initMap(label) {
+      this.loading = true;
       let that = this;
       const loader = new Loader({
         apiKey: "AIzaSyA7qMWed4cLNiIl922Yy3nrZVVSASlDQJw",
