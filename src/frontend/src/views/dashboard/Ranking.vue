@@ -1,5 +1,5 @@
 <template>
-    <div id="app" v-loading="loading" style="height: 100vh"
+    <div id="app" v-loading="loading" style="height: 103vh; background-color: #444a5b;"
       element-loading-text="loading..."
       element-loading-spinner="el-icon-loading"
       element-loading-background="rgba(0, 0, 0, 0.8)">  
@@ -9,7 +9,7 @@
           <el-col class="tablebody" :span="20">
             <div class="tablelabel"> Sentiment Ranking</div>
             <el-table class="tablecontent" :data="tableData1" stripe height="250" style="width: 100%"  :default-sort = "{prop: 'sentiment', order: 'descending'}" >
-                <el-table-column type="index" :index="indexMethod" width="width:10%" align="center"> </el-table-column>
+                <el-table-column type="index" width="width:10%" align="center"> </el-table-column>
                 <el-table-column prop="electorate" label="Electorate" width="width:18%" align="center"> </el-table-column>
                 <el-table-column prop="party1" label="2019 Party" width="width:18%" align="center"> </el-table-column>
                 <el-table-column prop="party2" label="2022 Party" width="width:18%" align="center"> </el-table-column>
@@ -33,7 +33,7 @@
           <el-col class="tablebody" :span="20">
             <div class="tablelabel"> #Tweets Ranking</div>
             <el-table class="tablecontent" :data="tableData2" stripe height="250" style="width: 100%"  :default-sort = "{prop: 'tweets', order: 'descending'}" >
-                <el-table-column type="index" :index="indexMethod" width="width:10%" align="center"> </el-table-column>
+                <el-table-column type="index" width="width:10%" align="center"> </el-table-column>
                 <el-table-column prop="electorate" label="Electorate" width="width:18%" align="center"> </el-table-column>
                 <el-table-column prop="party1" label="2019 Party" width="width:18%" align="center"> </el-table-column>
                 <el-table-column prop="party2" label="2022 Party" width="width:18%" align="center"> </el-table-column>
@@ -275,11 +275,11 @@ methods: {
   .el-menu-vertical-demo{
     height:100vh;
   }
-  .table{
-    height: 100px;
-  }
+ .table{
+    height:100vh;
+ }
   .table1{
-    height: 30em;
+    height: 50vh;
     display: flex;
     background-color: #5f4848;
     justify-content:center;
@@ -287,7 +287,7 @@ methods: {
     border-bottom:0.1em solid #fff;
   }
   .table2{
-    height: 30em;
+    height: 50vh;
     background-color: #444a5b;
     display: flex;
     justify-content:center;

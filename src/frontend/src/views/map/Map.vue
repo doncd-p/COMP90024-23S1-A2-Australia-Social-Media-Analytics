@@ -1,8 +1,8 @@
 <template>
-  <div class="container">
+  <div class="container" style="height:95vh;">
     <!-- option -->
-    <el-row class="option" :gutter="2">
-      <el-col :span="10">
+    <el-row class="option" :gutter="2" style="height:15vh;">
+      <el-col :span="12">
         <div class="label-text">Senario:</div>
         <el-radio-group v-model="senario" class="radio-container">
           <el-radio-button label="vote" >Percentage of votes</el-radio-button>
@@ -13,7 +13,7 @@
           <el-radio-button label="status" >changed governing party</el-radio-button>
         </el-radio-group>
       </el-col>
-      <el-col :span="6">
+      <el-col :span="4">
         <div class="party">
           <div class="label-text">Govering Party:</div>
           <div class="party-text">{{ party }}</div>
@@ -33,7 +33,7 @@
         </div>
       </el-col>
     </el-row>
-      <el-row class="colorItem">
+      <el-row class="colorItem" style="height:5vh;">
        <div class="legend">{{legend.left}}</div>
        <div class="colorRange" :style="cover" v-if="senario != 'status'"></div>
         <div v-else class="colorRange" >
@@ -43,11 +43,11 @@
         <div class="legend">{{legend.right}}</div>
       </el-row>
     <!-- map -->
-    <div class="map" id="map" v-loading="loading" style="height: 800px; margin-bottom:0;"
+    <div class="map" id="map" v-loading="loading" style="height: 65vh; margin-bottom:0;"
       element-loading-text="loading..."
       element-loading-spinner="el-icon-loading"
       element-loading-background="rgba(0, 0, 0, 0.8)"></div>
-    <div style="color:white;"> Note: Percentage of votes won is votes according to Two Candidate Preferences.</div>
+    <div style="color:white; height:5vh; margin-bottom:0" > Note: Percentage of votes won is votes according to Two Candidate Preferences.</div>
 
     <el-dialog
       :title="mapItem.divisionName"
@@ -298,7 +298,7 @@ export default {
           center: { lat: -26.2744, lng: 133.7751 },
           zoom: 5,
         });
-        this.loading = false;
+        
       // ========================Icon examples=========================
       const icon=  {
             path: faLandmarkFlag.icon[4],
@@ -377,6 +377,7 @@ export default {
                   color = "#FF0000";
                 }
               }
+              this.loading = false;
               return {
                 fillColor: color,
                 strokeColor: "#000",
@@ -518,15 +519,11 @@ export default {
 }
 .option {
   width: 100%;
-  height: 10em;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.map {
-  height: 700px;
-  margin-bottom: 30px;
-}
+
 .radio-container {
   width: 100%;
   height: 100%;

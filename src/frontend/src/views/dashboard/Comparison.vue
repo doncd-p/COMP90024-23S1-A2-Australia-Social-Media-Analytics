@@ -1,10 +1,13 @@
 <template>
-    <div id="app">  
+    <div id="app" style="height:120vh;" v-loading="loading" 
+      element-loading-text="loading..."
+      element-loading-spinner="el-icon-loading"
+      element-loading-background="rgba(0, 0, 0, 0.8)">  
       <el-col :span="24" class="chart">
-        <el-row class="figurerow">
+        <el-row class="figurerow1">
           <!-- figure1 -->
-          <el-col class="figureitem" :span="20">
-           <div class="tablelabel">Census Data Trends on Tweets Data</div>
+          <el-col class="figureitem1" :span="20">
+           <div class="tablelabel3" style="margin-left:10px;">Census Data Trends on Tweets Data</div>
             <div class="ch" ><img :src="img_src" width="700" height="480"></div>
           </el-col>
            <el-col class="filter" :span="4">
@@ -26,15 +29,15 @@
             </el-row>
           </el-col>
         </el-row>
-        <el-row class="tablerow">
+        <el-row class="tablerow3">
             <!-- table1 -->
-          <el-col class="tablebody" :span="20">
-            <div class="tablelabel">Tweets vs Toots</div>
+          <el-col class="tablebody3" :span="20">
+            <div class="tablelabel3">Tweets vs Toots</div>
             <table>
                 <tr>
-                    <th style="width:400px;"></th>
-                    <th style="width:28%; ">Tweet</th>
-                    <th style="width:28%;">Toots</th>
+                    <th style="width:44%; height:25%"></th>
+                    <th style="width:28%; height:25%">Tweet</th>
+                    <th style="width:28%; height:25%">Toots</th>
                 </tr>
                 <tr>
                     <td>total number of political posts/partial matched posts</td>
@@ -54,12 +57,7 @@
             </table>
           </el-col>
           <el-col class="filter" :span="4">
-            <el-row>
-                <!-- button -->
-            </el-row>
-            <el-row>
             
-            </el-row>
           </el-col>
         </el-row>
       </el-col>
@@ -74,6 +72,7 @@ export default {
   name: "comparison",
   data() {
       return {
+        loading : true,
         img_src:"",
         //table1 filter1
         options1: [{
@@ -144,6 +143,7 @@ export default {
     },
     getData() {
       setTimeout(()=>{
+        this.loading = true
         this.$axios
             .get(process.env.VUE_APP_BASE_URL + "/toot/meta")
             .then((result) => {
@@ -159,7 +159,7 @@ export default {
               this.tweets_political = data.sum;
               this.tweets_total = data.count;
               this.tweets_rate = data.mean;
-              
+          this.loading = false
             });
             }, 0)
     },
@@ -171,15 +171,15 @@ export default {
   .el-menu-vertical-demo{
     height:100vh;
   }
-  .figurerow{
-    height: 50em;
-    display:flex;
+  .figurerow1{
+    height: 85vh;
+    display: flex;
     background-color: #5f4848;
     justify-content:center;
     align-items: center;
     border-bottom:0.1em solid #fff;
   }
-  .figureitem{
+  .figureitem1{
     height: 80%;
     width:65%;
     border: 0.5em solid #cb7f67;
@@ -207,41 +207,33 @@ export default {
     height:95%;
     width:98%;
   }
-  .description{
-    height:220px;
-    width:91%;
-    margin-left: 5%;
-    margin-top:2%;
-    background-color:#5f4848;
-    border:0.5em solid#cb7f67;
-  }
-  .table{
-    height: 100px;
-  }
-  .tablerow{
-    height:20em;
+ 
+  .tablerow3{
+    height:35vh;
     display: flex;
     background-color: #444a5b;
     justify-content:center;
     align-items: center;
     border-bottom:0.1em solid #fff;
   }
-  .tablebody{
+  .tablebody3{
     height: 80%;
     width:65%;
     border: 0.5em solid #cb7f67;
     background-color: #fff;
     display: flex;
     flex-direction: column;
+    justify-content: center;
     padding: 10px;
   }
-  .tablelabel{
+  .tablelabel3{
     font-size: 24px;
     font-weight: 500;
     margin-left:10px;
     color: #666;
     margin-bottom: 15px;
   }
+ 
   .filter{
     margin-left: 100px;
   }
@@ -260,15 +252,10 @@ export default {
     font-size: 20px;
     margin-bottom: 10px;
   }
-  table {
-  font-family: arial, sans-serif;
-  border-collapse: collapse;
-  width: 100%;
-}
+
 
 td, th {
   border: 1px solid #dddddd;
-  text-align: left;
   padding: 8px;
   text-align: center;
 }
