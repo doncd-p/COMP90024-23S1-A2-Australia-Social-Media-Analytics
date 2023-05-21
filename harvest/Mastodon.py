@@ -11,20 +11,14 @@ import re
 import subprocess
 import os
 
-#http://172.26.133.251:5984/test_running_toot_db
-
 
 # authentication
-# admin = 'admin'
-# password = 'password'
-admin = 'group9_admin'
-password = 'group9_H1'
-# url = f'http://{admin}:{password}@172.26.130.136:5984/'
-url = 'http://172.26.133.251:5984/'
+admin = 'admin'
+password = 'password'
 database = 'toot_database'
-
+url = 'http://172.26.136.11:5984/'
 # get couchdb instance
-couch = couchdb.Server(f'http://{admin}:{password}@172.26.133.251:5984/')
+couch = couchdb.Server(f'http://{admin}:{password}@172.26.136.11:5984/')
 
 # indicate the db name
 db_names = ['toot_database']
@@ -34,7 +28,6 @@ for db_name in db_names:
     if db_name not in couch:
         couch.create(db_name)
 
-# token = '2UqOce-h-VscNrEnWll30zPvmhyp0VfD4Vrv8Ks25h8'
 m = Mastodon(
     api_base_url = os.getenv('MASTODON_SERVER'),
     access_token = os.getenv('MASTODON_TOKEN')
@@ -120,7 +113,9 @@ class Listener(StreamListener):
                 status_processed = eval(str(status_processed))
                 out = {'docs': [status_processed]}
                 json_data = json.dumps(out).encode('utf-8')
-                subprocess.run(['curl', '-X', 'POST', f'{url}/{database}/_bulk_docs', '--header', 'Content-Type: application/json', '--data-binary', '@-', '-u', f'{admin}:{password}'], input=json_data)
+                subprocess.run(['curl', '-X', 'POST', f'{url}/{database}/_bulk_docs', 
+                                '--header', 'Content-Type: application/json', '--data-binary', 
+                                '@-', '-u', f'{admin}:{password}'], input=json_data)
 
         elif any(keyword in status['content'] for keyword in poli_key_words):
             status['key_match'] = 'partial'
@@ -131,18 +126,11 @@ class Listener(StreamListener):
                 status_processed = eval(str(status_processed))
                 out = {'docs': [status_processed]}
                 json_data = json.dumps(out).encode('utf-8')
-                subprocess.run(['curl', '-X', 'POST', f'{url}/{database}/_bulk_docs', '--header', 'Content-Type: application/json', '--data-binary', '@-', '-u', f'{admin}:{password}'], input=json_data)
+                subprocess.run(['curl', '-X', 'POST', f'{url}/{database}/_bulk_docs', 
+                                '--header', 'Content-Type: application/json', '--data-binary', 
+                                '@-', '-u', f'{admin}:{password}'], input=json_data)
 
 
-            # with open("output.txt", "a") as f:
-            #     f.write(f"Document saved with ID: {doc_id} and revision: {doc_rev} in social, partial, {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
-        
-        
-# while True:
-#     try:
-#         m.stream_public(Listener())
-#     except Exception as e:
-#         continue
-
+# start streaming
 m.stream_public(Listener())
 
