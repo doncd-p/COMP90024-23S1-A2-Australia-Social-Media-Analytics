@@ -119,9 +119,6 @@ export default {
   created(){
     this.loadEcharts1();
     this.loadEcharts2();
-    setTimeout(() => {
-      this.getChart2Data();
-   }, 0);
   },
   mounted() {
   },
