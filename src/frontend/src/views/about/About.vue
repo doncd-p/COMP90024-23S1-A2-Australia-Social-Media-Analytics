@@ -71,7 +71,7 @@
           <div class="package_middle_grid">
             <div class="col-md-6">
               <div class="packages_right packages_right" style="height: 340px">
-                <h3>Australian Party</h3>
+                <h3>Australian Parties</h3>
                 <p>
                   The Australian political parties mentioned on this website are represented
                   by their abbreviations. For easy reference, a table is provided alongside
