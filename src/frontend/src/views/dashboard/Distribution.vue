@@ -9,7 +9,7 @@
               element-loading-spinner="el-icon-loading"
               element-loading-background="rgba(0, 0, 0, 0.8)"></div>
           </el-col>
-          <el-col class="filter" :span="4">
+          <el-col class="filter3" :span="4">
             
             <el-row>
               <div class="filter2"> 
@@ -39,7 +39,7 @@
               element-loading-spinner="el-icon-loading"
               element-loading-background="rgba(0, 0, 0, 0.8)"></div>
           </el-col>
-          <el-col class="filter" :span="4">
+          <el-col class="filter3" :span="4">
             <el-row>
               <div class="filter2"> 
                   <div class="filter2label"> Time After Election:</div>
@@ -119,9 +119,6 @@ export default {
   created(){
     this.loadEcharts1();
     this.loadEcharts2();
-    setTimeout(() => {
-      this.getChart2Data();
-   }, 0);
   },
   mounted() {
   },
@@ -434,6 +431,9 @@ export default {
     height:100%;
     width:100%;
   }
+  .filter3{
+    margin-left:100px;
+  }
   .filter2{
     display: flex;
     flex-direction: column;
@@ -462,4 +462,3 @@ export default {
     word-break: break-all;
   }
 </style>
-
