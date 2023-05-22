@@ -1,13 +1,13 @@
 <template>
-    <div id="app" v-loading="loading" style="height: 100vh"
-      element-loading-text="loading..."
-      element-loading-spinner="el-icon-loading"
-      element-loading-background="rgba(0, 0, 0, 0.8)">  
+    <div id="app" >  
       <el-col :span="24" class="chart">
         <el-row class="scatter1">
           <!-- figure1 -->
           <el-col class="figure" :span="20">
-            <div class="c"  ref="linechart" ></div>
+            <div class="c"  ref="linechart" v-loading="loading1" style="height: 100%"
+              element-loading-text="loading..."
+              element-loading-spinner="el-icon-loading"
+              element-loading-background="rgba(0, 0, 0, 0.8)"></div>
           </el-col>
           <el-col class="filter" :span="4">
             
@@ -34,7 +34,10 @@
         </el-row>
         <el-row class="scatter2">
           <el-col class="figure" :span="20">
-            <div class="c scatter" id="scatterchart" ref="scatterchart" ></div>
+            <div class="c scatter" id="scatterchart" ref="scatterchart" v-loading="loading2" style="height: 100%; width:100%"
+              element-loading-text="loading..."
+              element-loading-spinner="el-icon-loading"
+              element-loading-background="rgba(0, 0, 0, 0.8)"></div>
           </el-col>
           <el-col class="filter" :span="4">
             <el-row>
@@ -72,7 +75,8 @@ export default {
   name: "distribution",
   data() {
       return {
-        loading:true,
+        loading1:true,
+        loading2:true,
        //chart1 data
         dailyChartData:null,
         weekChartData:null,
@@ -113,7 +117,9 @@ export default {
         description2: 'This graph denotes the sentiment distribution for electorates that changed vs didn’t change governing parties in the recent election. You can select time periods of aggregation relative to the election date.' }
     },
   created(){
-    this.initEcharts();
+    // this.initEcharts();
+    this.loadEcharts1();
+    this.loadEcharts2();
     setTimeout(() => {
       this.getChart2Data();
    }, 0);
@@ -137,191 +143,8 @@ export default {
   },
 
   methods: {
-   
-    async initEcharts() {
-      let chartData;
-      if(this.interval=="day"&&this.dailyChartData){
-        chartData = this.dailyChartData;
-      }else if (this.interval == "week" &&this.weekChartData){
-        chartData = this.weekChartData;
-      }else if (this.interval=="month"&&this.monthChartData){
-        chartData = this.monthChartData;
-      }else{
-        chartData = await this.getData();
-      }
-      
-      // chart1:
-      this.dateList = chartData.map(function (item) {
-          return item[0];
-        });
-      this.valueList = chartData.map(function (item) {
-          return Math.round(item[1] * 1000) / 1000;
-        });
-      const options = {
-           // Make gradient line here
-        visualMap: [
-          {
-            show: false,
-            type: 'continuous',
-            seriesIndex: 0,
-            min: -0.2,
-            max: 0.2
-          }
-        ],
-        title: [
-          {
-            left: 'center',
-            text: "The Sentiment of Whole Australia Before and After the Election"
-          }
-        ],
-        tooltip: {
-          trigger: 'axis'
-        },
-        xAxis: [
-          {
-            data: this.dateList
-          }
-        ],
-        yAxis: [
-          {
-            min:-0.2,
-            max:0.2
-          }
-        ],
-        series: [
-          {
-            type: 'line',
-            showSymbol: true,
-            data: this.valueList
-          }
-        ]
-      };
-
-      let linechart = echarts.init(this.$refs.linechart)
-      linechart.setOption(options)
-      
-      //chart2:
-      let chartData2 =  await this.getChart2Data();
-      let changed = []
-      let not_changed = []
-      for(let i = 0 ; i< chartData2.length ; i++){
-        if (chartData2[i][0]==1){
-          changed.push(chartData2[i][1])
-        }else{
-          not_changed.push(chartData2[i][1])
-        }
-      }
-       const options2 = {
-      title: [
-        {
-          text: 'Comparison of the sentiment according to whether changed governing party',
-          left: 'center'
-        },
-        {
-        
-          left: '10%',
-          top: '90%'
-        }
-      ],
-      dataset: [
-        {
-          source: [
-            not_changed, changed
-          ]
-        },
-      
-        {
-          transform: {
-            type: 'boxplot',
-            config: { itemNameFormatter: function (params) {
-              if (params.value == 1) {
-                return "changed"
-              }
-              return "non-changed"
-            }}
-          }
-        },
-        {
-          fromDatasetIndex: 1,
-          fromTransformResult: 1
-        }
-      ],
-      tooltip: {
-        trigger: 'item',
-        axisPointer: {
-          type: 'shadow'
-        }
-      },
-      grid: {
-        left: '10%',
-        right: '10%',
-        bottom: '15%'
-      },
-      xAxis: {
-        type: 'value',
-        name: 'Sentiment',
-        min: -1,
-        max:1
-      },
-      yAxis: {
-        type: 'category',
-        boundaryGap: true,
-        nameGap: 15,
-        splitArea: {
-          show: false
-        },
-        splitLine: {
-          show: true
-        }
-      },
-      color:[
-        "#ee6666",
-      ],
-      series: [
-        {
-          name: 'non-changed',
-          type: 'boxplot',
-          datasetIndex: 1,
-          tooltip: {formatter: function(params){
-            return [
-              'Type:' + params.name,
-              'min:'+ Math.round(params.data[1] * 100) / 100, 
-              'Q1: ' + Math.round(params.data[2] * 100) / 100,
-              'median:'+Math.round(params.data[3] * 100) / 100,
-              'Q3:'+Math.round(params.data[4] * 100) / 100,
-              'max:'+Math.round(params.data[5] * 100) / 100,
-            ].join('<br/>')
-          }},
-          itemStyle: {color: '#ffd04b'},
-        },
-        {
-          name: 'changed',
-          type: 'scatter',
-          datasetIndex: 2,
-          tooltip: {formatter: function(params){
-            return [
-              'Type:' + params.name,
-              'min:'+ Math.round(params.data[1] * 100) / 100, 
-              'Q1: ' + Math.round(params.data[2] * 100) / 100,
-              'median:'+Math.round(params.data[3] * 100) / 100,
-              'Q3:'+Math.round(params.data[4] * 100) / 100,
-              'max:'+Math.round(params.data[5] * 100) / 100,
-            ].join('<br/>')
-          }},
-          itemStyle: {color: '#dd0000'},
-        },
-      
-      ]
-    };
-
-      let scatterchart = echarts.init(this.$refs.scatterchart)
-      scatterchart.setOption(options2)
-      this.loading = false
-      
-    },
-    
     async loadEcharts1() {
-      this.loading = true;
+      this.loading1 = true;
       let chartData;
       if(this.interval=="day"&&this.dailyChartData){
         chartData = this.dailyChartData;
@@ -386,12 +209,12 @@ export default {
 
       let linechart = echarts.init(this.$refs.linechart)
       linechart.setOption(options)
-      this.loading = false
+      this.loading1 = false
       
     },
     
     async loadEcharts2() {
-      this.loading = true;
+      this.loading2 = true;
       let chartData2 =  await this.getChart2Data();
       let changed = []
       let not_changed = []
@@ -511,7 +334,7 @@ export default {
     
       let scatterchart = echarts.init(this.$refs.scatterchart)
       scatterchart.setOption(options2)
-      this.loading = false;
+      this.loading2 = false;
       
     },
     getData() {

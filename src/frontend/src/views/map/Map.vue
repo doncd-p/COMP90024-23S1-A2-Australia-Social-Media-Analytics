@@ -3,14 +3,14 @@
     <!-- option -->
     <el-row class="option" :gutter="2" style="height:15vh;">
       <el-col :span="12">
-        <div class="label-text">Senario:</div>
+        <div class="label-text">Scenario:</div>
         <el-radio-group v-model="senario" class="radio-container">
           <el-radio-button label="vote" >Percentage of votes</el-radio-button>
           <el-radio-button label="sentiment"
             >&nbsp;&nbsp;&nbsp;Sentiment&nbsp;&nbsp;&nbsp;</el-radio-button
           ><br />
           <el-radio-button label="tweets" >Number of Tweets</el-radio-button>
-          <el-radio-button label="status" >changed governing party</el-radio-button>
+          <el-radio-button label="status" >Changed Governing Party</el-radio-button>
         </el-radio-group>
       </el-col>
       <el-col :span="4">
