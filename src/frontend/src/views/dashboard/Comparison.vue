@@ -14,7 +14,17 @@
           <div class="tablelabel3" style="margin-left: 10px">
             Census Data Trends on Tweets Data
           </div>
-          <div class="ch"><img :src="img_src" width="700" height="480" /></div>
+          <div class="ch">
+            <img
+              :src="img_src"
+              style="
+                max-width: 100%;
+                max-height: 100%;
+                height: auto;
+                width: auto;
+              "
+            />
+          </div>
         </el-col>
         <el-col class="filter" :span="4">
           <el-row>
@@ -213,6 +223,9 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  height: calc(100% - 40px);
+  overflow: hidden;
 }
 .filter1 {
   display: flex;
@@ -246,7 +259,8 @@ export default {
   background-color: #fff;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
+  align-items: center;
   padding: 10px;
 }
 .tablelabel3 {
