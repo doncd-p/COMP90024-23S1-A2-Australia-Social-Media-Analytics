@@ -1,5 +1,8 @@
 <template>
-  <div class="container" style="height:95vh;">
+  <div class="container" style="height:95vh;" v-loading="loading" 
+      element-loading-text="loading..."
+      element-loading-spinner="el-icon-loading"
+      element-loading-background="rgba(0, 0, 0, 0.8)">
     <!-- option -->
     <el-row class="option" :gutter="2" style="height:15vh;">
       <el-col :span="12">
@@ -43,10 +46,7 @@
         <div class="legend">{{legend.right}}</div>
       </el-row>
     <!-- map -->
-    <div class="map" id="map" v-loading="loading" style="height: 65vh; margin-bottom:0;"
-      element-loading-text="loading..."
-      element-loading-spinner="el-icon-loading"
-      element-loading-background="rgba(0, 0, 0, 0.8)"></div>
+    <div class="map" id="map" style="height: 65vh;"></div>
     <div style="color:white; height:5vh; margin-bottom:0" > Note: Percentage of votes won is votes according to Two Candidate Preferences.</div>
 
     <el-dialog
@@ -283,6 +283,7 @@ export default {
   
     // ========================== Init Map ==================================================
     async initMap(label) {
+      this.loading = true;
       let that = this;
       const loader = new Loader({
         apiKey: "AIzaSyA7qMWed4cLNiIl922Yy3nrZVVSASlDQJw",
@@ -330,7 +331,6 @@ export default {
             title: `${name}`
         });
       }
-        
         map.data.loadGeoJson(
           process.env.VUE_APP_BASE_URL + "/electorate/geo_data",
           null,
@@ -385,7 +385,6 @@ export default {
                 fillOpacity: 1
               };
             });
-            
             // Add click and mouseover listeners
             let that = this;
             map.data.addListener("click", async (event) => {
@@ -450,11 +449,10 @@ export default {
             map.data.addListener("mouseout", (event) => {
               infowindow.close();
             });
-
-     
-
           }
         );
+
+       
       });
     },
   },

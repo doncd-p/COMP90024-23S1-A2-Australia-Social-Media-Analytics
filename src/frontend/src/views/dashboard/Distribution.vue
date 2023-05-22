@@ -117,7 +117,6 @@ export default {
         description2: 'This graph denotes the sentiment distribution for electorates that changed vs didn’t change governing parties in the recent election. You can select time periods of aggregation relative to the election date.' }
     },
   created(){
-    // this.initEcharts();
     this.loadEcharts1();
     this.loadEcharts2();
     setTimeout(() => {
