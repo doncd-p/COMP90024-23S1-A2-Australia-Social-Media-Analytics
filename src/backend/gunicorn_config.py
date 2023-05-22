@@ -1,5 +1,5 @@
 # Set the number of worker processes
-workers = 2
+workers = 4
 
 # Bind IP address and port
 bind = "0.0.0.0:8080"
