@@ -26,7 +26,7 @@
 - Zhuoya Zhou - zhuoyaz@student.unimelb.edu.au
 
 ## Background
-This project is part of COMP90024 Assignment 2, developed by Group 28. We have developed a cloud-based solution to analyse social media data, with a focus on Twitter data exported from the Australian Data Observatory (ADO) and data harvested from the Mastodon APIs. The project also incorporates data from the Spatial Urban Data Observatory (SUDO).
+This project is part of COMP90024 Assignment 2, developed by Group 9. We have developed a cloud-based solution to analyse social media data, with a focus on Twitter data exported from the Australian Data Observatory (ADO) and data harvested from the Mastodon APIs. The project also incorporates data from the Spatial Urban Data Observatory (SUDO).
 
 The aim of this project is to use a large Twitter corpus to tell interesting stories about life in Australia, and how social media data can be used alongside, compared with, or augment the official data available within the SUDO platform to improve our knowledge of life in Australia.
 
