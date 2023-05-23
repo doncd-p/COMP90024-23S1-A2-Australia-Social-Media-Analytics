@@ -77,5 +77,10 @@ ggplot(data, aes(x = log(avg_age), y = sentiment)) +
 ```
 
 ```{r}
-]
+# Create the scatter plot with the fit line
+ggplot(data, aes(x = log(avg_weekly_income), y = avg_educ_years)) +
+  geom_point() +
+  geom_smooth(method = "lm", formula = y ~ x, se = FALSE, color = "red") +
+  xlab("Log of Average Weekly Income by Household") +
+  ylab("Log of Average Education Year")
 ```

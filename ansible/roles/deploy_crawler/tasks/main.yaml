@@ -2,12 +2,6 @@
   pip:
     name: docker-compose
 
-- name: Disable crawler container
-  command:
-    cmd: "docker-compose -f /home/ubuntu/COMP90024/harvest/docker-compose-{{ item }}.yml down --rmi local"
-  ignore_errors: true
-  loop: "{{ groups['DISABLE_CRAWLERS'] }}"
-
 - name: Take down existing crawler container
   command:
     cmd: "docker-compose -f /home/ubuntu/COMP90024/harvest/docker-compose-{{ inventory_hostname }}.yml down --rmi local"
@@ -22,14 +16,8 @@
   command:
     cmd: "docker-compose -f /home/ubuntu/COMP90024/harvest/docker-compose-{{ inventory_hostname }}.yml up -d"
 
-
-# - name: Compose down previous server
-#   shell: docker-compose down --rmi local
-#   args:
-#     chdir: /home/ubuntu/COMP90024/harvester
-
-# - name: Compose start server
-#   shell: docker-compose up -d
-#   args:
-#     chdir: /home/ubuntu/COMP90024/harvester
-
+- name: Disable crawler container
+  command:
+    cmd: "docker-compose -f /home/ubuntu/COMP90024/harvest/docker-compose-{{ item }}.yml down --rmi local"
+  ignore_errors: true
+  loop: "{{ groups['DISABLE_CRAWLERS'] }}"
