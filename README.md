@@ -36,7 +36,6 @@ The system architecture is intended for use in a cloud setting, with high scalab
 Our team is investigating the topic of Australia's electron. 
 
 ## Repository Structure
-
     .
     ├─ ansible/     # Ansible scripts for orchestration.
     ├─ data/        # Data used in the project.
