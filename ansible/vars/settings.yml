@@ -1,8 +1,0 @@
-docker_network_name: comp90024
-
-# backend
-backend_module_name: backend
-backend_image_name: backend
-backend_container_name: backend
-backend_container_port: 8080
-backend_host_port: 8080

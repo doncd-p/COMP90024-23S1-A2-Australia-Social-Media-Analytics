@@ -1,10 +1,11 @@
 from flask import jsonify, request
 from flask_restful import Resource
-from app.utils.couchdb_client import client
+from app.utils.couchdb_client import CouchDBClient
 
 
 class ElectorateGeoData(Resource):
     def get(self):
+        client = CouchDBClient()
         db = client.get_db('geo_electorate')
 
         view = db.view('_all_docs', limit=1, include_docs=True)
@@ -33,6 +34,7 @@ class ElectorateSudoData(Resource):
     def get(self):
         electorate_filter = request.args.get('electorate')
 
+        client = CouchDBClient()
         db = client.get_db('sudo_electorate')
 
         # If a specific electorate has been requested, filter the results
@@ -68,6 +70,7 @@ class ElectorateSudoData(Resource):
 
 class ElectorateSudoDataAll(Resource):
     def get(self):
+        client = CouchDBClient()
         db = client.get_db('geo_electorate')
 
         view = db.view('_all_docs', limit=1, include_docs=True)

@@ -1,14 +1,14 @@
----
-- name: Clone Git repo
-  git:
-    repo: "{{ git_repo }}"
-    dest: "/home/ubuntu/COMP90024"
-    version: main
-    update: yes
-
 - name: Install docker-compose python package
   ansible.builtin.pip:
     name: docker-compose
+
+- name: Create .env file
+  copy:
+    dest: /home/ubuntu/COMP90024/src/frontend/.env
+    content: |
+      VUE_APP_BASE_URL=http://{{ groups['BACKEND_INSTANCE'][0] }}:8080
+      NODE_ENV=dev
+      VUE_APP_TEXT=environment
 
 - name: Compose down previous server
   shell: docker-compose down --rmi local
@@ -16,6 +16,6 @@
     chdir: /home/ubuntu/COMP90024/src/frontend
 
 - name: Compose start server
-  shell: docker-compose up -d
+  shell: docker-compose up --build -d
   args:
     chdir: /home/ubuntu/COMP90024/src/frontend

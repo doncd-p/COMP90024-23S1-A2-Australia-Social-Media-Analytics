@@ -1,6 +1,6 @@
 from flask import jsonify, request
 from flask_restful import Resource
-from app.utils.couchdb_client import client
+from app.utils.couchdb_client import CouchDBClient
 import calendar
 from datetime import datetime
 
@@ -35,6 +35,7 @@ class NumberSentimentPolitical(Resource):
                 response.status_code = 400
                 return response
 
+            client = CouchDBClient()
             db = client.get_db('tweet_database')
             try:
                 view = db.view('_design/date/_view/date_electorate__nsentiment__pol',
@@ -128,6 +129,7 @@ class DailyAvgSentimentPolitical(Resource):
                 response.status_code = 400
                 return response
 
+            client = CouchDBClient()
             db = client.get_db('tweet_database')
             view = db.view('_design/date/_view/date_electorate__avgsent__pol',
                            group=True, startkey=[startdate], endkey=[enddate])
@@ -214,6 +216,7 @@ class WeeklyAvgSentimentPolitical(Resource):
                 response.status_code = 400
                 return response
 
+            client = CouchDBClient()
             db = client.get_db('tweet_database')
             view = db.view('_design/week/_view/week_electorate__avgsent__pol',
                            group=True, startkey=[startweek], endkey=[endweek])
@@ -323,6 +326,7 @@ class MonthlyAvgSentimentPolitical(Resource):
                 response.status_code = 400
                 return response
 
+            client = CouchDBClient()
             db = client.get_db('tweet_database')
             view = db.view('_design/date/_view/date_electorate__avgsent__pol',
                            group=True, startkey=[startdate], endkey=[enddate])

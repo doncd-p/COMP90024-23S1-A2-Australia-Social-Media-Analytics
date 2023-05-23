@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import echarts from "echarts";
+import * as echarts from 'echarts'
 
 export default {
   name: "PieData",
@@ -39,8 +39,7 @@ export default {
   },
   methods: {
     initData() {
-      console.log(this.pieData)
-      this.pieName = ["Negative Tweets", "Netural Tweets", "Positive Tweets"]
+      this.pieName = ["Pseudo Count of Negative Tweets", "Pseudo Count of Netural Tweets", "Pseudo Count of Positive Tweets"]
     },
     initEcharts() {
       // 饼图
@@ -55,11 +54,7 @@ export default {
           data: this.pieName,
           bottom: "bottom",
         },
-        title: {
-          text: "Sentiment Analysis",
-          top: "0%",
-          left: "left",
-        },
+        
         tooltip: {
           trigger: "item",
         },
@@ -76,16 +71,16 @@ export default {
             radius: "60%", 
             data: [
               {
-                name: "Negative Tweets",
-                value: this.pieData.num_neg_tweets
+                name: "Pseudo Count of Negative Tweets",
+                value:  Math.round((this.pieData.num_neg_tweets) * 100) / 100
               },
               {
-                name: "Netural Tweets",
-                value: this.pieData.num_neu_tweets
+                name: "Pseudo Count of Netural Tweets",
+                value: Math.round((this.pieData.num_neu_tweets) * 100) / 100
               },
               {
-                name: "Positive Tweets",
-                value: this.pieData.num_pos_tweets
+                name: "Pseudo Count of Positive Tweets",
+                value: Math.round((this.pieData.num_pos_tweets) * 100) / 100
               }
             ],
 

@@ -1,10 +1,11 @@
 from flask import jsonify, request
 from flask_restful import Resource
-from app.utils.couchdb_client import client
+from app.utils.couchdb_client import CouchDBClient
 
 
 class TweetsMeta(Resource):
     def get(self):
+        client = CouchDBClient()
         db = client.get_db('tweet_database')
         view = db.view('_design/political/_view/political')
 

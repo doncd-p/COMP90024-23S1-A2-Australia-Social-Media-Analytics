@@ -1,0 +1,14 @@
+version: "3"
+services:
+  {{ inventory_hostname }}:
+    build: .
+    volumes:
+      - .:/app
+    environment:
+      - MASTODON_SERVER={{ mastodon_server }}
+      - MASTODON_TOKEN={{ mastodon_token }}
+    networks:
+      - harvester-network
+networks:
+  harvester-network:
+    name: harvester-network-{{ inventory_hostname }}

@@ -1,6 +1,6 @@
 <template>
   <el-menu 
-    default-active="/dashboard/ranking"
+    :default-active="activeMenu"
     class="el-menu-vertical-demo"
     background-color="#333"
     text-color="#fff"
@@ -21,7 +21,15 @@
 
 <script>
 export default {
-    name: 'SideBar'
+    name: 'SideBar',
+    computed:{
+      activeMenu(){
+        const {path} = this.$route;
+        return path;
+      }
+    }
+      
+    
 }
 </script>
 

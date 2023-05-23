@@ -45,32 +45,18 @@ The system architecture is intended for use in a cloud setting, with high scalab
 Our team is investigating the topic of Australia's electron. 
 
 ## Repository Structure
-.
-├── ansible
-├── data
-├── doc
-├── harvest
-├── notebook
-├── scripts
-└── src
-├── backend
-└── frontend
-├── main.js
-├── Dockerfile
-└── package.json
-.
-├── ansible               # Ansible scripts for orchestration.
-├── data                  # Data used in the project.
-├── doc                   # Documentation files 
-├── harvest               # Scripts for harvesting data from Twitter and Mastodon APIs
-├── notebook              # Jupyter notebooks used for data analysis
-├── scripts               # Additional scripts used in the project
-├── src                   # Source code for the project
-├── backend               # Backend code for the web application
-├── frontend              # Frontend code for the web application
-├── .gitignore                   
-├── LICENSE
-└── README.md
+    .
+    ├─ ansible/     # Ansible scripts for orchestration.
+    ├─ data/        # Data used in the project.
+    ├─ doc/         # Documentation files 
+    ├─ harvest/     # Scripts for harvesting data from Twitter and Mastodon APIs
+    ├─ scripts/     # Additional scripts used in the project
+    ├─ src/         # Jupyter notebooks used for data analysis
+    │  ├─ backend/  # Backend code for the web application
+    │  ├─ froneend/ # Frontend code for the web application
+    ├─ .gitignore   
+    ├─ LICENSE
+    ├─ README.md
 
 ## Project Workflow
 

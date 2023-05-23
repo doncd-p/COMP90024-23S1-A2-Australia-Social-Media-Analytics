@@ -1,21 +1,23 @@
----
-- name: Clone Git repo
-  git:
-    repo: "{{ git_repo }}"
-    dest: "/home/ubuntu/COMP90024"
-    version: main
-    update: yes
-
 - name: Install docker-compose python package
-  ansible.builtin.pip:
+  pip:
     name: docker-compose
 
-- name: Compose down previous server
-  shell: docker-compose down --rmi local
-  args:
-    chdir: /home/ubuntu/COMP90024/harvester
+- name: Take down existing crawler container
+  command:
+    cmd: "docker-compose -f /home/ubuntu/COMP90024/harvest/docker-compose-{{ inventory_hostname }}.yml down --rmi local"
+  ignore_errors: true
 
-- name: Compose start server
-  shell: docker-compose up -d
-  args:
-    chdir: /home/ubuntu/COMP90024/harvester
+- name: Generate Docker Compose files for each crawler
+  template:
+    src: roles/deploy_crawler/templates/docker-compose.j2
+    dest: "/home/ubuntu/COMP90024/harvest/docker-compose-{{ inventory_hostname }}.yml"
+
+- name: Run Docker Compose
+  command:
+    cmd: "docker-compose -f /home/ubuntu/COMP90024/harvest/docker-compose-{{ inventory_hostname }}.yml up -d"
+
+- name: Disable crawler container
+  command:
+    cmd: "docker-compose -f /home/ubuntu/COMP90024/harvest/docker-compose-{{ item }}.yml down --rmi local"
+  ignore_errors: true
+  loop: "{{ groups['DISABLE_CRAWLERS'] }}"

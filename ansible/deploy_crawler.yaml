@@ -1,6 +1,4 @@
-- hosts: CRAWLER_INSTANCE
+- hosts: CRAWLERS
   become: yes
-  vars:
-    git_repo: "https://github.com/andersonkam/group-frontend.git"
   roles:
     - role: deploy_crawler
