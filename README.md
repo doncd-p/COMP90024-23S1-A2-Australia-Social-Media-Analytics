@@ -25,15 +25,6 @@
 - Ying Zhu - ying.zhu4@student.unimelb.edu.au
 - Zhuoya Zhou - zhuoyaz@student.unimelb.edu.au
 
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
-
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
 ## Background
 This project is part of COMP90024 Assignment 2, developed by Group 28. We have developed a cloud-based solution to analyse social media data, with a focus on Twitter data exported from the Australian Data Observatory (ADO) and data harvested from the Mastodon APIs. The project also incorporates data from the Spatial Urban Data Observatory (SUDO).
 
