@@ -78,7 +78,7 @@
               <td>{{ toots_total }}</td>
             </tr>
             <tr>
-              <td>Percentage of political posts/partiao matched posts</td>
+              <td>Percentage of political posts/partial matched posts</td>
               <td>{{ tweets_rate.toFixed(4) }}</td>
               <td>{{ toots_rate.toFixed(4) }}</td>
             </tr>
