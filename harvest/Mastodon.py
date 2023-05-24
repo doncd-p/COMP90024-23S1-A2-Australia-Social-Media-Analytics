@@ -16,9 +16,9 @@ import os
 admin = 'admin'
 password = 'password'
 database = 'toot_database'
-url = 'http://172.26.136.11:5984/'
+url = f"http://{os.getenv('COUCHDB_IP')}:5984/"
 # get couchdb instance
-couch = couchdb.Server(f'http://{admin}:{password}@172.26.136.11:5984/')
+couch = couchdb.Server(f"http://{admin}:{password}@{os.getenv('COUCHDB_IP')}:5984/")
 
 # indicate the db name
 db_names = ['toot_database']
