@@ -11,14 +11,15 @@ import re
 import subprocess
 import os
 
-
+print(os.getenv('COUCHDB_IP'))
 # authentication
 admin = 'admin'
 password = 'password'
 database = 'toot_database'
-url = f"http://{os.getenv('COUCHDB_IP')}:5984/"
+couchdb_ip = os.getenv('COUCHDB_IP')
+url = f"http://{couchdb_ip}:5984/"
 # get couchdb instance
-couch = couchdb.Server(f"http://{admin}:{password}@{os.getenv('COUCHDB_IP')}:5984/")
+couch = couchdb.Server(f"http://{admin}:{password}@{couchdb_ip}:5984/")
 
 # indicate the db name
 db_names = ['toot_database']
