@@ -26,7 +26,7 @@
 - Zhuoya Zhou - zhuoyaz@student.unimelb.edu.au
 
 ## Video Demonstration
-<!-- TO DO -->
+[![Watch the video](./src/frontend/src/assets/images/map.jpg)](https://youtu.be/JTvXs9uA4Xc)
 
 ## Project Description
 This project is an outcome of COMP90024 Assignment 2, accomplished by Group 9. We've developed a cloud-based solution (ELEFEEL) to analyze social media data, primarily focusing on Twitter data sourced from the Australian Data Observatory (ADO) and information harvested via the Mastodon APIs. Additional data integration from the Spatial Urban Data Observatory (SUDO) also enriches our analysis.
