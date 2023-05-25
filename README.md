@@ -1,7 +1,7 @@
 # COMP90024-23S1-A2-Australia-Social-Media-Analytics
 ![Python Version](https://img.shields.io/badge/python-3.11%2B-blue)
 ![All Contributors](https://img.shields.io/github/contributors/doncd-p/COMP90024-23S1-A2-Australia-Social-Media-Analytics)
-![License](https://img.shields.io/github/license/doncd-p/cOMP90024-23S1-A2-Australia-Social-Media-Analytics)
+![License](https://img.shields.io/github/license/doncd-p/COMP90024-23S1-A2-Australia-Social-Media-Analytics)
 
 
 - [COMP90024-23S1-A2-Australia-Social-Media-Analytics](#comp90024-23s1-a2-australia-social-media-analytics)
@@ -26,7 +26,7 @@
 - Zhuoya Zhou - zhuoyaz@student.unimelb.edu.au
 
 ## Video Demonstration
-<!-- TO DO -->
+[![Watch the video](./src/frontend/src/assets/images/map.jpg)](https://youtu.be/JTvXs9uA4Xc)
 
 ## Project Description
 This project is an outcome of COMP90024 Assignment 2, accomplished by Group 9. We've developed a cloud-based solution (ELEFEEL) to analyze social media data, primarily focusing on Twitter data sourced from the Australian Data Observatory (ADO) and information harvested via the Mastodon APIs. Additional data integration from the Spatial Urban Data Observatory (SUDO) also enriches our analysis.
