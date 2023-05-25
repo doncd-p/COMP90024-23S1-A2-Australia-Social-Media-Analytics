@@ -1,7 +1,7 @@
 # COMP90024-23S1-A2-Australia-Social-Media-Analytics
 ![Python Version](https://img.shields.io/badge/python-3.11%2B-blue)
 ![All Contributors](https://img.shields.io/github/contributors/doncd-p/COMP90024-23S1-A2-Australia-Social-Media-Analytics)
-![License](https://img.shields.io/github/license/doncd-p/cOMP90024-23S1-A2-Australia-Social-Media-Analytics)
+![License](https://img.shields.io/github/license/doncd-p/COMP90024-23S1-A2-Australia-Social-Media-Analytics)
 
 
 - [COMP90024-23S1-A2-Australia-Social-Media-Analytics](#comp90024-23s1-a2-australia-social-media-analytics)
