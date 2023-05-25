@@ -28,3 +28,6 @@ or pip install ansible
 6. To deploy frontend
     1. run `./deploy_frontend.sh`
     2. enter your personal device password
+
+
+For a detailed tutorial, please refer to [this YouTube playlist](https://www.youtube.com/playlist?list=PLdCTupRD-v9g_HvDFUE4nTTCGT8tjNqZ7).
