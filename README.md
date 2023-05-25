@@ -6,13 +6,13 @@
 
 - [COMP90024-23S1-A2-Australia-Social-Media-Analytics](#comp90024-23s1-a2-australia-social-media-analytics)
   - [Contributor](#contributor)
-  - [Background](#background)
+  - [Video Demonstration](#video-demonstration)
+  - [Project Description](#project-description)
   - [Repository Structure](#repository-structure)
   - [Project Workflow](#project-workflow)
     - [Branches](#branches)
     - [Naming Conventions](#naming-conventions)
     - [Pull Requests and Code Review](#pull-requests-and-code-review)
-
 
 ## Contributor
 <a href="https://github.com/doncd-p/COMP90024-23S1-A2-Australia-Social-Media-Analytics/graphs/contributors">
@@ -25,15 +25,16 @@
 - Ying Zhu - ying.zhu4@student.unimelb.edu.au
 - Zhuoya Zhou - zhuoyaz@student.unimelb.edu.au
 
-## Background
-This project is part of COMP90024 Assignment 2, developed by Group 9. We have developed a cloud-based solution to analyse social media data, with a focus on Twitter data exported from the Australian Data Observatory (ADO) and data harvested from the Mastodon APIs. The project also incorporates data from the Spatial Urban Data Observatory (SUDO).
-
-The aim of this project is to use a large Twitter corpus to tell interesting stories about life in Australia, and how social media data can be used alongside, compared with, or augment the official data available within the SUDO platform to improve our knowledge of life in Australia.
-
-The system architecture is intended for use in a cloud setting, with high scalability and completely orchestratable using the Ansible scripting engine. Docker is used to manage and deploy application components across the four computer nodes assigned to this project by the course instructors.
-
+## Video Demonstration
 <!-- TO DO -->
-Our team is investigating the topic of Australia's electron. 
+
+## Project Description
+This project is an outcome of COMP90024 Assignment 2, accomplished by Group 9. We've developed a cloud-based solution (ELEFEEL) to analyze social media data, primarily focusing on Twitter data sourced from the Australian Data Observatory (ADO) and information harvested via the Mastodon APIs. Additional data integration from the Spatial Urban Data Observatory (SUDO) also enriches our analysis.
+
+ELEFEEL dives into the confluence of politics and technology within the Australian electoral context. The objective is to examine the potential correlation between social media sentiment data and the outcomes of recent elections in Australia.
+
+Our system architecture is designed for a cloud environment, boasting high scalability. The entire orchestration is managed through Ansible scripting engine, with Docker handling the deployment and management of application components.
+
 
 ## Repository Structure
     .

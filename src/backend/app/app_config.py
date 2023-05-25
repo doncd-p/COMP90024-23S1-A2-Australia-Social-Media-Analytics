@@ -4,7 +4,7 @@ import os
 class Config:
     BASE_URL = os.environ.get('BASE_URL', 'http://localhost:8080')
     COUCHDB_HOSTS = os.environ.get(
-        'COUCHDB_HOSTS', '172.26.133.251').split(',')
+        'COUCHDB_HOSTS').split(',')
     COUCHDB_PORT = os.environ.get('COUCHDB_PORT', '5984')
     COUCHDB_USERNAME = os.environ.get('COUCHDB_USERNAME', 'group9_admin')
     COUCHDB_PASSWORD = os.environ.get('COUCHDB_PASSWORD', 'group9_H1')
