@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import * as echarts from 'echarts'
+import * as echarts from "echarts";
 
 export default {
   name: "PieData",
@@ -19,7 +19,7 @@ export default {
     return {
       myChart: {},
       pieName: [],
-      myChartStyle: { width: "100%", height: "330px" }, 
+      myChartStyle: { width: "100%", height: "330px" },
     };
   },
 
@@ -30,16 +30,19 @@ export default {
   watch: {
     pieData: {
       handler(value) {
-       this.initData();
-       this.initEcharts()
+        this.initData();
+        this.initEcharts();
       },
       deep: true,
     },
-
   },
   methods: {
     initData() {
-      this.pieName = ["Pseudo Count of Negative Tweets", "Pseudo Count of Netural Tweets", "Pseudo Count of Positive Tweets"]
+      this.pieName = [
+        "Pseudo Count of Negative Tweets",
+        "Pseudo Count of Netural Tweets",
+        "Pseudo Count of Positive Tweets",
+      ];
     },
     initEcharts() {
       // 饼图
@@ -54,7 +57,7 @@ export default {
           data: this.pieName,
           bottom: "bottom",
         },
-        
+
         tooltip: {
           trigger: "item",
         },
@@ -65,25 +68,24 @@ export default {
               show: true,
               formatter(param) {
                 // correct the percentage
-                return param.name + ' (' + param.percent + '%)';
-              }
+                return param.name + " (" + param.percent + "%)";
+              },
             },
-            radius: "60%", 
+            radius: "60%",
             data: [
               {
                 name: "Pseudo Count of Negative Tweets",
-                value:  Math.round((this.pieData.num_neg_tweets) * 100) / 100
+                value: Math.round(this.pieData.num_neg_tweets * 100) / 100,
               },
               {
                 name: "Pseudo Count of Netural Tweets",
-                value: Math.round((this.pieData.num_neu_tweets) * 100) / 100
+                value: Math.round(this.pieData.num_neu_tweets * 100) / 100,
               },
               {
                 name: "Pseudo Count of Positive Tweets",
-                value: Math.round((this.pieData.num_pos_tweets) * 100) / 100
-              }
+                value: Math.round(this.pieData.num_pos_tweets * 100) / 100,
+              },
             ],
-
           },
         ],
       };
