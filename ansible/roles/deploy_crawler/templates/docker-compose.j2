@@ -7,6 +7,7 @@ services:
     environment:
       - MASTODON_SERVER={{ mastodon_server }}
       - MASTODON_TOKEN={{ mastodon_token }}
+      - COUCHDB_IP={{ couchdb_ip }}
     networks:
       - harvester-network
 networks:

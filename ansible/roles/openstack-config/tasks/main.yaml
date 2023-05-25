@@ -5,10 +5,9 @@
     state: present
     update_cache: yes
 
-
 - name: Clone Git repo
   git:
-    repo: "https://github.com/doncd-p/COMP90024-23S1-A2-Australia-Social-Media-Analytics.git"
+    repo: "https://{{ git_username }}:{{ git_password }}@github.com/doncd-p/COMP90024-23S1-A2-Australia-Social-Media-Analytics.git"
     dest: "/home/ubuntu/COMP90024"
     version: develop
     update: yes
@@ -17,7 +16,6 @@
   shell: |
     cd /home/ubuntu/COMP90024
     git pull
-
 
 - name: Add Docker GPG key
   shell: |  

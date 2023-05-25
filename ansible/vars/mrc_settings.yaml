@@ -2,7 +2,7 @@
 availability_zone: melbourne-qh2-uom
 instance_image: bbaf16f8-2484-48d7-b455-42209cc4b8d2
 instance_key_name: group9_key
-instance_flavor: uom.mse.1c4g
+instance_flavor: uom.mse.2c9g
 instance_network: qh2-uom-internal
 
 # location to save the IP addresses
@@ -10,22 +10,22 @@ ip_file: "./inventory/instance_addresses.ini"
 
 # Volume
 volumes:
-  - vol_name: instance1-volume
-    vol_size: 60
+  - vol_name: instance0-volume
+    vol_size: 150
     device: /dev/vdb
-    mountpoint: /home/ubuntu/COMP90024
+    mountpoint: /data
+  - vol_name: instance1-volume
+    vol_size: 150
+    device: /dev/vdb
+    mountpoint: /data
   - vol_name: instance2-volume
-    vol_size: 60
+    vol_size: 150
     device: /dev/vdb
     mountpoint: /data
   - vol_name: instance3-volume
-    vol_size: 60
+    vol_size: 50
     device: /dev/vdb
-    mountpoint: /data
-  # - vol_name: instance4-volume
-  #   vol_size: 60
-  #   device: /dev/vdb
-  #   mountpoint: /data
+    mountpoint: /home/ubuntu/COMP90024
 
 
 # Security group
@@ -48,37 +48,20 @@ security_groups:
     port_range_min: 7946
     port_range_max: 7946
     remote_ip_prefix: 0.0.0.0/0
-  # - name: demo_ssh
-  #   description: "Demo security group for SSH access"
-  #   protocol: tcp
-  #   port_range_min: 22
-  #   port_range_max: 22
-  #   remote_ip_prefix: 0.0.0.0/0
-  # - name: demo_http
-  #   description: "Demo security group for HTTP"
-  #   protocol: tcp
-  #   port_range_min: 80
-  #   port_range_max: 80
-  #   remote_ip_prefix: 0.0.0.0/0
 
 # Instance
 instances:
+  - name: instance0
+    volume_ids: '{ instance0_volumes|default([]) }'
+    volumes: ['instance0-volume']
   - name: instance1
     volume_ids: '{ instance1_volumes|default([]) }'
     volumes: ['instance1-volume']
   - name: instance2
     volume_ids: '{ instance2_volumes|default([]) }'
     volumes: ['instance2-volume']
-  - name: instance3
-    volume_ids: '{ instance3_volumes|default([]) }'
-    volumes: ['instance3-volume']
-
-
-# frontend_server:
-#   - name: frontend_server
-#     volume_ids: '{ instance1_volumes|default([]) }'
-#     volumes: ['instance4-volume']
-  # - name: instance4
-  #   security_groups: instance4-security-group
-  #   volume_ids: '{ instance4_volumes|default([]) }'
-  #   volumes: ['instance4-volume']
+  # - name: instance3
+  #   security_groups: instance3-security-group
+  #   volume_ids: '{ instance3_volumes|default([]) }'
+  #   volumes: ['instance3-volume']
+ 

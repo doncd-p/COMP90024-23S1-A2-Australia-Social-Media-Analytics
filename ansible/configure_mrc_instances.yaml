@@ -1,8 +1,11 @@
 ---
 # install require dependencies on instances
 - hosts: all
+  vars_files:
+    - vars/git_credentials.yml
   vars:
     remote_user: ubuntu
   gather_facts: true
   roles:
-     - role: openstack-config
+    # - role: openstack-mount-vol
+    - role: openstack-config
