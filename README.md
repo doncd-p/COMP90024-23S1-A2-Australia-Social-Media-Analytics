@@ -29,7 +29,7 @@
 [![Watch the video](./src/frontend/src/assets/images/map.jpg)](https://youtu.be/JTvXs9uA4Xc)
 
 ## Project Description
-This project is an outcome of COMP90024 Assignment 2, accomplished by Group 9. We've developed a cloud-based solution (ELEFEEL) to analyze social media data, primarily focusing on Twitter data sourced from the Australian Data Observatory (ADO) and information harvested via the Mastodon APIs. Additional data integration from the Spatial Urban Data Observatory (SUDO) also enriches our analysis.
+This project is an outcome of COMP90024 Assignment 2, accomplished by Group 9. We've developed a cloud-based solution (ELEFEEL) to analyse the feasibility of using social media data to predict Australian Election Results, primarily focusing on Twitter data. Additional datasets used in this project are from the Australian Data Observatory (ADO) and harvested via the Mastodon APIs.
 
 ELEFEEL dives into the confluence of politics and technology within the Australian electoral context. The objective is to examine the potential correlation between social media sentiment data and the outcomes of recent elections in Australia.
 
